@@ -1,0 +1,28 @@
+{
+  "name": "claude-api-contract",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Single source of truth for a REST API contract: TypeSpec -> openapi.yml, linted, mocked, breaking-change gated.",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "api:compile": "tsp compile spec --emit @typespec/openapi3",
+    "api:bundle": "node scripts/bundle-openapi.mjs",
+    "format": "tsp format \"spec/**/*.tsp\"",
+    "lint": "spectral lint openapi.yml --ruleset .spectral.yaml",
+    "mock": "prism mock openapi.yml -p ${PRISM_PORT:-4010}",
+    "mock:dynamic": "prism mock openapi.yml -d -p ${PRISM_PORT:-4010}",
+    "validate": "npm run api:compile && bash scripts/check_typespec_drift.sh && npm run lint && bash scripts/check_examples.sh",
+    "breaking": "bash scripts/check_breaking.sh"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^1.0.0",
+    "@typespec/http": "^1.0.0",
+    "@typespec/openapi3": "^1.0.0",
+    "@typespec/rest": "^0.65.0",
+    "@stoplight/spectral-cli": "^6.14.0",
+    "@stoplight/prism-cli": "^5.12.0"
+  }
+}

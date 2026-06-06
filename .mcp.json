@@ -1,0 +1,29 @@
+{
+  "_note": "OPTIONAL FALLBACK. Recommended baseline gets github + context7 from the official plugins github@claude-plugins-official + context7@claude-plugins-official (enabledPlugins in .claude/settings.json). Use this .mcp.json only if you prefer the committed MCP-server path; then add 'github','context7' to enabledMcpjsonServers in .claude/settings.json. Do NOT enable both the plugin and this server for the same MCP.",
+  "mcpServers": {
+    "github": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "${CONTEXT7_API_KEY}"
+      ]
+    }
+  },
+  "_last_reviewed": "2026-06-06"
+}

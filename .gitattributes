@@ -1,0 +1,30 @@
+# Force LF line endings across the repo, regardless of OS.
+# Rationale: project lives on Windows + WSL2 and on Linux/macOS; bind-mounts
+# between Windows and WSL2 routinely flip CRLF<->LF and produce phantom diffs.
+# LF-only kills the noise.
+
+# Default: auto-detect text vs binary; commit and check out as LF.
+* text=auto eol=lf
+
+# Shell scripts MUST be LF (CRLF breaks the shebang on Linux).
+*.sh         text eol=lf
+# JS / TypeSpec / config / docs — LF.
+*.mjs        text eol=lf
+*.js         text eol=lf
+*.ts         text eol=lf
+*.tsp        text eol=lf
+*.yml        text eol=lf
+*.yaml       text eol=lf
+*.json       text eol=lf
+*.md         text eol=lf
+.env.example text eol=lf
+
+# Binary assets — never normalize, never diff.
+*.png        binary
+*.jpg        binary
+*.jpeg       binary
+*.gif        binary
+*.ico        binary
+*.pdf        binary
+*.zip        binary
+*.tar.gz     binary

@@ -1,0 +1,53 @@
+# Layered Spectral ruleset for claude-api-contract.
+# Extends the full spectral:oas baseline and adds repo-specific governance.
+# See .claude/rules/spectral-style.md and the spectral-lint skill.
+extends: [[spectral:oas, all]]
+
+rules:
+  # Operations must be self-describing (consumer DX + generated docs).
+  operation-summary-required:
+    description: Every operation must have a summary.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: error
+    then:
+      field: summary
+      function: truthy
+
+  operation-tags-required:
+    description: Every operation must have at least one tag.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: error
+    then:
+      field: tags
+      function: truthy
+
+  # operationId becomes a consumer symbol — required and stable.
+  operation-operationId-required:
+    description: Every operation must declare an operationId.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: error
+    then:
+      field: operationId
+      function: truthy
+
+  # Property casing — snake_case repo-wide (matches the DRF consumer default).
+  schema-property-snake-case:
+    description: Schema properties must be snake_case.
+    severity: warn
+    recommended: true
+    given: $.components.schemas..properties.*~
+    then:
+      function: casing
+      functionOptions:
+        type: snake
+        disallowDigits: false
+
+  # Descriptions everywhere (no empty/TODO docs — see no-stubs rule).
+  schema-description-required:
+    description: Named schemas should have a description.
+    severity: warn
+    recommended: true
+    given: $.components.schemas[*]
+    then:
+      field: description
+      function: truthy
