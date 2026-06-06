@@ -1,0 +1,829 @@
+openapi: 3.1.0
+info:
+  title: Claude API Contract
+  version: 0.1.0
+  contact:
+    name: claude-api-contract
+    url: https://github.com/VadayI/claude-api-contract
+    email: VadayI@users.noreply.github.com
+  license:
+    name: Proprietary
+    url: https://github.com/VadayI/claude-api-contract
+  description: 'REST API contract for the Claude ecosystem: standardized list/error envelopes, JWT user-flow and OAuth2 client-credentials service-flow auth, and a blog-style articles resource. Single source of truth, consumed by claude-django and claude-react-mui.'
+tags:
+  - name: articles
+    description: Blog-style article resource (CRUD).
+  - name: auth
+    description: 'Authentication: user-flow (register/login/refresh/logout) and service-flow (client-credentials token).'
+paths:
+  /api/v1/articles:
+    get:
+      operationId: listArticles
+      summary: List articles
+      description: Return a paginated list of articles, optionally filtered by status or search term.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: 1-based page number.
+          schema:
+            type: integer
+            format: int32
+            default: 1
+          explode: false
+        - name: page_size
+          in: query
+          required: false
+          description: Number of items per page.
+          schema:
+            type: integer
+            format: int32
+            default: 20
+          explode: false
+        - name: status
+          in: query
+          required: false
+          description: Filter by publication status.
+          schema:
+            $ref: '#/components/schemas/ArticleStatus'
+          explode: false
+        - name: search
+          in: query
+          required: false
+          description: Full-text search query.
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleList'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '403':
+          description: 403 — authenticated but not permitted (missing scope/permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '429':
+          description: 429 — rate limit exceeded; retry after the indicated delay.
+          headers:
+            Retry-After:
+              required: true
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - articles
+      security:
+        - BearerAuth: []
+        - OAuth2Auth:
+            - articles:read
+    post:
+      operationId: createArticle
+      summary: Create an article
+      description: Create a new article.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '403':
+          description: 403 — authenticated but not permitted (missing scope/permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '409':
+          description: 409 — the request conflicts with the current state of the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '429':
+          description: 429 — rate limit exceeded; retry after the indicated delay.
+          headers:
+            Retry-After:
+              required: true
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleCreate'
+        description: Article creation payload.
+      security:
+        - BearerAuth: []
+        - OAuth2Auth:
+            - articles:write
+  /api/v1/articles/{id}:
+    get:
+      operationId: getArticle
+      summary: Get an article
+      description: Retrieve a single article by its identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Article identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '403':
+          description: 403 — authenticated but not permitted (missing scope/permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '404':
+          description: 404 — the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '429':
+          description: 429 — rate limit exceeded; retry after the indicated delay.
+          headers:
+            Retry-After:
+              required: true
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - articles
+      security:
+        - BearerAuth: []
+        - OAuth2Auth:
+            - articles:read
+    patch:
+      operationId: updateArticle
+      summary: Update an article
+      description: Partially update an existing article.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Article identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '403':
+          description: 403 — authenticated but not permitted (missing scope/permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '404':
+          description: 404 — the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '409':
+          description: 409 — the request conflicts with the current state of the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '429':
+          description: 429 — rate limit exceeded; retry after the indicated delay.
+          headers:
+            Retry-After:
+              required: true
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleUpdate'
+        description: Article update payload.
+      security:
+        - BearerAuth: []
+        - OAuth2Auth:
+            - articles:write
+    delete:
+      operationId: deleteArticle
+      summary: Delete an article
+      description: Delete an existing article.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Article identifier.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '403':
+          description: 403 — authenticated but not permitted (missing scope/permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '404':
+          description: 404 — the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '429':
+          description: 429 — rate limit exceeded; retry after the indicated delay.
+          headers:
+            Retry-After:
+              required: true
+              description: Seconds to wait before retrying.
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - articles
+      security:
+        - BearerAuth: []
+        - OAuth2Auth:
+            - articles:write
+  /auth/login:
+    post:
+      operationId: loginUser
+      summary: Log in
+      description: Exchange user credentials for an access + refresh token pair. Public endpoint.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        description: Login credentials.
+      security:
+        - {}
+  /auth/logout:
+    post:
+      operationId: logoutUser
+      summary: Log out
+      description: Invalidate the current session; optionally revoke the supplied refresh token.
+      parameters: []
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - auth
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+        description: Optional refresh token to revoke.
+  /auth/refresh:
+    post:
+      operationId: refreshToken
+      summary: Refresh the access token
+      description: Exchange a valid refresh token for a new access token. Public endpoint.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+        description: The refresh token to exchange.
+      security:
+        - {}
+  /auth/register:
+    post:
+      operationId: registerUser
+      summary: Register a new user
+      description: Create a new user account. Public endpoint.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '409':
+          description: 409 — the request conflicts with the current state of the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        description: Registration credentials.
+      security:
+        - {}
+  /auth/token:
+    post:
+      operationId: issueServiceToken
+      summary: Issue a service token
+      description: Service-to-service client-credentials grant. Returns a scoped access token. Public endpoint.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTokenResponse'
+        '400':
+          description: 400 — request body failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrors'
+        '401':
+          description: 401 — authentication is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceTokenRequest'
+        description: Client-credentials token request.
+      security:
+        - {}
+security:
+  - BearerAuth: []
+components:
+  schemas:
+    AccessToken:
+      type: object
+      required:
+        - access
+      properties:
+        access:
+          type: string
+          description: Short-lived JWT access token.
+        refresh:
+          type: string
+          description: Rotated refresh token, if refresh rotation is enabled.
+      description: A renewed access token, optionally with a rotated refresh token.
+    Article:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - body
+        - status
+        - author_id
+        - tags
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          description: Unique article identifier.
+        title:
+          type: string
+          description: Article title.
+        slug:
+          type: string
+          description: URL-friendly slug.
+        body:
+          type: string
+          description: Article body content.
+        status:
+          allOf:
+            - $ref: '#/components/schemas/ArticleStatus'
+          description: Publication status.
+        author_id:
+          type: string
+          description: Identifier of the author.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Associated tag labels.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp (UTC).
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp (UTC).
+      description: A blog-style article.
+    ArticleCreate:
+      type: object
+      required:
+        - title
+        - body
+      properties:
+        title:
+          type: string
+          description: Article title.
+        body:
+          type: string
+          description: Article body content.
+        slug:
+          type: string
+          description: Optional URL-friendly slug; generated from the title if omitted.
+        status:
+          allOf:
+            - $ref: '#/components/schemas/ArticleStatus'
+          description: Publication status; defaults to draft.
+          default: draft
+        tags:
+          type: array
+          items:
+            type: string
+          description: Associated tag labels.
+          default: []
+      description: Payload to create an article.
+    ArticleList:
+      type: object
+      required:
+        - count
+        - next
+        - previous
+        - results
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: Total number of items across all pages.
+        next:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+          description: URL of the next page of results, or null on the last page.
+        previous:
+          anyOf:
+            - type: string
+              format: uri
+            - type: 'null'
+          description: URL of the previous page of results, or null on the first page.
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+          description: Items on the current page.
+      description: Standard paginated list envelope (count / next / previous / results).
+    ArticleStatus:
+      type: string
+      enum:
+        - draft
+        - published
+        - archived
+      description: Publication status of an article.
+    ArticleUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Article title.
+        slug:
+          type: string
+          description: URL-friendly slug.
+        body:
+          type: string
+          description: Article body content.
+        status:
+          allOf:
+            - $ref: '#/components/schemas/ArticleStatus'
+          description: Publication status.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Associated tag labels.
+      description: Payload to partially update an article; all fields optional.
+    ErrorDetail:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: Human-readable error message.
+      description: Simple error envelope with a single human-readable message.
+    FieldError:
+      type: object
+      required:
+        - field
+        - code
+        - message
+      properties:
+        field:
+          type: string
+          description: Name of the field that failed validation.
+        code:
+          type: string
+          description: Stable, machine-readable error code (e.g. 'required', 'invalid').
+        message:
+          type: string
+          description: Human-readable explanation of the validation failure.
+      description: A single field-level validation error.
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User email address.
+        password:
+          type: string
+          description: Plain-text password (transport-encrypted).
+      description: Login credentials.
+    RefreshRequest:
+      type: object
+      required:
+        - refresh
+      properties:
+        refresh:
+          type: string
+          description: The refresh token previously issued.
+      description: Refresh token request body.
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User email address.
+        password:
+          type: string
+          description: Plain-text password (transport-encrypted).
+        name:
+          type: string
+          description: Optional display name.
+      description: Credentials to register a new user account.
+    RegisterResponse:
+      type: object
+      required:
+        - user
+      properties:
+        user:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          description: The newly created user.
+        tokens:
+          allOf:
+            - $ref: '#/components/schemas/TokenPair'
+          description: Optional initial access + refresh token pair.
+      description: Result of registering a user (user plus an optional initial token pair).
+    ServiceTokenRequest:
+      type: object
+      required:
+        - grant_type
+        - client_id
+        - client_secret
+      properties:
+        grant_type:
+          type: string
+          description: OAuth2 grant type; must be 'client_credentials'.
+        client_id:
+          type: string
+          description: Service client identifier.
+        client_secret:
+          type: string
+          description: Service client secret.
+        scope:
+          type: string
+          description: Optional space-separated list of requested scopes.
+      description: Service-to-service client-credentials token request.
+    ServiceTokenResponse:
+      type: object
+      required:
+        - access
+        - token_type
+        - expires_in
+        - scope
+      properties:
+        access:
+          type: string
+          description: Short-lived JWT access token.
+        token_type:
+          type: string
+          description: Token type; always 'Bearer'.
+        expires_in:
+          type: integer
+          format: int32
+          description: Token lifetime in seconds.
+        scope:
+          type: string
+          description: Granted scopes (space-separated).
+      description: Service-to-service access token response.
+    TokenPair:
+      type: object
+      required:
+        - access
+        - refresh
+      properties:
+        access:
+          type: string
+          description: Short-lived JWT access token.
+        refresh:
+          type: string
+          description: Long-lived refresh token (returned in the response body).
+      description: Access + refresh token pair.
+    User:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+          description: Unique user identifier.
+        email:
+          type: string
+          description: User email address.
+        name:
+          type: string
+          description: Optional display name.
+      description: A registered user account.
+    ValidationErrors:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'
+          description: List of per-field validation errors.
+      description: Validation error envelope carrying a list of per-field errors.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: http://localhost:4010/auth/token
+          scopes:
+            articles:read: ''
+            articles:write: ''
+servers:
+  - url: http://localhost:4010
+    description: Prism mock
+    variables: {}
