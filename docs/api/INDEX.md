@@ -2,7 +2,7 @@
 
 > The contract is `openapi.yml` (OpenAPI 3.1) at the repo root — the single source of truth, generated from `spec/**/*.tsp`. This index is a human-readable overview that points at it. Maintained by `docs-writer`.
 
-**Version:** 0.1.0 (unreleased) · **Servers:** `http://localhost:4010` (Prism mock)
+**Version:** 0.1.0 · **Servers:** `http://localhost:4010` (Prism mock)
 
 ## Security schemes
 

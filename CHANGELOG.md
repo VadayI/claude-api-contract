@@ -5,6 +5,8 @@ Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/br
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-07
+
 ### Added (Etap 3 — examples, CI, mock)
 - **Inline examples** for all 10 operations (`@opExample` in `spec/`) emitting into `openapi.yml` — success responses plus key error envelopes (400 validation, 401/403/404/409/429 simple).
 - **`x-faker`** annotations on key schema properties for realistic dynamic mock (`User.email/name`, `Article.title/slug/body/created_at/updated_at`).
@@ -25,5 +27,5 @@ Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/br
 - Added `tspconfig.yaml` emitting OpenAPI **3.1.0** (D4).
 
 ### Notes
-- No breaking-change analysis: first release, no prior tag (oasdiff gate SKIPs).
+- Breaking-аналіз (oasdiff): N/A — перший тег, нема бази для порівняння (SKIP).
 - Earlier: Scaffolding (Etap 1) — `.claude/` config (agents, rules, commands, skills), scripts, CLAUDE.md, README.
