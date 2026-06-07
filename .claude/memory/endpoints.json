@@ -52,7 +52,7 @@
     "scopes": [],
     "statuses": [200, 400, 401],
     "envelope": "single",
-    "notes": "Public S2S (D5). grant_type=client_credentials. Returns access + token_type + expires_in + scope. Body is JSON (deviation from form-urlencoded). tokenUrl currently points at the Prism mock."
+    "notes": "Public S2S (D5). grant_type=client_credentials. Returns access + token_type + expires_in + scope. Body is JSON (deviation from form-urlencoded). tokenUrl points at the production server placeholder (https://api.example.com); derived projects replace it."
   },
   {
     "method": "GET",
