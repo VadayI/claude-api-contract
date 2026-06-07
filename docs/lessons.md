@@ -26,6 +26,12 @@
 - **`@opExample` форми залежать від типу відповіді.** Для відповідей-прямих-типів (`TokenPair`, `Article`, `ListResponse<Article>`) приклад подається плоско. Для відповідей із явним `@statusCode`/`@body` (201 і ВСІ помилки 400/401/403/404/409/429) `@opExample` вимагає повної форми конверта `#{ statusCode: N, body: #{...} }`, інакше компілятор кидає `unassignable`. Кілька `@opExample` на операції розкладаються по статус-кодах за формою типу. Request-приклад — через `parameters: #{ body: #{...} }` (+ `id` для операцій із path-параметром).
 - **Spectral 6.16/AJV падає на `null` у прикладах проти nullable-3.1-схем.** Будь-яке значення `null` у `example` проти `type: [T, "null"]` / `anyOf [..., {type: "null"}]` (навіть із `format: uri`) валить лінтер крешем `Cannot read properties of null (reading 'enum')` — це падіння процесу, а не lint-finding, тож examples-гейт червоніє «нізащо». Обхід: не клади літеральний `null` у приклади nullable-полів. Для list-envelope приклад роби «середньою сторінкою» пагінації (`next`/`previous` — URL, не null) — він валідний проти схеми і не фейковий. Поведінку самих полів `null` усе одно описує схема (`next: url | null`).
 
+## TypeSpec 1.x — OAuth2 scope descriptions недоступні
+
+- **`OAuth2Scope.description` не заповнюється з `.tsp`-джерела** у TypeSpec 1.x `@typespec/http`. Компілятор (`decorators.js`) мапить кожен scope-рядок `x` лише до `{ value: x }` — поле `description` ніколи не встановлюється.
+- Будь-яка спроба додати `scopes: [{ value: "…"; description: "…" }]` у flow-літерал або порушує generic `Scopes extends string[]` (неправильна форма), або змішує flow-level scopes з per-operation `ServiceOAuth2<["…"]>` — в результаті оператор отримує обидва scopes на всіх операціях замість per-operation.
+- **Обхід:** чекати поки TypeSpec HTTP розкриє цей API, або відстежити issue upstream. Поточний стан у контракті: `articles:read: ''` / `articles:write: ''` — правильно за схемою, але без описів. Залишено у `docs/todo.md`.
+
 ## Stacked PRs + squash-merge (consumer repos)
 
 - **`gh pr merge --squash --delete-branch` на base-гілці auto-CLOSE всі stacked PR**, що мають цю гілку як base. GitHub не перебазовує стек — він просто закриває залежні PR.
