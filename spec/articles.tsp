@@ -187,11 +187,22 @@ op listArticles(
 @opExample(#{
   returnType: #{
     statusCode: 400,
-    body: #{ errors: #[#{ field: "title", code: "required", message: "This field is required." }] },
+    body: #{
+      errors: #[
+        #{
+          field: "title",
+          code: "required",
+          message: "This field is required.",
+        }
+      ],
+    },
   },
 })
 @opExample(#{
-  returnType: #{ statusCode: 409, body: #{ detail: "An article with this slug already exists." } },
+  returnType: #{
+    statusCode: 409,
+    body: #{ detail: "An article with this slug already exists." },
+  },
 })
 op createArticle(
   @doc("Article creation payload.")
@@ -251,7 +262,10 @@ op getArticle(
 @doc("Partially update an existing article.")
 @useAuth(BearerAuth | ServiceOAuth2<["articles:write"]>)
 @opExample(#{
-  parameters: #{ id: "art_01HZX3K9P2QY", body: #{ status: ArticleStatus.archived } },
+  parameters: #{
+    id: "art_01HZX3K9P2QY",
+    body: #{ status: ArticleStatus.archived },
+  },
   returnType: #{
     id: "art_01HZX3K9P2QY",
     title: "Designing a Contract-First API",
