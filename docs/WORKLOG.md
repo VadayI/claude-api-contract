@@ -2,6 +2,17 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-07 — Release v0.1.0
+
+- **Тригер:** `/release v0.1.0` — перший git-тег контракту.
+- **oasdiff встановлено** (`v1.18.4` у `~/.local/bin`; `~/.bashrc` оновлено; `env-detect.json` тепер `oasdiff: true`). `scripts/setup-wsl.sh` показував інструкції, але не ставив — встановлено пряме скачування бінарника.
+- **Release-prep PR #3** (`chore/release-v0.1.0`): `CHANGELOG.md` [Unreleased]→[0.1.0]-2026-06-07 + порожній [Unreleased] зверху; `docs/api/INDEX.md` — знято `(unreleased)`; `package.json` — `0.0.0`→`0.1.0`. CI (5 гейтів) пройшов зелено (38 с); PR merged.
+- **Gates локально + CI:** `npm run validate` GREEN (drift + lint + examples); `npm run breaking` → SKIP (перший тег, нема бази). breaking-аналіз N/A.
+- **git tag `v0.1.0`** на merge-commit `3f5504a`; pushed.
+- **GitHub Release** створено: https://github.com/VadayI/claude-api-contract/releases/tag/v0.1.0
+- **Raw URL для споживачів:** `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.0/openapi.yml`
+- Наступний крок: Etap 4 — consumer repos (`claude-django`, `claude-react-mui`) пінять `CONTRACT_VERSION=v0.1.0`.
+
 ## 2026-06-07 — Etap 3 (examples, CI, mock)
 - Pipeline (dispatcher): api-architect (example/x-faker matrix) → tsp-author + mock-validator (delegated subagent, authored via bash heredoc) → contract-reviewer (independent re-run of all gates) → docs-writer. breaking SKIP (no prior tag).
 - `spec/auth.tsp` + `spec/articles.tsp`: `@opExample` (26 inline examples; success + 400/401/403/404/409/429) + `@extension("x-faker")` on 7 fields. Regenerated `openapi.yml` (drift OK).

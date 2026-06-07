@@ -129,23 +129,47 @@ model ServiceTokenResponse {
 @doc("Create a new user account. Public endpoint.")
 @useAuth(NoAuth)
 @opExample(#{
-  parameters: #{ body: #{ email: "ada@example.com", password: "S3cure-pass!", name: "Ada Lovelace" } },
+  parameters: #{
+    body: #{
+      email: "ada@example.com",
+      password: "S3cure-pass!",
+      name: "Ada Lovelace",
+    },
+  },
   returnType: #{
     statusCode: 201,
     body: #{
-      user: #{ id: "usr_01HZX3K9P2", email: "ada@example.com", name: "Ada Lovelace" },
-      tokens: #{ access: "eyJhbGciOiJIUzI1NiJ9.reg-access", refresh: "r3fr3sh-tok3n-reg" },
+      user: #{
+        id: "usr_01HZX3K9P2",
+        email: "ada@example.com",
+        name: "Ada Lovelace",
+      },
+      tokens: #{
+        access: "eyJhbGciOiJIUzI1NiJ9.reg-access",
+        refresh: "r3fr3sh-tok3n-reg",
+      },
     },
   },
 })
 @opExample(#{
   returnType: #{
     statusCode: 400,
-    body: #{ errors: #[#{ field: "email", code: "invalid", message: "Enter a valid email address." }] },
+    body: #{
+      errors: #[
+        #{
+          field: "email",
+          code: "invalid",
+          message: "Enter a valid email address.",
+        }
+      ],
+    },
   },
 })
 @opExample(#{
-  returnType: #{ statusCode: 409, body: #{ detail: "A user with this email already exists." } },
+  returnType: #{
+    statusCode: 409,
+    body: #{ detail: "A user with this email already exists." },
+  },
 })
 op registerUser(
   @doc("Registration credentials.")
@@ -169,19 +193,34 @@ op registerUser(
 @doc("Exchange user credentials for an access + refresh token pair. Public endpoint.")
 @useAuth(NoAuth)
 @opExample(#{
-  parameters: #{ body: #{ email: "ada@example.com", password: "S3cure-pass!" } },
-  returnType: #{ access: "eyJhbGciOiJIUzI1NiJ9.access", refresh: "r3fr3sh-tok3n-login" },
+  parameters: #{
+    body: #{ email: "ada@example.com", password: "S3cure-pass!" },
+  },
+  returnType: #{
+    access: "eyJhbGciOiJIUzI1NiJ9.access",
+    refresh: "r3fr3sh-tok3n-login",
+  },
 })
 @opExample(#{
   returnType: #{
     statusCode: 400,
-    body: #{ errors: #[#{ field: "email", code: "invalid", message: "Enter a valid email address." }] },
+    body: #{
+      errors: #[
+        #{
+          field: "email",
+          code: "invalid",
+          message: "Enter a valid email address.",
+        }
+      ],
+    },
   },
 })
 @opExample(#{
   returnType: #{
     statusCode: 401,
-    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+    body: #{
+      detail: "Authentication credentials were not provided or are invalid.",
+    },
   },
 })
 op loginUser(
@@ -198,12 +237,17 @@ op loginUser(
 @useAuth(NoAuth)
 @opExample(#{
   parameters: #{ body: #{ refresh: "r3fr3sh-tok3n-login" } },
-  returnType: #{ access: "eyJhbGciOiJIUzI1NiJ9.access-new", refresh: "r3fr3sh-rotated-tok3n" },
+  returnType: #{
+    access: "eyJhbGciOiJIUzI1NiJ9.access-new",
+    refresh: "r3fr3sh-rotated-tok3n",
+  },
 })
 @opExample(#{
   returnType: #{
     statusCode: 401,
-    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+    body: #{
+      detail: "Authentication credentials were not provided or are invalid.",
+    },
   },
 })
 op refreshToken(
@@ -218,9 +262,7 @@ op refreshToken(
 @summary("Log out")
 @doc("Invalidate the current session; optionally revoke the supplied refresh token.")
 @useAuth(BearerAuth)
-@opExample(#{
-  parameters: #{ body: #{ refresh: "r3fr3sh-tok3n-login" } },
-})
+@opExample(#{ parameters: #{ body: #{ refresh: "r3fr3sh-tok3n-login" } } })
 op logoutUser(
   @doc("Optional refresh token to revoke.")
   @body
@@ -256,7 +298,9 @@ op logoutUser(
 @opExample(#{
   returnType: #{
     statusCode: 401,
-    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+    body: #{
+      detail: "Authentication credentials were not provided or are invalid.",
+    },
   },
 })
 op issueServiceToken(
