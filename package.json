@@ -1,6 +1,6 @@
 {
   "name": "claude-api-contract",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Single source of truth for a REST API contract: TypeSpec -> openapi.yml, linted, mocked, breaking-change gated.",
