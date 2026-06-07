@@ -3,6 +3,23 @@
 All notable contract changes are documented here. Format derived from `oasdiff changelog`.
 Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/breaking-changes.md).
 
+## [v0.2.0] — 2026-06-07
+
+> **Semver classification:** MINOR (pre-1.0 breaking convention — `0.x` breaking change bumps MINOR)
+> oasdiff changelog vs `v0.1.1`: 5 error-level (api-path-removed-without-deprecation) + 5 info-level (endpoint-added) — see below.
+> **Breaking changes:** yes — auth endpoint paths renamed from `/auth/*` to `/api/v1/auth/*` (see ADR 0004).
+
+### Changed
+- `POST /auth/login` removed; replaced by `POST /api/v1/auth/login` (path renamed — breaking, intentional per ADR 0004).
+- `POST /auth/logout` removed; replaced by `POST /api/v1/auth/logout` (path renamed — breaking, intentional per ADR 0004).
+- `POST /auth/refresh` removed; replaced by `POST /api/v1/auth/refresh` (path renamed — breaking, intentional per ADR 0004).
+- `POST /auth/register` removed; replaced by `POST /api/v1/auth/register` (path renamed — breaking, intentional per ADR 0004).
+- `POST /auth/token` removed; replaced by `POST /api/v1/auth/token` (path renamed — breaking, intentional per ADR 0004).
+
+All five renames are listed in `.oasdiff-ignore.txt` to keep the breaking-change gate active for everything else. Consumer impact: update any hardcoded `/auth/` prefix to `/api/v1/auth/`.
+
+---
+
 ## [v0.1.1] — 2026-06-07
 
 > Semver classification: **patch** — no paths, schemas, operationIds, required fields, or response shapes changed.

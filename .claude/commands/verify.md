@@ -16,5 +16,5 @@ Optional `$ARGUMENTS`: a feature/resource name. Default: the most recently added
 ## Steps
 1. Read `.claude/memory/endpoints.json` + `openapi.yml`.
 2. Dispatch `docs-writer` to generate `docs/verify/<feature>.md`: for each endpoint — the `curl` against the Prism mock (`npm run mock`), the documented request, and the expected status codes / auth-scope behavior.
-3. Confirm `/auth/*` issues usable tokens against the mock.
+3. Confirm `/api/v1/auth/*` issues usable tokens against the mock.
 4. Report the path and a one-line how-to-run.

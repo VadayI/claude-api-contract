@@ -12,7 +12,7 @@
 
 ## 3. Auth profile
 - User-flow (D1): register / login / refresh / logout — Bearer/JWT, refresh in body (D2).
-- Service-flow (D5): `POST /auth/token` client-credentials + scopes (if S2S).
+- Service-flow (D5): `POST /api/v1/auth/token` client-credentials + scopes (if S2S).
 
 ## 4. Envelopes
 - list: `{ count, next, previous, results: T[] }`
