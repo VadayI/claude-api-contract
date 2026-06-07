@@ -50,8 +50,17 @@ List query params: `page` (int32), `page_size` (int32), `status` (`draft`/`publi
 - Bearer scheme emits `scheme: Bearer` without `bearerFormat: JWT` — a TypeSpec `@typespec/http` limitation (built-in `BearerAuth` has no `bearerFormat` field). Canon is generated, never hand-edited.
 - `/auth/token` request body is JSON (not `application/x-www-form-urlencoded`) for a self-contained contract and a trivial mock.
 
+## Examples, mock & CI (Etap 3)
+
+- **Inline examples** for every operation live in `spec/**/*.tsp` via `@opExample` and emit into `openapi.yml` (success + key errors). Spectral's `oas3-valid-*-examples` (examples gate) validates them against the schema.
+- **`x-faker`** annotations on key properties (`User.email/name`, `Article.title/slug/body/created_at/updated_at`) drive realistic `npm run mock:dynamic` payloads.
+- **Request fixtures** under `examples/**` (`auth/*.request.json`, `articles/*.request.json`) feed the mock smoke test.
+- **Prism mock smoke** — `npm run mock:smoke` boots the mock from `openapi.yml` and asserts all 11 endpoints return their documented codes (two-way validation; security enforced — list without a bearer → 401).
+- **CI** — `.github/workflows/contract-ci.yml` runs 5 gates: TypeSpec drift · Spectral lint · examples · oasdiff breaking (`--fail-on ERR`) · Prism mock smoke.
+- **Verify handoff** — `docs/verify/etap-3.md` (Prism + curl checklist).
+
 ## Follow-ups (next small PR / slice)
 
 - Populate OAuth2 scope descriptions (currently empty in the scopes map).
 - Replace the mock `tokenUrl` / `@server` with the real server when it exists.
-- `examples/**` + `x-faker`, CI workflow (5 gates), Prism mock smoke (Etap 3) → then tag `v0.1.0`.
+- Tag **`v0.1.0`** once CI is green on `main` (via `/release`).

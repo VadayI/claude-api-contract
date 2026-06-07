@@ -1,0 +1,6 @@
+{
+  "title": "Designing a Contract-First API",
+  "body": "A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.",
+  "tags": ["api", "typespec"],
+  "status": "published"
+}

@@ -18,9 +18,11 @@ model User {
   id: string;
 
   @doc("User email address.")
+  @extension("x-faker", "internet.email")
   email: string;
 
   @doc("Optional display name.")
+  @extension("x-faker", "name.fullName")
   name?: string;
 }
 
@@ -126,6 +128,25 @@ model ServiceTokenResponse {
 @summary("Register a new user")
 @doc("Create a new user account. Public endpoint.")
 @useAuth(NoAuth)
+@opExample(#{
+  parameters: #{ body: #{ email: "ada@example.com", password: "S3cure-pass!", name: "Ada Lovelace" } },
+  returnType: #{
+    statusCode: 201,
+    body: #{
+      user: #{ id: "usr_01HZX3K9P2", email: "ada@example.com", name: "Ada Lovelace" },
+      tokens: #{ access: "eyJhbGciOiJIUzI1NiJ9.reg-access", refresh: "r3fr3sh-tok3n-reg" },
+    },
+  },
+})
+@opExample(#{
+  returnType: #{
+    statusCode: 400,
+    body: #{ errors: #[#{ field: "email", code: "invalid", message: "Enter a valid email address." }] },
+  },
+})
+@opExample(#{
+  returnType: #{ statusCode: 409, body: #{ detail: "A user with this email already exists." } },
+})
 op registerUser(
   @doc("Registration credentials.")
   @body
@@ -147,6 +168,22 @@ op registerUser(
 @summary("Log in")
 @doc("Exchange user credentials for an access + refresh token pair. Public endpoint.")
 @useAuth(NoAuth)
+@opExample(#{
+  parameters: #{ body: #{ email: "ada@example.com", password: "S3cure-pass!" } },
+  returnType: #{ access: "eyJhbGciOiJIUzI1NiJ9.access", refresh: "r3fr3sh-tok3n-login" },
+})
+@opExample(#{
+  returnType: #{
+    statusCode: 400,
+    body: #{ errors: #[#{ field: "email", code: "invalid", message: "Enter a valid email address." }] },
+  },
+})
+@opExample(#{
+  returnType: #{
+    statusCode: 401,
+    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+  },
+})
 op loginUser(
   @doc("Login credentials.")
   @body
@@ -159,6 +196,16 @@ op loginUser(
 @summary("Refresh the access token")
 @doc("Exchange a valid refresh token for a new access token. Public endpoint.")
 @useAuth(NoAuth)
+@opExample(#{
+  parameters: #{ body: #{ refresh: "r3fr3sh-tok3n-login" } },
+  returnType: #{ access: "eyJhbGciOiJIUzI1NiJ9.access-new", refresh: "r3fr3sh-rotated-tok3n" },
+})
+@opExample(#{
+  returnType: #{
+    statusCode: 401,
+    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+  },
+})
 op refreshToken(
   @doc("The refresh token to exchange.")
   @body
@@ -171,6 +218,9 @@ op refreshToken(
 @summary("Log out")
 @doc("Invalidate the current session; optionally revoke the supplied refresh token.")
 @useAuth(BearerAuth)
+@opExample(#{
+  parameters: #{ body: #{ refresh: "r3fr3sh-tok3n-login" } },
+})
 op logoutUser(
   @doc("Optional refresh token to revoke.")
   @body
@@ -187,6 +237,28 @@ op logoutUser(
 @summary("Issue a service token")
 @doc("Service-to-service client-credentials grant. Returns a scoped access token. Public endpoint.")
 @useAuth(NoAuth)
+@opExample(#{
+  parameters: #{
+    body: #{
+      grant_type: "client_credentials",
+      client_id: "svc_articles_sync",
+      client_secret: "cs_7f3a9b2e1d6c4805a1f2",
+      scope: "articles:read articles:write",
+    },
+  },
+  returnType: #{
+    access: "eyJhbGciOiJIUzI1NiJ9.svc-access",
+    token_type: "Bearer",
+    expires_in: 900,
+    scope: "articles:read articles:write",
+  },
+})
+@opExample(#{
+  returnType: #{
+    statusCode: 401,
+    body: #{ detail: "Authentication credentials were not provided or are invalid." },
+  },
+})
 op issueServiceToken(
   @doc("Client-credentials token request.")
   @body
