@@ -105,6 +105,7 @@ model ArticleUpdate {
 @summary("List articles")
 @doc("Return a paginated list of articles, optionally filtered by status or search term.")
 @useAuth(BearerAuth | ServiceOAuth2<["articles:read"]>)
+// STUB: last-page null example deferred — Spectral/AJV null-nullable-3.1 bug not yet fixed upstream
 @opExample(#{
   returnType: #{
     count: 42,

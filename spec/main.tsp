@@ -23,6 +23,7 @@ using OpenAPI;
     url: "https://github.com/VadayI/claude-api-contract",
   },
 })
+@server("https://api.example.com", "Production")
 @server("http://localhost:4010", "Prism mock")
 @tagMetadata(
   "auth",

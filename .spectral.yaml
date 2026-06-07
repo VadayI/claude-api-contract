@@ -51,3 +51,9 @@ rules:
     then:
       field: description
       function: truthy
+
+  # The production server uses https://api.example.com as a placeholder — this
+  # is intentional in the template; derived projects replace it. Disable the
+  # built-in oas3-server-not-example.com rule (which fires even for
+  # recommended:false when using [spectral:oas, all]).
+  oas3-server-not-example.com: off

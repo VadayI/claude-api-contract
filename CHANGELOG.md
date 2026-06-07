@@ -5,6 +5,20 @@ Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/br
 
 ## [Unreleased]
 
+### Changed
+- `servers`: Added production server placeholder `https://api.example.com` alongside the Prism mock (`http://localhost:4010`). Derived projects should replace this URL with the real one.
+- `components.securitySchemes.OAuth2Auth.flows.clientCredentials.tokenUrl`: Updated from `http://localhost:4010/auth/token` to `https://api.example.com/auth/token`.
+
+### Added
+- `.oasdiff-ignore.txt`: Empty allow-list file for consciously accepted breaking changes (with in-file usage instructions).
+- `.spectral.yaml`: Silenced `oas3-server-not-example.com` rule — `api.example.com` is an intentional placeholder for derived projects; documented with a comment in the file.
+
+### Fixed
+- `README.md`: Status section updated to reflect `v0.1.0` release and completed Etap 4 consumer inversion.
+- `spec/articles.tsp`: Added STUB comment above `listArticles` last-page null example — deferred due to Spectral/AJV null-nullable-3.1 incompatibility; no wire-shape change.
+
+> Semver classification: **patch** — no paths, schemas, operationIds, required fields, or response shapes changed.
+
 ## [0.1.0] - 2026-06-07
 
 ### Added (Etap 3 — examples, CI, mock)

@@ -2,7 +2,7 @@
 
 > The contract is `openapi.yml` (OpenAPI 3.1) at the repo root — the single source of truth, generated from `spec/**/*.tsp`. This index is a human-readable overview that points at it. Maintained by `docs-writer`.
 
-**Version:** 0.1.0 · **Servers:** `http://localhost:4010` (Prism mock)
+**Version:** 0.1.0 · **Servers:** `https://api.example.com` (Production placeholder — replace in derived projects) · `http://localhost:4010` (Prism mock)
 
 ## Security schemes
 
@@ -61,6 +61,6 @@ List query params: `page` (int32), `page_size` (int32), `status` (`draft`/`publi
 
 ## Follow-ups (next small PR / slice)
 
+- Replace the `https://api.example.com` placeholder in `spec/main.tsp` and `spec/models/security.tsp` with the real server URL in a derived project.
 - Populate OAuth2 scope descriptions (currently empty in the scopes map).
-- Replace the mock `tokenUrl` / `@server` with the real server when it exists.
-- Tag **`v0.1.0`** once CI is green on `main` (via `/release`).
+- ~~Tag **`v0.1.0`** once CI is green on `main` (via `/release`).~~ Done — tagged `v0.1.0`.

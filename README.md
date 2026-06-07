@@ -76,4 +76,4 @@ openapi.yml      ◄ CANONICAL OUTPUT (bundled, OpenAPI 3.1)
 .spectral.yaml   layered ruleset
 ```
 
-> Status: scaffolding (Etap 1 — `.claude/` config + scripts). Next: `spec/` first slice (auth + sample resource), CI workflow, examples, then tag `v0.1.0`.
+> Status: **v0.1.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Both consumers (`claude-django`, `claude-react-mui`) inverted and pinning `v0.1.0`. See `docs/HANDOFF.md` for current state.
