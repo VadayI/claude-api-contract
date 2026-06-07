@@ -7,7 +7,7 @@ Inspect and safely adjust the template configuration.
 
 ## Log
 ```bash
-node scripts/log-cmd.mjs /config "$ARGUMENTS"
+node scripts/log-cmd.mjs /check-config "$ARGUMENTS"
 ```
 
 ## Steps
