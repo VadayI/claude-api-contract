@@ -964,11 +964,14 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: http://localhost:4010/auth/token
+          tokenUrl: https://api.example.com/auth/token
           scopes:
             articles:read: ''
             articles:write: ''
 servers:
   - url: http://localhost:4010
     description: Prism mock
+    variables: {}
+  - url: https://api.example.com
+    description: Production
     variables: {}

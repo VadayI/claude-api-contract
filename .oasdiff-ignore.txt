@@ -1,0 +1,12 @@
+# .oasdiff-ignore.txt — consciously accepted breaking changes
+#
+# Format: one entry per line, as produced by `oasdiff breaking --format text`.
+# Every entry must have a corresponding ADR reference in docs/decisions/.
+# This file is passed to check_breaking.sh via `--err-ignore`.
+#
+# How to add an entry:
+#   1. Run `oasdiff breaking <base> openapi.yml` to get the exact change string.
+#   2. Confirm the change is intentional and document it in an ADR.
+#   3. Add the line below and reference the ADR.
+#
+# Current allow-list: (none — no breaking changes have been consciously accepted yet)
