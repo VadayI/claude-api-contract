@@ -1,21 +1,19 @@
 # TODO (rolling)
 
-## Now — close out PR #1 (feat/contract-first-slice)
-- [ ] Commit `package-lock.json` to the PR (reproducible `npm ci` in CI). `git add package-lock.json && git commit -m "chore: pin dev toolchain via package-lock.json" && git push`
-- [ ] Verify branch protection on `main` is enabled (PR + status checks) so PR-only holds.
-- [ ] Review & merge PR #1.
+## Now — close out PR #2 (feat/etap-3-examples-ci-mock)
+- [ ] Wait for `contract-ci` green on PR #2 (`gh pr checks 2 --watch`).
+- [ ] Merge PR #2 (`gh pr merge 2 --merge --delete-branch`); `git switch main && git pull`.
+- [ ] Enable required status check `contract-ci` on `main` via full PUT to `.../branches/main/protection` (keep reviews count 0).
 
-## Etap 3 (next slice / PR)
-- [ ] `examples/**` request/response examples + `x-faker` annotations for realistic dynamic mock.
-- [ ] `.github/workflows/contract-ci.yml` — 5 gates: TypeSpec drift, Spectral lint, examples, oasdiff breaking, Prism mock smoke.
-- [ ] Prism mock smoke test (mock comes up + returns valid responses).
-- [ ] `docs/verify/<feature>.md` via `/verify` (Prism + curl checklist from `endpoints.json`).
-- [ ] Release `v0.1.0` via `/release` (rebuild, gates green, CHANGELOG, tag, push) — only after gates are green.
+## Next — release v0.1.0
+- [ ] `/release v0.1.0` from `main` (rebuild, gates green, CHANGELOG via oasdiff changelog, tag `v0.1.0`, push tag). First tag → breaking gate baseline established.
+- [ ] Confirm raw URL resolves: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.0/openapi.yml`.
+
+## Etap 4 — invert consumers (separate repos, after v0.1.0)
+- [ ] `claude-django`: validate impl vs contract; pull + `scripts/check_contract_sync.sh`; pin `CONTRACT_VERSION=v0.1.0` (+ `contract.lock.json`).
+- [ ] `claude-react-mui`: Bearer + refresh-flow; `api:pull` (`openapi-typescript`) from contract@v0.1.0; sync-gate.
 
 ## Cosmetic follow-ups (small PR, non-blocking)
-- [ ] OAuth2 scope descriptions (currently empty map) — add in `spec/models/security.tsp` (`OAuth2Scope` with descriptions), not in YAML.
+- [ ] OAuth2 scope descriptions (empty map) — add in `spec/models/security.tsp`, not in YAML.
 - [ ] Replace mock `tokenUrl` / `@server` (`http://localhost:4010`) with the real server when it exists.
-
-## Later (separate repos, after v0.1.0)
-- [ ] Invert consumer `claude-django` (validate impl vs contract; pull + sync-gate; pin `CONTRACT_VERSION`).
-- [ ] Invert consumer `claude-react-mui` (Bearer + refresh-flow; `api:pull` from contract; sync-gate).
+- [ ] Optional: a `last-page` list example once Spectral/AJV null-example bug is fixed upstream (track version).
