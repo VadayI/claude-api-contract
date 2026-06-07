@@ -1,0 +1,62 @@
+name: contract-ci
+
+# Контракт-first гейти. 5 перевірок: TypeSpec drift, Spectral lint,
+# валідація прикладів, oasdiff breaking (--fail-on ERR), Prism mock smoke.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + tags for oasdiff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install oasdiff (breaking-change gate)
+        run: go install github.com/oasdiff/oasdiff@latest
+
+      - name: Add Go bin to PATH
+        run: echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      # --- Гейт 1: TypeSpec drift (openapi.yml == spec/ output) ---
+      - name: Gate 1 — TypeSpec drift
+        run: |
+          npm run api:compile
+          bash scripts/check_typespec_drift.sh
+
+      # --- Гейт 2: Spectral lint (шаровий рулсет) ---
+      - name: Gate 2 — Spectral lint
+        run: npm run lint
+
+      # --- Гейт 3: валідація прикладів проти схем ---
+      - name: Gate 3 — Examples validation
+        run: bash scripts/check_examples.sh
+
+      # --- Гейт 4: oasdiff breaking vs останній тег (--fail-on ERR) ---
+      - name: Gate 4 — Breaking changes (oasdiff)
+        run: npm run breaking
+
+      # --- Гейт 5: Prism mock smoke (mock піднімається + валідні відповіді) ---
+      - name: Gate 5 — Prism mock smoke
+        run: npm run mock:smoke

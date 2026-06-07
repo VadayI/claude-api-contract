@@ -14,6 +14,7 @@
     "lint": "spectral lint openapi.yml --ruleset .spectral.yaml",
     "mock": "prism mock openapi.yml -p ${PRISM_PORT:-4010}",
     "mock:dynamic": "prism mock openapi.yml -d -p ${PRISM_PORT:-4010}",
+    "mock:smoke": "bash scripts/check_mock.sh",
     "validate": "npm run api:compile && bash scripts/check_typespec_drift.sh && npm run lint && bash scripts/check_examples.sh",
     "breaking": "bash scripts/check_breaking.sh"
   },

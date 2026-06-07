@@ -1,0 +1,6 @@
+{
+  "grant_type": "client_credentials",
+  "client_id": "svc_articles_sync",
+  "client_secret": "cs_7f3a9b2e1d6c4805a1f2",
+  "scope": "articles:read articles:write"
+}

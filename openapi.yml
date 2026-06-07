@@ -61,6 +61,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleList'
+              example:
+                count: 42
+                next: https://api.example.com/api/v1/articles?page=3
+                previous: https://api.example.com/api/v1/articles?page=1
+                results:
+                  - id: art_01HZX3K9P2QY
+                    title: Designing a Contract-First API
+                    slug: designing-a-contract-first-api
+                    body: A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.
+                    status: published
+                    author_id: usr_01HZX3K9P2
+                    tags:
+                      - api
+                      - typespec
+                    created_at: '2026-06-01T10:00:00Z'
+                    updated_at: '2026-06-02T08:30:00Z'
+                  - id: art_01HZX4M0R3ZB
+                    title: Mocking the Contract with Prism
+                    slug: mocking-the-contract-with-prism
+                    body: Prism turns the OpenAPI document into a live mock so the frontend can build before the backend exists.
+                    status: draft
+                    author_id: usr_01HZX3K9P2
+                    tags:
+                      - prism
+                      - mock
+                    created_at: '2026-06-03T09:15:00Z'
+                    updated_at: '2026-06-03T09:15:00Z'
         '401':
           description: 401 — authentication is missing or invalid.
           content:
@@ -104,12 +131,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
+              example:
+                id: art_01HZX3K9P2QY
+                title: Designing a Contract-First API
+                slug: designing-a-contract-first-api
+                body: A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.
+                status: published
+                author_id: usr_01HZX3K9P2
+                tags:
+                  - api
+                  - typespec
+                created_at: '2026-06-01T10:00:00Z'
+                updated_at: '2026-06-02T08:30:00Z'
         '400':
           description: 400 — request body failed validation.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrors'
+              example:
+                errors:
+                  - field: title
+                    code: required
+                    message: This field is required.
         '401':
           description: 401 — authentication is missing or invalid.
           content:
@@ -128,6 +172,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: An article with this slug already exists.
         '429':
           description: 429 — rate limit exceeded; retry after the indicated delay.
           headers:
@@ -149,6 +195,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ArticleCreate'
+            example:
+              title: Designing a Contract-First API
+              body: A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.
+              tags:
+                - api
+                - typespec
+              status: published
         description: Article creation payload.
       security:
         - BearerAuth: []
@@ -173,6 +226,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
+              example:
+                id: art_01HZX3K9P2QY
+                title: Designing a Contract-First API
+                slug: designing-a-contract-first-api
+                body: A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.
+                status: published
+                author_id: usr_01HZX3K9P2
+                tags:
+                  - api
+                  - typespec
+                created_at: '2026-06-01T10:00:00Z'
+                updated_at: '2026-06-02T08:30:00Z'
         '401':
           description: 401 — authentication is missing or invalid.
           content:
@@ -191,6 +256,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Article not found.
         '429':
           description: 429 — rate limit exceeded; retry after the indicated delay.
           headers:
@@ -228,6 +295,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
+              example:
+                id: art_01HZX3K9P2QY
+                title: Designing a Contract-First API
+                slug: designing-a-contract-first-api
+                body: A contract-first workflow lets backend and frontend teams start in parallel by agreeing on the wire shape up front.
+                status: archived
+                author_id: usr_01HZX3K9P2
+                tags:
+                  - api
+                  - typespec
+                created_at: '2026-06-01T10:00:00Z'
+                updated_at: '2026-06-04T11:45:00Z'
         '400':
           description: 400 — request body failed validation.
           content:
@@ -252,6 +331,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Article not found.
         '409':
           description: 409 — the request conflicts with the current state of the resource.
           content:
@@ -279,6 +360,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ArticleUpdate'
+            example:
+              status: archived
         description: Article update payload.
       security:
         - BearerAuth: []
@@ -316,6 +399,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Article not found.
         '429':
           description: 429 — rate limit exceeded; retry after the indicated delay.
           headers:
@@ -348,18 +433,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenPair'
+              example:
+                access: eyJhbGciOiJIUzI1NiJ9.access
+                refresh: r3fr3sh-tok3n-login
         '400':
           description: 400 — request body failed validation.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrors'
+              example:
+                errors:
+                  - field: email
+                    code: invalid
+                    message: Enter a valid email address.
         '401':
           description: 401 — authentication is missing or invalid.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Authentication credentials were not provided or are invalid.
       tags:
         - auth
       requestBody:
@@ -368,6 +463,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: ada@example.com
+              password: S3cure-pass!
         description: Login credentials.
       security:
         - {}
@@ -394,6 +492,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshRequest'
+            example:
+              refresh: r3fr3sh-tok3n-login
         description: Optional refresh token to revoke.
   /auth/refresh:
     post:
@@ -408,6 +508,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessToken'
+              example:
+                access: eyJhbGciOiJIUzI1NiJ9.access-new
+                refresh: r3fr3sh-rotated-tok3n
         '400':
           description: 400 — request body failed validation.
           content:
@@ -420,6 +523,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Authentication credentials were not provided or are invalid.
       tags:
         - auth
       requestBody:
@@ -428,6 +533,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshRequest'
+            example:
+              refresh: r3fr3sh-tok3n-login
         description: The refresh token to exchange.
       security:
         - {}
@@ -444,18 +551,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegisterResponse'
+              example:
+                user:
+                  id: usr_01HZX3K9P2
+                  email: ada@example.com
+                  name: Ada Lovelace
+                tokens:
+                  access: eyJhbGciOiJIUzI1NiJ9.reg-access
+                  refresh: r3fr3sh-tok3n-reg
         '400':
           description: 400 — request body failed validation.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrors'
+              example:
+                errors:
+                  - field: email
+                    code: invalid
+                    message: Enter a valid email address.
         '409':
           description: 409 — the request conflicts with the current state of the resource.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: A user with this email already exists.
       tags:
         - auth
       requestBody:
@@ -464,6 +586,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RegisterRequest'
+            example:
+              email: ada@example.com
+              password: S3cure-pass!
+              name: Ada Lovelace
         description: Registration credentials.
       security:
         - {}
@@ -480,6 +606,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceTokenResponse'
+              example:
+                access: eyJhbGciOiJIUzI1NiJ9.svc-access
+                token_type: Bearer
+                expires_in: 900
+                scope: articles:read articles:write
         '400':
           description: 400 — request body failed validation.
           content:
@@ -492,6 +623,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDetail'
+              example:
+                detail: Authentication credentials were not provided or are invalid.
       tags:
         - auth
       requestBody:
@@ -500,6 +633,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ServiceTokenRequest'
+            example:
+              grant_type: client_credentials
+              client_id: svc_articles_sync
+              client_secret: cs_7f3a9b2e1d6c4805a1f2
+              scope: articles:read articles:write
         description: Client-credentials token request.
       security:
         - {}
@@ -538,12 +676,15 @@ components:
         title:
           type: string
           description: Article title.
+          x-faker: lorem.sentence
         slug:
           type: string
           description: URL-friendly slug.
+          x-faker: lorem.slug
         body:
           type: string
           description: Article body content.
+          x-faker: lorem.paragraphs
         status:
           allOf:
             - $ref: '#/components/schemas/ArticleStatus'
@@ -560,10 +701,12 @@ components:
           type: string
           format: date-time
           description: Creation timestamp (UTC).
+          x-faker: date.recent
         updated_at:
           type: string
           format: date-time
           description: Last update timestamp (UTC).
+          x-faker: date.recent
       description: A blog-style article.
     ArticleCreate:
       type: object
@@ -796,9 +939,11 @@ components:
         email:
           type: string
           description: User email address.
+          x-faker: internet.email
         name:
           type: string
           description: Optional display name.
+          x-faker: name.fullName
       description: A registered user account.
     ValidationErrors:
       type: object
