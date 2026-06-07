@@ -2,6 +2,13 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-07 — Fix /config command conflict (PR #8)
+
+- **Проблема:** `.claude/commands/config.md` перекривав вбудовану команду Claude Code `/config` (UI налаштувань).
+- **Рішення:** Перейменовано `config.md` → `check-config.md`; оновлено посилання у `CLAUDE.md`.
+- **PR #8** (`chore/rename-config-command`) — squash-merged до `main`.
+- Немає змін контракту; breaking-change аналіз не потрібен.
+
 ## 2026-06-07 — Release v0.1.1
 
 - **`/audit`** → рекомендовано `/release v0.1.1` (PR #6 злито, всі гейти зелені, тег відсутній).

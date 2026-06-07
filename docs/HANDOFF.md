@@ -22,7 +22,10 @@
   - Всі gates GREEN; patch bump (infrastructure-only diff).
   - Tag `v0.1.1` запушено; GitHub Release: https://github.com/VadayI/claude-api-contract/releases/tag/v0.1.1
   - Raw URL: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.1/openapi.yml`
-  - CHANGELOG commit на local `main` (1 commit ahead of origin/main — push через PR або напряму).
+- **Fix /config conflict PR #8 — DONE ✅** (2026-06-07):
+  - `config.md` → `check-config.md` (проектна команда тепер `/check-config`).
+  - `CLAUDE.md` оновлено. Вбудована `/config` знову доступна.
+  - `main` = `origin/main`, дерево чисте.
 
 ## Template vs requirements
 
@@ -34,7 +37,7 @@
 
 **contract-repo:**
 - [x] **`v0.1.1` тег** — DONE ✅ (2026-06-07). Raw URL для консумерів: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.1/openapi.yml`
-- [ ] Push CHANGELOG commit до origin/main (1 commit ahead — `chore: release v0.1.1 — CHANGELOG`).
+- [x] Push CHANGELOG commit до origin/main — DONE ✅ (main = origin/main після PR #8).
 - [ ] OAuth2 scope descriptions — заблоковано TypeSpec 1.x; чекати upstream.
 - [ ] `last-page` null example — заблоковано Spectral/AJV bug; STUB у `spec/articles.tsp:108`.
 

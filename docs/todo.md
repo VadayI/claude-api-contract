@@ -12,7 +12,7 @@
 - [x] Release `v0.1.1` — tag + GitHub Release (2026-06-07). Patch: production server + tokenUrl.
 
 ## Follow-ups (non-blocking, без пріоритету)
-- [ ] Push CHANGELOG commit до origin/main (`chore: release v0.1.1 — CHANGELOG`, 1 ahead).
+- [x] Push CHANGELOG commit до origin/main — DONE (main = origin/main після PR #8).
 - [ ] react-mui PR3: 429 + Retry-After backoff у transport.
 - [ ] react-mui PR4: `npm run mock` (Prism проти vendored openapi.yml).
 - [ ] claude-django: власний CI воркфлоу + required status check на `main`.
