@@ -16,6 +16,6 @@
 - [ ] claude-django: власний CI воркфлоу + required status check на `main`.
 - [ ] claude-django: `contract.lock.json`/sha256 (наразі tag-pin only).
 - [ ] claude-react-mui: branch protection на `main`.
-- [ ] contract-repo: OAuth2 scope descriptions (`spec/models/security.tsp`).
-- [ ] contract-repo: реальний `@server`/`tokenUrl` (коли backend з'явиться).
-- [ ] contract-repo: `last-page` list example (після Spectral/AJV null-bug fix).
+- [ ] contract-repo: OAuth2 scope descriptions — заблоковано: TypeSpec 1.x `@typespec/http` не підтримує `description` на `OAuth2Scope`; відкрити issue upstream або дочекатися нової версії.
+- [x] contract-repo: реальний `@server`/`tokenUrl` — DONE (PR #6, production placeholder `https://api.example.com`).
+- [ ] contract-repo: `last-page` list example — заблоковано: Spectral/AJV null-nullable-3.1 bug ще присутній; STUB-коментар у `spec/articles.tsp:108`.

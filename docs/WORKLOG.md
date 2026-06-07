@@ -2,6 +2,22 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-07 — Cosmetic polish (PR #5 + PR #6) + clean-up гілок
+
+- **Аналіз REQUIREMENTS/PROJECT:** звірка `REQUIREMENTS-claude-api-contract.md` + `PROJECT.md` з фактичним станом → шаблон відповідає вимогам на ~98%. Єдина реальна неточність — застарілий README.
+- **Cosmetic polish PR #6** (`chore/cosmetic-polish-v0.1.1`), PATCH → v0.1.1-кандидат:
+  - `spec/main.tsp`: додано `@server("https://api.example.com","Production")` поряд з mock.
+  - `spec/models/security.tsp`: `tokenUrl` → `https://api.example.com/auth/token`.
+  - `.spectral.yaml`: silenced `oas3-server-not-example.com` (intentional placeholder; comment).
+  - `.oasdiff-ignore.txt`: створено порожній allow-list з інструкціями.
+  - `README.md`: статус "Etap 1 scaffolding" → "v0.1.0 released + Etap 4 done".
+  - `CHANGELOG.md` + `docs/api/INDEX.md`: оновлено.
+  - Scope descriptions — не застосовано: TypeSpec 1.x `@typespec/http` не підтримує `description` в `OAuth2Scope` у flow-літералах. Залишено у backlog.
+  - Last-page null example — не застосовано: Spectral/AJV null-nullable-3.1 bug ще присутній. STUB-коментар доданий. Залишено у backlog.
+- **Gates PR #6:** `npm run validate` ✅ drift + lint + examples; `npm run breaking` ✅ no ERR; mock smoke ✅ 11/11. contract-reviewer APPROVED (з одним блокером — стале notes у endpoints.json, виправлено в 304cb67). breaking-analyst: PATCH, 0 ERR.
+- **PR #5** (`docs/wrap-up-etap4`, відкритий ще з попередньої сесії): MERGED ✅ — Etap 4 wrap-up docs (HANDOFF/WORKLOG/todo/lessons) тепер на `main`.
+- **Гілки:** усі stale гілки видалено. `main` — єдина гілка. Список: `chore/release-v0.1.0`, `chore/wrap-up-v0.1.0`, `docs/wrap-up-etap4`, `chore/cosmetic-polish-v0.1.1` (видалено при merge).
+
 ## 2026-06-07 — Wrap-up: Etap 4 повністю завершено
 
 - **claude-react-mui PR #12** (Bearer + refresh, ADR 0021): MERGED ✅. CI: Quality Gates SUCCESS; E2E FAILURE — флапаючий тест у consumer-repo, не стосується контракту. Гілку видалено.
