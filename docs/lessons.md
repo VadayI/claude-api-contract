@@ -25,3 +25,11 @@
 ## Examples & TypeSpec @opExample (Etap 3)
 - **`@opExample` форми залежать від типу відповіді.** Для відповідей-прямих-типів (`TokenPair`, `Article`, `ListResponse<Article>`) приклад подається плоско. Для відповідей із явним `@statusCode`/`@body` (201 і ВСІ помилки 400/401/403/404/409/429) `@opExample` вимагає повної форми конверта `#{ statusCode: N, body: #{...} }`, інакше компілятор кидає `unassignable`. Кілька `@opExample` на операції розкладаються по статус-кодах за формою типу. Request-приклад — через `parameters: #{ body: #{...} }` (+ `id` для операцій із path-параметром).
 - **Spectral 6.16/AJV падає на `null` у прикладах проти nullable-3.1-схем.** Будь-яке значення `null` у `example` проти `type: [T, "null"]` / `anyOf [..., {type: "null"}]` (навіть із `format: uri`) валить лінтер крешем `Cannot read properties of null (reading 'enum')` — це падіння процесу, а не lint-finding, тож examples-гейт червоніє «нізащо». Обхід: не клади літеральний `null` у приклади nullable-полів. Для list-envelope приклад роби «середньою сторінкою» пагінації (`next`/`previous` — URL, не null) — він валідний проти схеми і не фейковий. Поведінку самих полів `null` усе одно описує схема (`next: url | null`).
+
+## Stacked PRs + squash-merge (consumer repos)
+
+- **`gh pr merge --squash --delete-branch` на base-гілці auto-CLOSE всі stacked PR**, що мають цю гілку як base. GitHub не перебазовує стек — він просто закриває залежні PR.
+- **Безпечні варіанти:**
+  1. Squash-merge intermediate PR **без `--delete-branch`**, потім вручну rebase стек, потім delete старі гілки.
+  2. Після squash-merge intermediate PR зробити `git rebase origin/main` на наступній гілці → `push --force-with-lease` → перестворити PR з `--base main`.
+- **Варіант 2** (rebase + перестворення PR) — чистіший, бо в результаті PR містить лише власні зміни відносно main.

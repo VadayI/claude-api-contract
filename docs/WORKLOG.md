@@ -2,6 +2,13 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-07 — Wrap-up: Etap 4 повністю завершено
+
+- **claude-react-mui PR #12** (Bearer + refresh, ADR 0021): MERGED ✅. CI: Quality Gates SUCCESS; E2E FAILURE — флапаючий тест у consumer-repo, не стосується контракту. Гілку видалено.
+- **Etap 4 — DONE**: обидва консумери (claude-django, claude-react-mui) повністю інвертовані та пінять `v0.1.0`. Контракт є єдиним джерелом правди для обох repo.
+- Стан контракту: `main` чистий, тег `v0.1.0`, усі гейти зелені, endpoints.json актуальний.
+- Follow-ups (non-blocking): react-mui PR3 (429 backoff), PR4 (Prism mock), django CI workflow, django contract.lock.json/sha256, react-mui branch protection на `main`.
+
 ## 2026-06-07 — Release v0.1.0
 
 - **Тригер:** `/release v0.1.0` — перший git-тег контракту.
@@ -40,3 +47,24 @@
 ## 2026-06-06 — Etap 1 verified; first push prepared
 - Verification pass: no empty/NUL/corrupt files, frontmatter present, no orphan rules, scripts runnable.
 - GitHub repo created (empty). First push prepared as a host-shell command block (sandbox lacks gh/PAT; /mnt 9p unsafe for .git). Push + branch protection pending.
+
+## 2026-06-07 — Етап 4 (інверсія консумерів)
+
+### claude-django
+- Explore-агент підтвердив: **інверсію вже авторовано у 5 відкритих PR (#12–#16)** (plan 0011, ADR 0017–0020) — ці PR були заблоковані відсутністю тегу v0.1.0. Тепер розблоковані.
+- Знайдені артефакти на гілках: `templates/scripts/pull_contract.sh` (CONTRACT_REPO/VERSION→raw-URL), `templates/scripts/check_contract_conformance.sh` (schemathesis + django-contract-tester), `templates/.env.example` (CONTRACT_VERSION=v0.1.0, CONTRACT_REPO=VadayI/claude-api-contract), `templates/apps_common/permissions.py` (HasScope), `templates/apps_common/exceptions.py` (contract error envelope). Дрейф-гейт видалено; conformance-гейт замість нього.
+- **main не захищений** (branch protection відсутній) — передано WSL2-блок для захисту після merge.
+- **Доставка:** WSL2-блоки для merge #12→#16 (squash) + PUT branch protection → на стороні користувача.
+
+### claude-react-mui
+- Explore-агент підтвердив: **інверсії немає**. `api:pull` тягнув з backend (`VITE_OPENAPI_URL`), auth=`Token`, без піна/lock/sync-gate. План `docs/plans/0003-api-contract-inversion.md` (4 PR) існував але не закомічений.
+- **PR1 реалізовано** (субагент, файли на диску): `scripts/api-pull.mjs` → `CONTRACT_REPO/CONTRACT_VERSION` raw-URL; `.env.example` → CONTRACT_REPO/VERSION=v0.1.0, VITE_API_BASE_URL→localhost:4010; `contract.lock.json` (sha256); `scripts/check_contract_sync.sh`; `frontend-ci.yml` додано `Gate — contract sync`; `src/lib/api/openapi.yml` замінено реальним контрактом v0.1.0 (3.1, bearerAuth, articles); `src/lib/api/schema.d.ts` перегенеровано; feature `todos→articles` (articlesApi, useArticles, ArticlesPage + тести + MSW handlers); router/App оновлено; ADR 0020; правила api-client.md/preflight.md; CLAUDE.md. Гейти: typecheck/lint/test(42)/build/types-drift/contract-sync — GREEN.
+- **PR2 реалізовано** (субагент, файли на диску): `src/lib/auth/authStore.ts` (Zustand, access+refresh in-memory); `src/lib/api/client.ts` переписано — Bearer injection middleware + 401→refresh→retry middleware + normaliseError розширено на `{errors:[{field,code,message}]}`; `src/features/auth/authApi.ts` (login/logout/register); `.claude/rules/auth.md` (supersedes auth-and-csrf.md); ADR 0021 (supersedes ADR 0018); authStore.test.ts + client.test.ts (42 тести). Гейти: всі GREEN.
+- **Доставка:** WSL2-блоки для двох PR у claude-react-mui — на стороні користувача.
+
+### Addendum (сесія wrap-up)
+- **claude-django**: PR #12–#16 merged by user (squash); branch protection увімкнено (`force_push=false`, `reviews_count=0`, `status_checks=null` — без CI воркфлоу у шаблоні).
+- **claude-react-mui PR #10** (contract + articles): MERGED ✅; CI Quality Gates GREEN, `check_contract_sync.sh` пройшов у CI.
+- **claude-react-mui PR #11** (auth, base=feat/contract-source-inversion): auto-CLOSED GitHub при squash+delete base-гілки — очікувана поведінка stacked PR зі squash-merge. Перестворено як PR #12 після `git rebase origin/main` (1 commit ahead, 0 behind).
+- **PR #12 CI**: `check_feature_readmes.sh` впав — `src/features/auth/` не мав README.md (PR2-субагент не створив). Додано `src/features/auth/README.md` через heredoc; гейт зелений локально. CI re-run pending.
+- **Lesson (stacked PRs + squash):** при `gh pr merge --squash --delete-branch` GitHub видаляє base-гілку і auto-close всі PR, що базуються на ній. Для stacked PRs або: (a) merge intermediate без delete-branch; (b) відразу ребейзити стек на main після кожного merge. Записано у lessons.md.

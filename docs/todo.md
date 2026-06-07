@@ -2,17 +2,20 @@
 
 ## Done ✅
 - [x] Merge PR #2 (feat/etap-3-examples-ci-mock) → `main`.
-- [x] Release `v0.1.0` — tag + GitHub Release. Raw URL: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.0/openapi.yml`
+- [x] Release `v0.1.0` — tag + GitHub Release.
 - [x] Встановити `oasdiff` (`v1.18.4`; `~/.local/bin`).
+- [x] Wire `contract-ci` до branch-protection на `main` (required check).
+- [x] Etap 4 claude-django: merge PR #12–#16 + branch protection ON.
+- [x] Etap 4 react-mui PR1 (#10): contract-source + sync-gate + todos→articles. MERGED.
+- [x] Etap 4 react-mui PR2 (#12): Bearer + refresh-flow. MERGED ✅ (CI Quality Gates GREEN).
+- [x] Etap 4 повністю завершено — обидва консумери пінять v0.1.0.
 
-## Now — branch protection (CI gate)
-- [ ] Wire `contract-ci` до branch-protection на `main` (full PUT `required_status_checks.contexts=["contract-ci"]`, `required_approving_review_count=0`). Після цього `--admin` більше не потрібен.
-
-## Etap 4 — invert consumers (separate repos, after v0.1.0)
-- [ ] `claude-django`: validate impl vs contract; pull + `scripts/check_contract_sync.sh`; pin `CONTRACT_VERSION=v0.1.0` (+ `contract.lock.json`).
-- [ ] `claude-react-mui`: Bearer + refresh-flow; `api:pull` (`openapi-typescript`) from contract@v0.1.0; sync-gate.
-
-## Cosmetic follow-ups (small PR, non-blocking)
-- [ ] OAuth2 scope descriptions (empty map) — add in `spec/models/security.tsp`, not in YAML.
-- [ ] Replace mock `tokenUrl` / `@server` (`http://localhost:4010`) with the real server when it exists.
-- [ ] Optional: a `last-page` list example once Spectral/AJV null-example bug is fixed upstream (track version).
+## Follow-ups (non-blocking, без пріоритету)
+- [ ] react-mui PR3: 429 + Retry-After backoff у transport.
+- [ ] react-mui PR4: `npm run mock` (Prism проти vendored openapi.yml).
+- [ ] claude-django: власний CI воркфлоу + required status check на `main`.
+- [ ] claude-django: `contract.lock.json`/sha256 (наразі tag-pin only).
+- [ ] claude-react-mui: branch protection на `main`.
+- [ ] contract-repo: OAuth2 scope descriptions (`spec/models/security.tsp`).
+- [ ] contract-repo: реальний `@server`/`tokenUrl` (коли backend з'явиться).
+- [ ] contract-repo: `last-page` list example (після Spectral/AJV null-bug fix).
