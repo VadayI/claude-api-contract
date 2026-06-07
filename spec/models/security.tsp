@@ -12,7 +12,7 @@ alias ServiceOAuth2<Scopes extends string[]> = OAuth2Auth<
   [
     {
       type: OAuth2FlowType.clientCredentials;
-      tokenUrl: "https://api.example.com/auth/token";
+      tokenUrl: "https://api.example.com/api/v1/auth/token";
     }
   ],
   Scopes

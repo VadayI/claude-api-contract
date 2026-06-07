@@ -26,6 +26,6 @@ Optional `$ARGUMENTS`: a port (overrides `PRISM_PORT`, default 4010) and/or `--d
    ```
    (@.claude/rules/prism-mock.md)
 
-3. Dispatch `mock-validator` for the smoke test: hit each endpoint with the documented request, confirm two-way validation and that `/auth/*` issues usable tokens.
+3. Dispatch `mock-validator` for the smoke test: hit each endpoint with the documented request, confirm two-way validation and that `/api/v1/auth/*` issues usable tokens.
 
 4. Report the base URL (`http://localhost:<port>`) and the smoke results.

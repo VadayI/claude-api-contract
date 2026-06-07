@@ -46,7 +46,7 @@ for _ in $(seq 1 30); do
     cat "$LOG"
     exit 1
   fi
-  if curl -s -o /dev/null -m 2 -X POST "${BASE}/auth/login" \
+  if curl -s -o /dev/null -m 2 -X POST "${BASE}/api/v1/auth/login" \
         -H "$CT" -d @examples/auth/login.request.json 2>/dev/null; then
     ready=1
     break
@@ -79,15 +79,15 @@ check() {
 echo "[mock] smoke against ${BASE}"
 
 # Public auth endpoints (no token required).
-check "POST /auth/register" 201 -X POST "${BASE}/auth/register" \
+check "POST /api/v1/auth/register" 201 -X POST "${BASE}/api/v1/auth/register" \
   -H "$CT" -H 'Prefer: code=201' -d @examples/auth/register.request.json
-check "POST /auth/login" 200 -X POST "${BASE}/auth/login" \
+check "POST /api/v1/auth/login" 200 -X POST "${BASE}/api/v1/auth/login" \
   -H "$CT" -H 'Prefer: code=200' -d @examples/auth/login.request.json
-check "POST /auth/refresh" 200 -X POST "${BASE}/auth/refresh" \
+check "POST /api/v1/auth/refresh" 200 -X POST "${BASE}/api/v1/auth/refresh" \
   -H "$CT" -H 'Prefer: code=200' -d @examples/auth/refresh.request.json
-check "POST /auth/token" 200 -X POST "${BASE}/auth/token" \
+check "POST /api/v1/auth/token" 200 -X POST "${BASE}/api/v1/auth/token" \
   -H "$CT" -H 'Prefer: code=200' -d @examples/auth/token.request.json
-check "POST /auth/logout" 204 -X POST "${BASE}/auth/logout" \
+check "POST /api/v1/auth/logout" 204 -X POST "${BASE}/api/v1/auth/logout" \
   -H "$AUTH" -H "$CT" -d @examples/auth/refresh.request.json
 
 # Secured article endpoints — bearer required (Prism enforces security).

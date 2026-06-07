@@ -420,7 +420,7 @@ paths:
         - BearerAuth: []
         - OAuth2Auth:
             - articles:write
-  /auth/login:
+  /api/v1/auth/login:
     post:
       operationId: loginUser
       summary: Log in
@@ -469,7 +469,7 @@ paths:
         description: Login credentials.
       security:
         - {}
-  /auth/logout:
+  /api/v1/auth/logout:
     post:
       operationId: logoutUser
       summary: Log out
@@ -495,7 +495,7 @@ paths:
             example:
               refresh: r3fr3sh-tok3n-login
         description: Optional refresh token to revoke.
-  /auth/refresh:
+  /api/v1/auth/refresh:
     post:
       operationId: refreshToken
       summary: Refresh the access token
@@ -538,7 +538,7 @@ paths:
         description: The refresh token to exchange.
       security:
         - {}
-  /auth/register:
+  /api/v1/auth/register:
     post:
       operationId: registerUser
       summary: Register a new user
@@ -593,7 +593,7 @@ paths:
         description: Registration credentials.
       security:
         - {}
-  /auth/token:
+  /api/v1/auth/token:
     post:
       operationId: issueServiceToken
       summary: Issue a service token
@@ -964,7 +964,7 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: https://api.example.com/auth/token
+          tokenUrl: https://api.example.com/api/v1/auth/token
           scopes:
             articles:read: ''
             articles:write: ''

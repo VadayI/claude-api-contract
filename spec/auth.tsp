@@ -123,7 +123,7 @@ model ServiceTokenResponse {
 // ---------------------------------------------------------------------------
 
 @tag("auth")
-@route("/auth/register")
+@route("/api/v1/auth/register")
 @post
 @summary("Register a new user")
 @doc("Create a new user account. Public endpoint.")
@@ -187,7 +187,7 @@ op registerUser(
   | ConflictError;
 
 @tag("auth")
-@route("/auth/login")
+@route("/api/v1/auth/login")
 @post
 @summary("Log in")
 @doc("Exchange user credentials for an access + refresh token pair. Public endpoint.")
@@ -230,7 +230,7 @@ op loginUser(
 ): TokenPair | ValidationError | UnauthorizedError;
 
 @tag("auth")
-@route("/auth/refresh")
+@route("/api/v1/auth/refresh")
 @post
 @summary("Refresh the access token")
 @doc("Exchange a valid refresh token for a new access token. Public endpoint.")
@@ -257,7 +257,7 @@ op refreshToken(
 ): AccessToken | ValidationError | UnauthorizedError;
 
 @tag("auth")
-@route("/auth/logout")
+@route("/api/v1/auth/logout")
 @post
 @summary("Log out")
 @doc("Invalidate the current session; optionally revoke the supplied refresh token.")
@@ -274,7 +274,7 @@ op logoutUser(
   | UnauthorizedError;
 
 @tag("auth")
-@route("/auth/token")
+@route("/api/v1/auth/token")
 @post
 @summary("Issue a service token")
 @doc("Service-to-service client-credentials grant. Returns a scoped access token. Public endpoint.")
