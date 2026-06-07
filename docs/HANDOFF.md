@@ -18,6 +18,11 @@
   - `.oasdiff-ignore.txt` створено (порожній allow-list).
   - `README.md` статус виправлено.
   - `main` — єдина гілка, всі stale локальні та remote гілки видалено.
+- **Release v0.1.1 — DONE ✅** (2026-06-07):
+  - Всі gates GREEN; patch bump (infrastructure-only diff).
+  - Tag `v0.1.1` запушено; GitHub Release: https://github.com/VadayI/claude-api-contract/releases/tag/v0.1.1
+  - Raw URL: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.1/openapi.yml`
+  - CHANGELOG commit на local `main` (1 commit ahead of origin/main — push через PR або напряму).
 
 ## Template vs requirements
 
@@ -28,7 +33,8 @@
 ## What's next (follow-ups, без жорсткого дедлайну)
 
 **contract-repo:**
-- [ ] **`v0.1.1` тег** — PR #6 злито; всі gates зелені. Запустити `/release v0.1.1` коли зручно.
+- [x] **`v0.1.1` тег** — DONE ✅ (2026-06-07). Raw URL для консумерів: `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.1/openapi.yml`
+- [ ] Push CHANGELOG commit до origin/main (1 commit ahead — `chore: release v0.1.1 — CHANGELOG`).
 - [ ] OAuth2 scope descriptions — заблоковано TypeSpec 1.x; чекати upstream.
 - [ ] `last-page` null example — заблоковано Spectral/AJV bug; STUB у `spec/articles.tsp:108`.
 
@@ -58,7 +64,7 @@
 
 ## Environment notes (see docs/lessons.md)
 
-- `oasdiff v1.18.4` у `~/.local/bin`; `~/.bashrc` оновлено; `PATH="$HOME/.local/bin:$PATH" npm run breaking`.
+- `oasdiff v1.18.4` встановлено у `~/bin/oasdiff` (сесія 2026-06-07); `~/bin` не додано у `.bashrc` постійно — перед `npm run breaking` потрібен `export PATH="$HOME/bin:$PATH"`.
 - git/`gh` — тільки з host/WSL2 shell.
 - contract-repo `main`: branch protection ON (`contract-ci` required, reviews=0).
 - claude-django `main`: branch protection ON (PR-only, без CI, reviews=0).

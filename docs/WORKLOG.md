@@ -2,6 +2,21 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-07 — Release v0.1.1
+
+- **`/audit`** → рекомендовано `/release v0.1.1` (PR #6 злито, всі гейти зелені, тег відсутній).
+- **`oasdiff` не знайдений** при старті сесії (`env-detect.json: false`). Встановлено `v1.18.4` pre-built binary → `~/bin/oasdiff`. Примітка: `~/bin` не прописаний у `.bashrc` постійно — потрібен `export PATH="$HOME/bin:$PATH"` перед запуском або оновлення `.bashrc`.
+- **`/release v0.1.1`** виконано:
+  - `npm run api:compile && npm run api:bundle` → OK.
+  - `npm run validate` → GREEN (drift + lint + examples).
+  - `npm run breaking` → OK, no ERR-level changes vs `v0.1.0`.
+  - `oasdiff diff v0.1.0 → HEAD`: зміни лише infrastructure (added `servers: https://api.example.com`; `tokenUrl` localhost→production). Patch bump підтверджено.
+  - `CHANGELOG.md` оновлено (docs-writer): `[Unreleased]` → `[v0.1.1] — 2026-06-07`.
+  - Тег `v0.1.1` створено, запушено до origin.
+  - GitHub Release створено: https://github.com/VadayI/claude-api-contract/releases/tag/v0.1.1
+  - **CHANGELOG commit на local `main`** (не пушений окремо — тег вказує на цей commit).
+- **Raw URL для консумерів:** `https://raw.githubusercontent.com/VadayI/claude-api-contract/v0.1.1/openapi.yml`
+
 ## 2026-06-07 — Cosmetic polish (PR #5 + PR #6) + clean-up гілок
 
 - **Аналіз REQUIREMENTS/PROJECT:** звірка `REQUIREMENTS-claude-api-contract.md` + `PROJECT.md` з фактичним станом → шаблон відповідає вимогам на ~98%. Єдина реальна неточність — застарілий README.

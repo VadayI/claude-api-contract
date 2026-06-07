@@ -9,8 +9,10 @@
 - [x] Etap 4 react-mui PR1 (#10): contract-source + sync-gate + todos→articles. MERGED.
 - [x] Etap 4 react-mui PR2 (#12): Bearer + refresh-flow. MERGED ✅ (CI Quality Gates GREEN).
 - [x] Etap 4 повністю завершено — обидва консумери пінять v0.1.0.
+- [x] Release `v0.1.1` — tag + GitHub Release (2026-06-07). Patch: production server + tokenUrl.
 
 ## Follow-ups (non-blocking, без пріоритету)
+- [ ] Push CHANGELOG commit до origin/main (`chore: release v0.1.1 — CHANGELOG`, 1 ahead).
 - [ ] react-mui PR3: 429 + Retry-After backoff у transport.
 - [ ] react-mui PR4: `npm run mock` (Prism проти vendored openapi.yml).
 - [ ] claude-django: власний CI воркфлоу + required status check на `main`.
