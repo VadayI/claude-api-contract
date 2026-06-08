@@ -10,13 +10,4 @@
 #   3. Add the line below and reference the ADR.
 #
 # Current allow-list:
-
-# --- ADR 0004 — version-prefix the auth paths (/auth/* -> /api/v1/auth/*) ---
-# docs/decisions/0004-version-prefix-auth-paths.md
-# Intentional ERR-level path rename; v0.2.0 (pre-1.0 breaking = MINOR bump).
-# Both consumers (claude-django, claude-react-mui) update their auth base paths.
-api POST /auth/login api path removed without deprecation
-api POST /auth/logout api path removed without deprecation
-api POST /auth/refresh api path removed without deprecation
-api POST /auth/register api path removed without deprecation
-api POST /auth/token api path removed without deprecation
+# (empty — add entries here as intentional breaking changes are accepted)
