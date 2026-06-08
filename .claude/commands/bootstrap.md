@@ -37,7 +37,12 @@ Read `env-detect.json`: `platform_supported`, `node_supported`, `gh.authenticate
 
 ## Mode A flow
 1. `bash scripts/install.sh` (npm deps + oasdiff check).
-2. Scaffold the contract skeleton from `templates/`: `.spectral.yaml`, `spec/main.tsp` + `spec/models/` (envelopes), `spec/auth.tsp` (D1+D5 endpoints), a sample resource, `examples/`, `docs/api/INDEX.md`, `.github/workflows/contract-ci.yml`, `CHANGELOG.md`.
+2. Author the contract skeleton via `tsp-author`. These files exist in the scaffold already — **no copying needed**: `.spectral.yaml`, `docs/api/INDEX.md`, `.github/workflows/contract-ci.yml`, `CHANGELOG.md`. The following must be authored fresh:
+   - `spec/main.tsp` — `@service`, `@server`, global `bearerAuth` security scheme, imports of the other spec files.
+   - `spec/models/` — `ListResponse<T>`, `ErrorDetail`, `ValidationErrors`, `Retry-After` header model (@.claude/rules/api-envelope.md).
+   - `spec/auth.tsp` — all user-flow + S2S auth endpoints (@.claude/rules/auth-contract.md).
+   - `examples/auth/` — representative request/response examples for the auth endpoints.
+   The first domain resource is designed later via the full pipeline (`ba → api-architect → tsp-author`).
 3. `npm run api:compile && npm run api:bundle` → first `openapi.yml`.
 4. `npm run validate` green; `npm run mock` smoke via `mock-validator`.
 5. `git init`, link the GitHub remote, first PR (never push to `main`).

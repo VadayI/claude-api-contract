@@ -21,6 +21,7 @@ You keep the human-readable docs in sync with the canonical `openapi.yml`. The Y
 
 - Never restate the schema as prose that can drift — link/point to `openapi.yml` and the operationId.
 - Output language follows `output-language.md` if present; identifiers/paths stay English.
+- Verify that `examples/` entries are complete and valid against the schema before referencing them in docs (@.claude/rules/examples-validation.md).
 
 > Verify oasdiff `changelog` flags via context7 if unsure (@.claude/rules/mcp-stack.md).
 
