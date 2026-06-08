@@ -147,11 +147,17 @@ claude                     # start the Claude Code CLI from the repo root
 Inside Claude Code, run:
 
 ```
-/doctor     # audits the environment and reports any missing tools
-/bootstrap  # scaffolds spec/ and examples/ (Mode A — fresh project)
+/doctor      # audits the environment and reports any missing tools
+/bootstrap   # scaffolds spec/ and examples/ AND personalizes identity (Mode A)
+/personalize # (optional) re-run identity rewrite or prose pass at any time
 ```
 
 Then follow the prompts. See **Quick start** below for the full command sequence.
+
+> **Template identity is rewritten automatically by `/bootstrap`** — it replaces
+> `VadayI/claude-api-contract` URLs, README title, `package.json` name/version with
+> your owner/repo. Run `/personalize` standalone if you need to re-run or add
+> the prose pass (README description, consumer names).
 
 ---
 
@@ -195,7 +201,8 @@ Or via npm: `npm run clean`
 
 ```
 /doctor          # audit the environment, recommends /bootstrap
-/bootstrap        # scaffold the contract skeleton (Mode A) or resume (Mode B)
+/bootstrap        # scaffold + personalize identity (Mode A) or resume (Mode B)
+/personalize      # (standalone) re-run token + prose identity rewrite
 /synthesize-brief # (optional) build PROJECT.md from docs/**
 /preflight        # build-input gate
 # then design the first resource via the pipeline
