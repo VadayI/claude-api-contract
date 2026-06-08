@@ -203,7 +203,7 @@ Or via npm: `npm run clean`
 /doctor          # audit the environment, recommends /bootstrap
 /bootstrap        # scaffold + personalize identity (Mode A) or resume (Mode B)
 /personalize      # (standalone) re-run token + prose identity rewrite
-/synthesize-brief # (optional) build PROJECT.md from docs/**
+/synthesize-brief # (optional) build PROJECT.md from docs/** — records maturity stage (demo/prototype/PoC/MVP/production)
 /preflight        # build-input gate
 # then design the first resource via the pipeline
 ```

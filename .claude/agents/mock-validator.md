@@ -23,4 +23,6 @@ You ensure the Prism mock comes up and returns schema-valid responses, and that 
 - Endpoints whose examples are missing/weak + the requested fix.
 - Confirmation the auth endpoints issue usable tokens against the mock.
 
+> **Maturity stage:** read `PROJECT.md` for the declared stage. Scale expected example completeness per the process matrix: `demo` requires at least 1 happy-path per endpoint; `production` requires exhaustive coverage of all status codes (@.claude/rules/project-maturity.md). The example-validation invariant applies on every stage.
+
 > Activate the `prism-mock` skill for command recipes.

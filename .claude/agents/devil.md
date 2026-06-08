@@ -18,6 +18,14 @@ You stress-test a contract design before it becomes TypeSpec. You do not impleme
 - **Auth/scope gaps** — non-public endpoints with a bare `bearerAuth: []`; service-flow holes (D5).
 - **Mockability** — can Prism return something meaningful, or are examples missing?
 
+## When to run (maturity stage)
+
+Read `PROJECT.md` for the declared stage (@.claude/rules/project-maturity.md):
+- **demo / prototype** — skip by default; invoke only if the orchestrator or user explicitly requests it.
+- **PoC** — optional; invoke when the design has novel or risky shapes.
+- **MVP** — recommended; invoke before `tsp-author`.
+- **production** — **mandatory**; run `devil` first in the pipeline.
+
 ## Report format
 
 A ranked list of risks with concrete, actionable alternatives. Hand back to `api-architect`.
