@@ -37,15 +37,21 @@ Read `env-detect.json`: `platform_supported`, `node_supported`, `gh.authenticate
 
 ## Mode A flow
 1. `bash scripts/install.sh` (npm deps + oasdiff check).
-2. Author the contract skeleton via `tsp-author`. These files exist in the scaffold already — **no copying needed**: `.spectral.yaml`, `docs/api/INDEX.md`, `.github/workflows/contract-ci.yml`, `CHANGELOG.md`. The following must be authored fresh:
+2. **Personalize identity** — rewrite all template identity strings before the first commit:
+   - Extract slug from `$ARGUMENTS` if provided (e.g. `/bootstrap my-api` → slug = `my-api`); otherwise ask via `AskUserQuestion` (header `Project slug`).
+   - Try `gh repo view --json nameWithOwner` to resolve the GitHub owner. If unavailable, also ask.
+   - Run `bash scripts/personalize.sh --name {slug} --owner {owner} --yes`.
+   - Dispatch `docs-writer` for the prose pass: README self-description, CLAUDE.md consumer section, `contract-first.md` diagram (see `/personalize` step 3 for full spec).
+   - Result: the very first commit/PR is already personalized — no template strings remain.
+3. Author the contract skeleton via `tsp-author`. These files exist in the scaffold already — **no copying needed**: `.spectral.yaml`, `docs/api/INDEX.md`, `.github/workflows/contract-ci.yml`, `CHANGELOG.md`. The following must be authored fresh:
    - `spec/main.tsp` — `@service`, `@server`, global `bearerAuth` security scheme, imports of the other spec files.
    - `spec/models/` — `ListResponse<T>`, `ErrorDetail`, `ValidationErrors`, `Retry-After` header model (@.claude/rules/api-envelope.md).
    - `spec/auth.tsp` — all user-flow + S2S auth endpoints (@.claude/rules/auth-contract.md).
    - `examples/auth/` — representative request/response examples for the auth endpoints.
    The first domain resource is designed later via the full pipeline (`ba → api-architect → tsp-author`).
-3. `npm run api:compile && npm run api:bundle` → first `openapi.yml`.
-4. `npm run validate` green; `npm run mock` smoke via `mock-validator`.
-5. `git init`, link the GitHub remote, first PR (never push to `main`).
+4. `npm run api:compile && npm run api:bundle` → first `openapi.yml`.
+5. `npm run validate` green; `npm run mock` smoke via `mock-validator`.
+6. `git init`, link the GitHub remote, first PR (never push to `main`).
 
 ## Mode B flow
 PR the missing pieces only; re-run `npm run validate`; reconcile `endpoints.json` with `openapi.yml`.

@@ -43,6 +43,21 @@ npm run mock:dynamic        # Prism dynamic mock (Faker + x-faker)
 # tags vX.Y.Z, pushes the tag. Never tag a RED contract.
 ```
 
+## Personalize (new project from template)
+
+```bash
+npm run personalize                         # resolve from git remote + confirm interactively
+bash scripts/personalize.sh --dry-run       # preview all token replacements, no writes
+bash scripts/personalize.sh --yes           # apply without confirmation prompt
+bash scripts/personalize.sh --name my-api --owner acme --yes  # explicit values
+bash scripts/personalize.sh --no-tier3      # skip .claude/ frontmatter tag rewrite
+```
+
+Tier 1: `VadayI/claude-api-contract` URLs, `package.json` name/desc, README H1.
+Tier 2: `package.json` version reset → `0.0.0`, delete `docs/AUDIT-*.md`.
+Tier 3: `[claude-api-contract]` → `[{slug}]` in all `.claude/` frontmatter.
+Prose (requires Claude Code `/personalize`): README self-description, CLAUDE.md consumer section, `contract-first.md` diagram.
+
 ## Sandbox & cleanup
 
 ```bash
