@@ -37,26 +37,43 @@ wsl --install -d Ubuntu    # installs WSL2 + Ubuntu; reboot when prompted
 
 After reboot, open the **Ubuntu** app — every subsequent step runs **inside Ubuntu**, not PowerShell.
 
-### Step 1 — Create a working directory
+### Step 1 — Go to your project folder
+
+Navigate to the folder where you want the contract to live. Two common scenarios:
+
+**A) Create a new folder:**
 
 ```bash
-mkdir -p ~/projects        # create the projects folder (safe if it already exists)
-cd ~/projects
+mkdir -p ~/projects/my-contract   # create the folder
+cd ~/projects/my-contract         # enter it
 ```
 
-### Step 2 — Clone the template
+**B) Use an existing folder** (e.g. you are already in `D:\Dev\My\VMT\contract` via WSL2):
 
 ```bash
-git clone https://github.com/VadayI/claude-api-contract.git
-cd claude-api-contract
+cd /mnt/d/Dev/My/VMT/contract     # navigate to it (WSL2 path for D:\Dev\My\VMT\contract)
 ```
+
+> The next step clones the template **into the current directory**, so make sure it is the exact
+> folder you want the project files to end up in.
+
+### Step 2 — Clone the template into the current folder
+
+```bash
+git clone https://github.com/VadayI/claude-api-contract.git .
+```
+
+The trailing **`.`** (dot) tells git to clone into the **current directory** instead of creating a
+subfolder named `claude-api-contract`. The directory must be empty (or contain only a `.git` folder).
 
 Or using the GitHub CLI:
 
 ```bash
-gh repo clone VadayI/claude-api-contract
-cd claude-api-contract
+gh repo clone VadayI/claude-api-contract .
 ```
+
+> **Without the dot** (`git clone <url>`) git creates a subfolder named `claude-api-contract` inside
+> the current directory. Use that form only if you deliberately want a subfolder.
 
 ### Step 3 — Install system toolchain
 
@@ -198,3 +215,28 @@ openapi.yml      ◄ CANONICAL OUTPUT (bundled, OpenAPI 3.1)
 ```
 
 > Status: **v0.1.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Both consumers (`claude-django`, `claude-react-mui`) inverted and pinning `v0.1.0`. See `docs/HANDOFF.md` for current state.
+
+## Uninstall
+
+### Remove only regenerable artifacts (safe — keeps your contract source)
+
+```bash
+bash scripts/clean.sh        # removes node_modules/, tsp-output/, session memory files
+```
+
+Regenerate them at any time with `npm ci` and `npm run api:compile`.
+
+### Remove the entire project folder
+
+If the project is in its own dedicated folder, just delete that folder:
+
+```bash
+# Linux / macOS / WSL2 — replace <path> with your actual project folder
+rm -rf /path/to/your/contract
+
+# Example (WSL2 path for D:\Dev\My\VMT\contract):
+rm -rf /mnt/d/Dev/My/VMT/contract
+```
+
+> This deletes everything — source files, git history, dependencies. Make sure you have pushed
+> your work to GitHub (or have a backup) before running this.
