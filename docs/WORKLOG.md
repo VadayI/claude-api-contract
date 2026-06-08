@@ -2,6 +2,20 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-08 (session 3)
+- feat: project maturity stage + Definition of Done (#20) — CI: green — tag: none
+  - New global rule `.claude/rules/project-maturity.md`: 5-stage taxonomy (demo/prototype/PoC/MVP/production/other),
+    process matrix (pipeline depth · `devil` · review rigour · example completeness per stage),
+    invariant block (5 CI gates + `@doc` always ON, never relaxed by stage)
+  - ADR `docs/decisions/0005-project-maturity-stage.md`: guidance-only, no gate skipping
+  - `templates/PROJECT.md`: new `**Maturity stage:**` header field + §7 Definition of Done
+    (standard gates checklist + project-specific criteria — never left as placeholder)
+  - `.claude/rules/preflight.md`: 2 new CRITICAL build-input rows (stage + DoD)
+  - `CLAUDE.md`: import + dispatcher note (read stage before dispatch, ask if missing)
+  - Agents updated: `ba`, `brief-synthesizer`, `api-architect`, `contract-reviewer`,
+    `mock-validator`, `devil` — all maturity-aware; `devil` now has "When to run" section
+  - Commands updated: `/preflight`, `/synthesize-brief`
+
 ## 2026-06-08 (session 2)
 - feat: `/personalize` command + `scripts/personalize.sh` (#18) — CI: green (18s) — tag: none
   - Tier 1: `VadayI/claude-api-contract` URLs, `package.json` name/desc, `README.md` H1
