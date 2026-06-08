@@ -16,12 +16,100 @@ In the old flow the contract was born in the backend (`drf-spectacular` generate
 
 ## Requirements
 
-Node 20.19+ (22 LTS recommended), git, GitHub CLI (`gh`), and `oasdiff` (breaking-change gate). One-shot bootstrap:
+- **Node.js 20.19+** (22 LTS recommended) — runs the hook, TypeSpec, Spectral, Prism
+- **git** — version control
+- **GitHub CLI (`gh`)** — PR/release automation
+- **oasdiff** — breaking-change gate (Go binary, not an npm package)
+- **Claude Code CLI** — `npm install -g @anthropic-ai/claude-code`
+
+## Installation (step by step)
+
+Follow these steps once on a fresh machine. Every command is meant to run in a **bash shell**
+(Linux / macOS / WSL2 Ubuntu). Windows users: complete Step 0 first.
+
+### Step 0 — Windows only: install WSL2
+
+Open **PowerShell as Administrator** and run:
+
+```powershell
+wsl --install -d Ubuntu    # installs WSL2 + Ubuntu; reboot when prompted
+```
+
+After reboot, open the **Ubuntu** app — every subsequent step runs **inside Ubuntu**, not PowerShell.
+
+### Step 1 — Create a working directory
 
 ```bash
-bash scripts/setup-wsl.sh    # nvm + Node LTS + claude CLI + gh + oasdiff (idempotent)
-bash scripts/install.sh      # npm deps (TypeSpec, Spectral, Prism) + oasdiff check
+mkdir -p ~/projects        # create the projects folder (safe if it already exists)
+cd ~/projects
 ```
+
+### Step 2 — Clone the template
+
+```bash
+git clone https://github.com/VadayI/claude-api-contract.git
+cd claude-api-contract
+```
+
+Or using the GitHub CLI:
+
+```bash
+gh repo clone VadayI/claude-api-contract
+cd claude-api-contract
+```
+
+### Step 3 — Install system toolchain
+
+```bash
+bash scripts/setup-wsl.sh  # nvm + Node LTS + Claude Code CLI + checks gh/oasdiff (idempotent)
+```
+
+This script installs: **nvm**, **Node LTS**, **Claude Code CLI** (`@anthropic-ai/claude-code`).
+It also checks that `gh` and `oasdiff` are on PATH and prints install hints if they are missing.
+Safe to re-run at any time.
+
+> After running, reload your shell (`source ~/.bashrc` or open a new terminal) so `node`, `npm`,
+> and `claude` are on your PATH.
+
+### Step 4 — Install project dependencies
+
+```bash
+bash scripts/install.sh    # npm ci (TypeSpec, Spectral, Prism) + oasdiff presence check
+```
+
+Installs the npm dev-dependencies declared in `package.json`:
+`@typespec/compiler`, `@typespec/http`, `@typespec/openapi3`, `@stoplight/spectral-cli`,
+`@stoplight/prism-cli`. Creates `node_modules/`.
+
+### Step 5 — Configure secrets
+
+```bash
+cp .env.example .env       # create your local .env from the template
+```
+
+Open `.env` and fill in the values (GitHub PAT, `CONTEXT7_API_KEY`, etc.).
+The `SessionStart` hook seeds `.env` automatically on the first `claude` launch if the file is
+missing, but filling in real values before working is recommended.
+
+### Step 6 — Launch Claude Code
+
+```bash
+claude                     # start the Claude Code CLI from the repo root
+```
+
+Inside Claude Code, run:
+
+```
+/doctor     # audits the environment and reports any missing tools
+/bootstrap  # scaffolds spec/ and examples/ (Mode A — fresh project)
+```
+
+Then follow the prompts. See **Quick start** below for the full command sequence.
+
+---
+
+> **Just want to try it without a permanent install?** See *Try it in a throwaway sandbox* below —
+> one command clones and installs everything into a temp directory.
 
 ## Try it in a throwaway sandbox
 
