@@ -23,6 +23,39 @@ bash scripts/setup-wsl.sh    # nvm + Node LTS + claude CLI + gh + oasdiff (idemp
 bash scripts/install.sh      # npm deps (TypeSpec, Spectral, Prism) + oasdiff check
 ```
 
+## Try it in a throwaway sandbox
+
+Clone the template into a temporary directory and install all dependencies in one command:
+
+```bash
+bash scripts/sandbox.sh                  # clone into /tmp/cac-sandbox.XXXXXX + install
+bash scripts/sandbox.sh /my/path         # clone into a specific path
+bash scripts/sandbox.sh --ref v0.2.1     # pin a specific tag or branch
+```
+
+Or via npm: `npm run sandbox`
+
+The sandbox is a full git clone (tags included), so all quality gates work. To remove it: `rm -rf <printed-path>`.
+
+## Clean up
+
+Remove build and session artifacts when you want a clean slate:
+
+```bash
+bash scripts/clean.sh                   # Class A — safe, always regenerable
+bash scripts/clean.sh --dry-run         # preview what would be deleted
+bash scripts/clean.sh --reset-to-clone  # Class A + B — resets to fresh-clone state (confirms)
+```
+
+Or via npm: `npm run clean`
+
+| Class | What | When to use |
+|---|---|---|
+| **A** (default) | `node_modules/`, `tsp-output/`, `.tsp/`, session memory files | Any time — fully regenerable |
+| **B** (`--reset-to-clone`) | `spec/`, `examples/`, `openapi.yml`, `LOCAL/`, local ADRs, `.env` | To bring this copy to the state of a fresh clone; **irreversible** |
+
+> Full inventory of both classes — `docs/AUDIT-2026-06-08.md`.
+
 ## Quick start (in Claude Code CLI)
 
 ```
