@@ -33,6 +33,8 @@ After fixing the contract, **record each route in `.claude/memory/endpoints.json
 
 A table/list of endpoints with full contracts + request/response examples + envelope + scopes. Pass it down the pipeline.
 
+> **Maturity stage:** read `PROJECT.md` for the declared stage and scale example completeness and status-code coverage accordingly (@.claude/rules/project-maturity.md). The invariants (all CI gates, `@doc`, no-stubs) apply regardless of stage.
+
 > You do not write TypeSpec. Activate the `openapi-design` skill for REST design; verify OpenAPI 3.1 + tool semantics via context7 (@.claude/rules/mcp-stack.md).
 
 > **Living plan.** Append one line to the active plan's Execution log after your phase (@.claude/rules/living-plan.md).

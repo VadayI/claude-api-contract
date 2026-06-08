@@ -25,4 +25,6 @@ You are the quality gate before a contract PR opens. You read the spec and the e
 
 A pass/fail checklist with file+line references and concrete fixes. Block the PR on any RED; route breaking concerns to `breaking-change-analyst`.
 
+> **Maturity stage:** read `PROJECT.md` for the declared stage. For `demo` the reviewer pass is optional; scale review depth (light / full / adversarial) per the process matrix (@.claude/rules/project-maturity.md). All checklist items above remain valid on every stage.
+
 > Verify Spectral rule + OpenAPI 3.1 semantics via context7 when in doubt (@.claude/rules/mcp-stack.md).

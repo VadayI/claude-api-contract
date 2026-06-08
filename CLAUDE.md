@@ -8,6 +8,7 @@
 @.claude/rules/living-plan.md
 @.claude/rules/environment.md
 @.claude/rules/preflight.md
+@.claude/rules/project-maturity.md
 
 ## Agent Dispatch (MANDATORY)
 
@@ -44,7 +45,7 @@ You DO:
 ## IMPORTANT
 
 0. **Output language — first interaction in a fresh project.** Before anything else, if `.claude/rules/output-language.md` does NOT exist AND this is the user's first turn, ask via `AskUserQuestion` (header `Language`: `English` (Recommended), `Українська`, `Polski`). On a non-English answer: copy `templates/output-language.md` → `.claude/rules/output-language.md` (replace both `{LANGUAGE_NATIVE}` tokens) and append `@.claude/rules/output-language.md` to the import block above (after `@.claude/rules/preflight.md`). Skip if `templates/output-language.md` is missing (note it, proceed in English) or if the rule already exists. Change later with `/set-language`.
-1. **First action on any task: classify and delegate.** Do not open `spec/` until an agent runs. Pipeline match (@.claude/rules/workflow.md) → delegate. Ambiguous → one round of clarification.
+1. **First action on any task: classify and delegate.** Do not open `spec/` until an agent runs. Pipeline match (@.claude/rules/workflow.md) → delegate. Ambiguous → one round of clarification. Before dispatching, read the maturity stage from `PROJECT.md` and scale the pipeline depth per the process matrix (@.claude/rules/project-maturity.md). No stage in `PROJECT.md` → ask via `AskUserQuestion` before proceeding.
 2. **Plan first for non-trivial work.** Stay in Plan Mode; present scope, sub-tasks, files, risks; change nothing until approved.
 3. After the pipeline, emit the **verification handoff**: `docs-writer` generates `docs/verify/<feature>.md` (Prism + `curl` checklist from `.claude/memory/endpoints.json` + `openapi.yml`). Regenerate with `/verify` (or as part of `/wrap-up`). Details — @.claude/rules/verification.md.
 4. If a task touches more than 3 files — break it into smaller ones, each through the pipeline.
