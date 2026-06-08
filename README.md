@@ -75,7 +75,37 @@ gh repo clone VadayI/claude-api-contract .
 > **Without the dot** (`git clone <url>`) git creates a subfolder named `claude-api-contract` inside
 > the current directory. Use that form only if you deliberately want a subfolder.
 
-### Step 3 — Install system toolchain
+### Step 3 — Disconnect from the template and link your own repo
+
+After cloning, `.git` still points to the original template repository. Replace it with a fresh
+git history connected to **your** GitHub repo.
+
+**3a — Remove the template's git history and start fresh:**
+
+```bash
+rm -rf .git                # delete the template's .git (history, remotes, branches)
+git init                   # start a clean repository
+git add -A
+git commit -m "init: bootstrap from claude-api-contract template"
+```
+
+**3b — Create your GitHub repo and link it:**
+
+```bash
+gh repo create my-contract --private --source=. --push
+```
+
+This creates a private repo named `my-contract` on GitHub, sets it as `origin`, and pushes the
+initial commit in one command. Replace `my-contract` with your desired repo name.
+Use `--public` instead of `--private` if you want a public repo.
+
+> **Alternative** — if you already created the GitHub repo manually:
+> ```bash
+> git remote add origin https://github.com/YOUR_USERNAME/my-contract.git
+> git push -u origin main
+> ```
+
+### Step 4 — Install system toolchain
 
 ```bash
 bash scripts/setup-wsl.sh  # nvm + Node LTS + Claude Code CLI + checks gh/oasdiff (idempotent)
@@ -88,7 +118,7 @@ Safe to re-run at any time.
 > After running, reload your shell (`source ~/.bashrc` or open a new terminal) so `node`, `npm`,
 > and `claude` are on your PATH.
 
-### Step 4 — Install project dependencies
+### Step 5 — Install project dependencies
 
 ```bash
 bash scripts/install.sh    # npm ci (TypeSpec, Spectral, Prism) + oasdiff presence check
@@ -98,7 +128,7 @@ Installs the npm dev-dependencies declared in `package.json`:
 `@typespec/compiler`, `@typespec/http`, `@typespec/openapi3`, `@stoplight/spectral-cli`,
 `@stoplight/prism-cli`. Creates `node_modules/`.
 
-### Step 5 — Configure secrets
+### Step 6 — Configure secrets
 
 ```bash
 cp .env.example .env       # create your local .env from the template
@@ -108,7 +138,7 @@ Open `.env` and fill in the values (GitHub PAT, `CONTEXT7_API_KEY`, etc.).
 The `SessionStart` hook seeds `.env` automatically on the first `claude` launch if the file is
 missing, but filling in real values before working is recommended.
 
-### Step 6 — Launch Claude Code
+### Step 7 — Launch Claude Code
 
 ```bash
 claude                     # start the Claude Code CLI from the repo root
