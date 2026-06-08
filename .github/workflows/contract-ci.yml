@@ -33,30 +33,48 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Guard: spec/ absent = fresh template state, skip contract gates
+      - name: Detect spec/ (template-state guard)
+        id: guard
+        run: |
+          if [ -d spec ]; then
+            echo "has_spec=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "has_spec=false" >> "$GITHUB_OUTPUT"
+            echo "No spec/ found — template scaffold only, contract gates skipped."
+          fi
+
       - name: Install oasdiff (breaking-change gate)
+        if: steps.guard.outputs.has_spec == 'true'
         run: go install github.com/oasdiff/oasdiff@latest
 
       - name: Add Go bin to PATH
+        if: steps.guard.outputs.has_spec == 'true'
         run: echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       # --- Гейт 1: TypeSpec drift (openapi.yml == spec/ output) ---
       - name: Gate 1 — TypeSpec drift
+        if: steps.guard.outputs.has_spec == 'true'
         run: |
           npm run api:compile
           bash scripts/check_typespec_drift.sh
 
       # --- Гейт 2: Spectral lint (шаровий рулсет) ---
       - name: Gate 2 — Spectral lint
+        if: steps.guard.outputs.has_spec == 'true'
         run: npm run lint
 
       # --- Гейт 3: валідація прикладів проти схем ---
       - name: Gate 3 — Examples validation
+        if: steps.guard.outputs.has_spec == 'true'
         run: bash scripts/check_examples.sh
 
       # --- Гейт 4: oasdiff breaking vs останній тег (--fail-on ERR) ---
       - name: Gate 4 — Breaking changes (oasdiff)
+        if: steps.guard.outputs.has_spec == 'true'
         run: npm run breaking
 
       # --- Гейт 5: Prism mock smoke (mock піднімається + валідні відповіді) ---
       - name: Gate 5 — Prism mock smoke
+        if: steps.guard.outputs.has_spec == 'true'
         run: npm run mock:smoke

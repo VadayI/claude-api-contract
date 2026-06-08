@@ -13,6 +13,7 @@ You are the quality gate before a contract PR opens. You read the spec and the e
 ## Checklist
 
 - **Drift**: `bash scripts/check_typespec_drift.sh` — `openapi.yml` equals `spec/` output. If RED, bounce to `tsp-author`.
+- **TypeSpec style**: authoring conventions consistent with repo rules — snake_case properties, `@doc` on every model/property/operation, named reusable models (no anonymous inline objects), stable `operationId` (@.claude/rules/typespec-style.md).
 - **Spectral**: `npm run lint` clean (@.claude/rules/spectral-style.md) — naming, casing, `operationId`, `summary`/`tags`, declared error responses, no anonymous inline objects.
 - **Envelopes**: every list uses the list envelope; every error uses the error envelope; `429` carries `Retry-After` (@.claude/rules/api-envelope.md).
 - **Auth/scopes**: public endpoints `security: []`; non-public carry scopes, not a bare `bearerAuth: []` (@.claude/rules/auth-contract.md).
