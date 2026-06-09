@@ -86,16 +86,15 @@ fi
 # ---------------------------------------------------------------------------
 echo "[ready] --- 5/5  auth endpoint presence ---"
 if [[ -f openapi.yml ]]; then
-  auth_fails=0
-
   for path in "/api/v1/auth/login" "/api/v1/auth/refresh" "/api/v1/auth/token"; do
-    if grep -q "$path" openapi.yml; then
+    if grep -qE "^\s+${path}\s*:" openapi.yml; then
       ok "auth path $path found."
     else
       fail "auth path $path missing from openapi.yml. The mock cannot issue tokens without it. Fix spec/auth.tsp and recompile."
-      auth_fails=$((auth_fails + 1))
     fi
   done
+else
+  fail "openapi.yml missing — auth path check skipped (already counted above)."
 fi
 
 # ---------------------------------------------------------------------------
