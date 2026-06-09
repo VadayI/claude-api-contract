@@ -72,6 +72,16 @@ done
 # ---------------------------------------------------------------------------
 # Validate required: --ip
 # ---------------------------------------------------------------------------
+if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
+  echo "[deploy] FAIL: GITHUB_PERSONAL_ACCESS_TOKEN is not set. Set it in .env or export it." >&2
+  exit 1
+fi
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "[deploy] FAIL: docker not found on PATH. Install Docker first." >&2
+  exit 1
+fi
+
 if [[ -z "$VPS_IP" ]]; then
   echo "[deploy] ERROR: --ip <IP> is required (or set the VPS_IP environment variable)." >&2
   echo "[deploy] Usage: bash scripts/deploy-mock.sh --ip <VPS_IP> [--port <PORT>] [--dry-run]" >&2
@@ -147,27 +157,22 @@ echo "[deploy] VPS   : ${VPS_IP}:${PORT}"
 # ---------------------------------------------------------------------------
 # docker build
 # ---------------------------------------------------------------------------
-BUILD_CMD="docker build -t ${IMAGE} ."
 if [[ "$DRY_RUN" == "true" ]]; then
-  echo "[deploy] DRY-RUN: would run: ${BUILD_CMD}"
+  echo "[deploy] DRY-RUN: would run: docker build -t ${IMAGE} ."
 else
   echo "[deploy] --- building image ---"
-  eval "$BUILD_CMD"
+  if ! docker build -t "${IMAGE}" .; then
+    echo "[deploy] FAIL: docker build failed." >&2
+    exit 1
+  fi
 fi
 
 # ---------------------------------------------------------------------------
 # docker login ghcr.io
 # ---------------------------------------------------------------------------
-LOGIN_CMD="docker login ghcr.io -u ${OWNER} --password-stdin"
 if [[ "$DRY_RUN" == "true" ]]; then
-  echo "[deploy] DRY-RUN: would run: ${LOGIN_CMD} <<< \"\$GITHUB_PERSONAL_ACCESS_TOKEN\""
+  echo "[deploy] DRY-RUN: would run: docker login ghcr.io -u ${OWNER} --password-stdin <<< \"\$GITHUB_PERSONAL_ACCESS_TOKEN\""
 else
-  if [[ -z "${GITHUB_PERSONAL_ACCESS_TOKEN:-}" ]]; then
-    echo "[deploy] ERROR: GITHUB_PERSONAL_ACCESS_TOKEN is not set." >&2
-    echo "[deploy]        Set it in your .env file or export it before running this script." >&2
-    echo "[deploy]        Never pass the token as a command-line argument." >&2
-    exit 1
-  fi
   echo "[deploy] --- logging in to ghcr.io ---"
   docker login ghcr.io -u "${OWNER}" --password-stdin <<< "$GITHUB_PERSONAL_ACCESS_TOKEN"
 fi
@@ -175,12 +180,14 @@ fi
 # ---------------------------------------------------------------------------
 # docker push
 # ---------------------------------------------------------------------------
-PUSH_CMD="docker push ${IMAGE}"
 if [[ "$DRY_RUN" == "true" ]]; then
-  echo "[deploy] DRY-RUN: would run: ${PUSH_CMD}"
+  echo "[deploy] DRY-RUN: would run: docker push ${IMAGE}"
 else
   echo "[deploy] --- pushing image ---"
-  eval "$PUSH_CMD"
+  if ! docker push "${IMAGE}"; then
+    echo "[deploy] FAIL: docker push failed." >&2
+    exit 1
+  fi
 fi
 
 # ---------------------------------------------------------------------------
@@ -192,6 +199,7 @@ echo "[deploy] VPS command (run on your server):"
 echo ""
 echo "  docker pull ${IMAGE}"
 echo "  docker stop ${CONTAINER_NAME} 2>/dev/null || true"
+echo "  docker rm   ${CONTAINER_NAME} 2>/dev/null || true"
 echo "  docker run -d --restart unless-stopped \\"
 echo "    --name ${CONTAINER_NAME} \\"
 echo "    -e PRISM_PORT=${PORT} \\"
