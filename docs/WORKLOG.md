@@ -2,6 +2,15 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-09 (session 5)
+- fix: Prism Docker multiprocess crash — PR #29 — CI: green — tag: none (patch, no contract change)
+  - **PR #29** (`fix/prism-docker-multiprocess`) — squash-merged
+    - `Dockerfile` CMD: added `-m false` + explanatory comment (prism 5 reads `cluster.isPrimary` → `undefined` in Docker → crash; single-process mode bypasses the broken code path)
+    - `.claude/rules/deploy.md` Invariants: new bullet documenting `-m false` requirement
+    - `docs/lessons.md`: first real gotcha entry (symptom → cause → fix → note about local mock unaffected)
+  - Docker smoke-test passed: `Prism is listening on http://0.0.0.0:4010` — no isPrimary crash
+  - `/audit` + `/doctor` run: environment healthy across all 4 scopes; no env fixes applied (user decision)
+
 ## 2026-06-09 (session 4b — continuation)
 - chore: merge PRs #23–#25 + #26 (wrap-up) + #27 (release) — CI: green — tag: **v0.4.0**
   - All 4 PRs merged to `main` in order #23→#24→#25→#26→#27
