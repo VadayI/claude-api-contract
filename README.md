@@ -205,6 +205,8 @@ Or via npm: `npm run clean`
 /personalize      # (standalone) re-run token + prose identity rewrite
 /synthesize-brief # (optional) build PROJECT.md from docs/** — records maturity stage (demo/prototype/PoC/MVP/production)
 /preflight        # build-input gate
+/check-readme     # audit + fix README freshness
+/ship-contract    # package mock → push to ghcr.io → print VPS deploy command
 # then design the first resource via the pipeline
 ```
 
@@ -239,6 +241,32 @@ ba → api-architect → tsp-author → [contract-reviewer | breaking-change-ana
 Releases are **git tags** `vX.Y.Z`. Consumers pin `CONTRACT_VERSION` and fetch:
 `https://raw.githubusercontent.com/VadayI/claude-api-contract/<tag>/openapi.yml`. Bumping a pin is a deliberate PR in the consumer. See `.claude/rules/versioning.md`.
 
+## For consumers
+
+Once the contract is tagged and the mock is deployed (via `/ship-contract`), both consumer teams can start parallel work against the same shared mock:
+
+| Consumer | Role | How to use |
+|---|---|---|
+| **`claude-django`** (backend) | Validates its implementation against the contract | Vendor `openapi.yml@<tag>` → run `scripts/check_contract_sync.sh` in CI |
+| **`claude-react-mui`** (frontend) | Generates TS types + develops against the live mock | `openapi-typescript openapi.yml@<tag>` → point app at `http://<IP>:<PORT>` |
+
+**Pin the contract version** (in each consumer repo, committed — not just an env var):
+```
+CONTRACT_REPO=https://github.com/VadayI/claude-api-contract
+CONTRACT_VERSION=vX.Y.Z
+```
+Bumping the pin is a **deliberate PR in the consumer**. See `.claude/rules/versioning.md`.
+
+**Live mock** (deployed with `/ship-contract`):
+```
+http://<IP>:<PORT>
+```
+> Run `/ship-contract <IP> <PORT>` to build, push, and deploy the mock — then replace `<IP>:<PORT>` with the real address above.
+
+**Backend** (`claude-django`): vendor `openapi.yml`, run your `check_contract_sync.sh` gate in CI, write a `contract.lock.json` (`repo` + `version` + `sha256`).
+
+**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses).
+
 ## Structure
 
 ```
@@ -251,7 +279,7 @@ openapi.yml      ◄ CANONICAL OUTPUT (bundled, OpenAPI 3.1)
 .spectral.yaml   layered ruleset
 ```
 
-> Status: **v0.1.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Both consumers (`claude-django`, `claude-react-mui`) inverted and pinning `v0.1.0`. See `docs/HANDOFF.md` for current state.
+> Status: **v0.3.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Docker packaging + VPS deploy (`/ship-contract`). `/check-readme` freshness command. See `docs/HANDOFF.md` for current state.
 
 ## Uninstall
 
