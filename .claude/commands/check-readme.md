@@ -10,6 +10,10 @@ Audit `README.md` for staleness against the live repository state and update it 
 node scripts/log-cmd.mjs /check-readme "$ARGUMENTS"
 ```
 
+## Input
+
+`$ARGUMENTS` is currently unused (the command takes no arguments). Reserved for a future `--dry-run` flag.
+
 ## Steps
 
 1. **Dispatch `docs-writer`** to audit README.md against live state:
@@ -19,7 +23,10 @@ node scripts/log-cmd.mjs /check-readme "$ARGUMENTS"
      - `ls .claude/agents/*.md | wc -l` for agents
      - `ls .claude/rules/*.md | wc -l` for rules
      - `ls .claude/skills/*/SKILL.md | wc -l` for skills
-   - **`## For consumers` section:** verify it exists and contains a non-placeholder live mock URL (not `<IP>:<PORT>`). If the section is missing or has a placeholder, flag it — updating the URL requires `/ship-contract`.
+   - **`## For consumers` section:** three states:
+     - Section **missing entirely** → informational note only: "will be created by `/ship-contract`" (expected on a fresh project before first ship — not an error).
+     - Section **present with `<IP>:<PORT>` placeholder** → flag as stale: "run `/ship-contract` to fill in the live URL".
+     - Section **present with a real IP** → OK, report as current.
    - **`## Quick start` section:** verify `/check-readme` and `/ship-contract` are listed.
    - **Broken internal links:** check that every `@.claude/rules/*.md` reference in README exists on disk.
 
