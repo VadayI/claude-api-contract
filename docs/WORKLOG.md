@@ -2,6 +2,24 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-09 (session 4)
+- feat: Docker packaging + VPS deploy infrastructure + `/check-readme` + `/ship-contract` — 3 PRs open — tag: none
+  - **PR #23** (`feat/contract-packaging`) — Slice A: deploy infrastructure
+    - `Dockerfile` — `node:22-alpine`, `prism-cli@5.12.0` global, static mock, `-h 0.0.0.0`, `USER node`, `npm cache clean`
+    - `.dockerignore` — minimal build context (only `openapi.yml` reaches the image)
+    - `scripts/check_ready.sh` — readiness gate: `npm run validate` + mock smoke + breaking + artifact/auth checks; WARN if HEAD not on a v* tag
+    - `scripts/deploy-mock.sh` — build image, push to `ghcr.io/<owner>/<repo>-mock:<tag>`, print VPS `docker run` command; `--dry-run` support; early token/docker checks; `docker rm` on redeploy
+    - `package.json`: `ready` + `deploy:mock` scripts added
+    - `docs/decisions/0006-deploy-mock-to-vps.md` — ADR: static Prism mock, Docker, ghcr.io, direct IP:PORT
+  - **PR #24** (`feat/check-readme-command`) — Slice B: README audit command
+    - `.claude/commands/check-readme.md` — new `/check-readme` command: delegates to `docs-writer`, audits version/counts/consumer section/links, confirm-before-apply
+    - `.claude/agents/docs-writer.md` — scope expanded: `README.md` freshness added to "What you produce"
+    - `README.md` — new `## For consumers` section (backend/frontend parallel-work table, pin-version, live mock placeholder); status updated `v0.1.0` → `v0.3.0`; `/check-readme` + `/ship-contract` in Quick start
+  - **PR #25** (`feat/ship-contract-command`) — Slice C: ship command
+    - `.claude/rules/deploy.md` — new rule: deploy model (ghcr.io + VPS pull, static mock, no nginx, invariants, security notes)
+    - `.claude/commands/ship-contract.md` — new `/ship-contract <IP> <PORT>` command: readiness gate → deploy-mock.sh → docs-writer updates README → report VPS command
+  - No contract change (`spec/`/`openapi.yml` untouched); no tag needed this session
+
 ## 2026-06-08 (session 3)
 - feat: project maturity stage + Definition of Done (#20) — CI: green — tag: none
   - New global rule `.claude/rules/project-maturity.md`: 5-stage taxonomy (demo/prototype/PoC/MVP/production/other),
