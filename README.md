@@ -251,7 +251,7 @@ Once the contract is tagged and the mock is deployed (via `/ship-contract`), bot
 | **`claude-react-mui`** (frontend) | Generates TS types + develops against the live mock | `openapi-typescript openapi.yml@<tag>` → point app at `http://<IP>:<PORT>` |
 
 **Pin the contract version** (in each consumer repo, committed — not just an env var):
-```json
+```
 CONTRACT_REPO=https://github.com/VadayI/claude-api-contract
 CONTRACT_VERSION=vX.Y.Z
 ```
