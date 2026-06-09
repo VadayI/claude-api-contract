@@ -2,8 +2,15 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-09 (session 4b — continuation)
+- chore: merge PRs #23–#25 + #26 (wrap-up) + #27 (release) — CI: green — tag: **v0.4.0**
+  - All 4 PRs merged to `main` in order #23→#24→#25→#26→#27
+  - `CHANGELOG.md` — v0.4.0 entry prepended by `docs-writer`
+  - `git tag v0.4.0` pushed; GitHub release created
+  - Bump: **MINOR** — new commands + deploy infrastructure, zero contract shape change; consumers: no pin bump needed
+
 ## 2026-06-09 (session 4)
-- feat: Docker packaging + VPS deploy infrastructure + `/check-readme` + `/ship-contract` — 3 PRs open — tag: none
+- feat: Docker packaging + VPS deploy infrastructure + `/check-readme` + `/ship-contract` — 3 PRs open → merged — tag: v0.4.0
   - **PR #23** (`feat/contract-packaging`) — Slice A: deploy infrastructure
     - `Dockerfile` — `node:22-alpine`, `prism-cli@5.12.0` global, static mock, `-h 0.0.0.0`, `USER node`, `npm cache clean`
     - `.dockerignore` — minimal build context (only `openapi.yml` reaches the image)
