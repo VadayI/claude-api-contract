@@ -1,0 +1,16 @@
+# Build context: only openapi.yml is needed (Prism is installed globally)
+
+node_modules
+spec
+tsp-output
+.tsp
+examples
+docs
+.claude
+scripts
+templates
+LOCAL
+.git
+.env
+.env.example
+*.md
