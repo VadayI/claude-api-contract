@@ -21,6 +21,7 @@ openapi.yml + Dockerfile ──build──► image ──push──► pull ─
 - **Image tag = contract tag.** `ghcr.io/<owner>/<repo>-mock:<vX.Y.Z>` tracks the version; consumers know exactly what schema they're hitting.
 - **Static mode only.** Deterministic responses from `examples` in the schema. No `-d` flag.
 - **`-h 0.0.0.0` is required** in the Prism CMD — without it the mock is unreachable from outside the container.
+- **`-m false` (single-process) is required** in the Prism CMD inside Docker — prism 5's default multiprocess mode reads `cluster.isPrimary`, which is `undefined` in a container, crashing at startup with `Cannot read properties of undefined (reading 'isPrimary')`. Local `npm run mock` is unaffected (it runs Prism directly via Node, not multiprocess).
 - **`GITHUB_PERSONAL_ACCESS_TOKEN`** must have `write:packages` scope for `docker push` to `ghcr.io`. Never print or log the token.
 
 ## Readiness gate

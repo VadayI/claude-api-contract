@@ -20,5 +20,9 @@ USER node
 EXPOSE 4010
 
 # -h 0.0.0.0 is CRITICAL: without it Prism binds to loopback only
-# and the mock is unreachable from outside the container
-CMD ["sh", "-c", "prism mock openapi.yml -h 0.0.0.0 -p ${PRISM_PORT}"]
+# and the mock is unreachable from outside the container.
+# -m false (single-process) is REQUIRED inside Docker: prism 5's default
+# multiprocess mode reads cluster.isPrimary, which is undefined in a container
+# and crashes at startup with "Cannot read properties of undefined (reading 'isPrimary')".
+# Local `npm run mock` is unaffected (it runs Prism directly via Node, not multiprocess).
+CMD ["sh", "-c", "prism mock openapi.yml -h 0.0.0.0 -p ${PRISM_PORT} -m false"]
