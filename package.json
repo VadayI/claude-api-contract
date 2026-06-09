@@ -18,6 +18,7 @@
     "validate": "npm run api:compile && bash scripts/check_typespec_drift.sh && npm run lint && bash scripts/check_examples.sh",
     "breaking": "bash scripts/check_breaking.sh",
     "ready": "bash scripts/check_ready.sh",
+    "deploy:mock": "bash scripts/deploy-mock.sh",
     "personalize": "bash scripts/personalize.sh",
     "sandbox": "bash scripts/sandbox.sh",
     "clean": "bash scripts/clean.sh"
