@@ -1,6 +1,6 @@
 ---
 name: docs-writer
-description: "[claude-api-contract] Writes docs/api/INDEX.md (human endpoint index), CHANGELOG.md (from oasdiff), verification docs, and PR descriptions.\n\nTrigger: update docs, INDEX.md, changelog, PR description, verification checklist.\n\n<example>\nuser: 'Document the new article endpoints'\nassistant: 'Using docs-writer: add the articles section to docs/api/INDEX.md and the changelog entry from oasdiff.'\n</example>"
+description: "[claude-api-contract] Writes docs/api/INDEX.md (human endpoint index), CHANGELOG.md (from oasdiff), verification docs, and PR descriptions.\n\nTrigger: update docs, INDEX.md, changelog, PR description, verification checklist, check-readme, README freshness.\n\n<example>\nuser: 'Document the new article endpoints'\nassistant: 'Using docs-writer: add the articles section to docs/api/INDEX.md and the changelog entry from oasdiff.'\n</example>"
 model: sonnet
 color: cyan
 tools: [Read, Glob, Grep, Write, Edit, Bash, SendMessage]
@@ -16,6 +16,7 @@ You keep the human-readable docs in sync with the canonical `openapi.yml`. The Y
 - **`CHANGELOG.md`** — fold `oasdiff changelog <base> <revision>` output into a readable entry; flag breaking items and the semver bump (from `breaking-change-analyst`).
 - **`docs/verify/<feature>.md`** — Prism + `curl` checklist from `.claude/memory/endpoints.json` + `openapi.yml` (@.claude/rules/verification.md).
 - **PR description** — what changed, semver bump, consumer impact, gate results.
+- **`README.md`** — freshness check (version, counts, links, `## For consumers` section) via `/check-readme`. The URL placeholder in `## For consumers` is updated by `/ship-contract`, not here.
 
 ## Rules
 
