@@ -2,22 +2,25 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
-## Where we are (2026-06-09)
-- Branch: `main` — clean, HEAD = `fc13671` (PR #31, template docs reset)
+## Where we are (2026-06-10)
+- Branch: `main` — clean, HEAD = `d5f1b99` (PR #32, seed.sh one-liner)
 - Contract: `openapi.yml` absent (Class B — local working copy only) · `spec/` absent · latest tag: **`v0.4.0`**
-- Gates: n/a (`spec/` absent — CI gates skip cleanly)
-- Template: 11 agents · 22 commands · 21 rules · 6 skills · 5 CI gates · all docs reset to clean starters
+- Gates: n/a (`spec/` absent — CI gates skip cleanly; PR #32 CI green)
+- Template: 11 agents · 22 commands · 21 rules · 6 skills · 5 CI gates · `scripts/seed.sh` added
 
-## What was done this session (session 6)
-- **PR #31** (`docs/session-5-wrap-up`) — squash-merged
-  - Audited GitHub `main`: `spec/`, `examples/`, `openapi.yml`, ADR 0002–0004 correctly absent ✓
-  - Found `HANDOFF.md`, `WORKLOG.md`, `CHANGELOG.md` contained template meta-development history (sessions 1–5)
-  - Reset all three to clean template starters so a fresh clone gets a blank slate
+## What was done this session (session 7)
+- **PR #32** (`feat/seed-script`) — squash-merged `d5f1b99`
+  - Added `scripts/seed.sh`: one-liner seed script (`bash <(curl -fsSL .../scripts/seed.sh)`)
+    - Shallow-clones `main` → copies committed files → wipes transient memory → prints next steps
+    - Supports `--ref`, `--url` (fork), `--force` options
+    - Class B artifacts (`spec/`, `examples/`, `openapi.yml`) correctly excluded (not in committed `main`)
+  - Updated `README.md`: "Quick install" section above step-by-step guide
+  - Smoke-tested in temp dir: all expected files present, Class B absent ✓
 
 ## What's next
-- **Test fresh clone:** `git clone https://github.com/VadayI/claude-api-contract /tmp/test-clone` → confirm `HANDOFF.md` shows generic starter, `WORKLOG.md` has only placeholder, `CHANGELOG.md` has only `## [Unreleased]`
-- **Test `/ship-contract` end-to-end:** provide a real VPS IP + port, run `bash scripts/deploy-mock.sh --ip <IP> --port 4010`, confirm `http://IP:4010/api/v1/auth/login` returns 200 (Prism `-m false` fix means container now starts correctly)
-- **Consumer repos** (`claude-django`, `claude-react-mui`) — contract shape unchanged since `v0.4.0`, no pin bump needed; bump after a real contract change
+- **Verify one-liner on clean machine:** `bash <(curl -fsSL https://raw.githubusercontent.com/VadayI/claude-api-contract/main/scripts/seed.sh)` from an empty folder
+- **Test fresh clone:** `git clone https://github.com/VadayI/claude-api-contract /tmp/test-clone` → confirm `HANDOFF.md` shows generic starter, `WORKLOG.md` clean
+- **Test `/ship-contract` end-to-end:** provide a real VPS IP + port → `bash scripts/deploy-mock.sh --ip <IP> --port 4010` → confirm `http://IP:4010/api/v1/auth/login` returns 200
 - **Next contract work:** when a new resource is needed → `ba` → full pipeline → `/release` with semantic bump
 
 ## Open questions / risks
