@@ -22,6 +22,29 @@ In the old flow the contract was born in the backend (`drf-spectacular` generate
 - **oasdiff** — breaking-change gate (Go binary, not an npm package)
 - **Claude Code CLI** — `npm install -g @anthropic-ai/claude-code`
 
+## Quick install (one-liner)
+
+From an **empty folder** inside a WSL2 / Linux / macOS bash shell:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/VadayI/claude-api-contract/main/scripts/seed.sh)
+```
+
+This clones the template, copies all committed files into the current directory, and wipes
+transient state the `SessionStart` hook regenerates. After it finishes:
+
+```bash
+git init && git add -A && git commit -m "init: bootstrap from claude-api-contract template"
+gh repo create my-contract --private --source=. --push
+bash scripts/setup-wsl.sh   # node (nvm) + claude CLI (idempotent)
+bash scripts/install.sh     # npm deps (TypeSpec, Spectral, Prism)
+claude                       # then: /doctor -> /bootstrap -> /preflight
+```
+
+Options: `--ref v0.4.0` (pin a tag), `--url <fork>` (use a fork), `--force` (re-seed existing folder).
+
+---
+
 ## Installation (step by step)
 
 Follow these steps once on a fresh machine. Every command is meant to run in a **bash shell**
