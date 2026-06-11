@@ -227,6 +227,7 @@ Or via npm: `npm run clean`
 /bootstrap        # scaffold + personalize identity (Mode A) or resume (Mode B)
 /personalize      # (standalone) re-run token + prose identity rewrite
 /synthesize-brief # (optional) build PROJECT.md from docs/** — records maturity stage (demo/prototype/PoC/MVP/production)
+/happy-paths      # (optional) generate business happy-path journeys — re-runnable after /preflight once endpoints exist
 /preflight        # build-input gate
 /check-readme     # audit + fix README freshness
 /ship-contract    # package mock → push to ghcr.io → print VPS deploy command
