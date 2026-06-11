@@ -55,7 +55,7 @@ You DO:
 
 Core (default pipeline): `ba`, `api-architect`, `tsp-author`, `contract-reviewer`, `breaking-change-analyst`, `mock-validator`, `docs-writer`
 
-Optional: `devil` (challenge a design), `auditor` (`/audit`), `brief-synthesizer` (`/synthesize-brief`), `template-sync` (`/update-from-template`)
+Optional: `devil` (challenge a design), `auditor` (`/audit`), `brief-synthesizer` (`/synthesize-brief`), `happy-path-author` (`/happy-paths`), `template-sync` (`/update-from-template`)
 
 ## Stack
 
@@ -71,5 +71,5 @@ This config is also an **environment configurator**. The expected local environm
 
 ## Project bootstrap & preflight
 
-New project order: `/doctor` (detects scenario, recommends `/bootstrap`) → `/bootstrap` (Mode A scaffold / Mode B resume) → optionally `/synthesize-brief` → `/preflight` (build-input gate) → first resource via the pipeline. Spec: @.claude/rules/preflight.md.
+New project order: `/doctor` (detects scenario, recommends `/bootstrap`) → `/bootstrap` (Mode A scaffold / Mode B resume) → optionally `/synthesize-brief` → optionally `/happy-paths` (business journeys from the brief) → `/preflight` (build-input gate) → first resource via the pipeline. Spec: @.claude/rules/preflight.md.
 <!-- Last reviewed/updated: 2026-06-08 (audit: fix bootstrap Mode A step 2; fix rule-scoping docs in Claude-specific behavior) -->

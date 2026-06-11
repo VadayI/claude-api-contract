@@ -41,3 +41,7 @@
 
 ### Project-specific criteria
 <Add conditions agreed with the team — e.g. "all auth endpoints + Article CRUD done", "v1.0.0 tagged and pushed", "frontend mock deployed to staging", etc. Never leave this blank — if there are no extra criteria, write "none beyond standard gates".>
+
+## 8. Happy paths
+Primary success journeys (full detail in `docs/api/HAPPY-PATHS.md` — generate with `/happy-paths`):
+- <Journey name> — <one line, plain language>.
