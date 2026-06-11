@@ -2,6 +2,19 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-11 (session 8)
+- feat: `/happy-paths` command + `happy-path-author` agent — PR #33 — CI: green — tag: none
+  - Designed and implemented a new slash command `/happy-paths` and dedicated agent `happy-path-author`
+  - Command generates plain-language business user journeys (happy paths) after `/synthesize-brief`
+  - **Dual-mode auto-detect:** story-level when `endpoints.json` is empty/absent (`— (to be designed)` column); endpoint-annotated when registry is populated (real `operationId` + path in table)
+  - **Idempotent + re-runnable:** overwrites `docs/api/HAPPY-PATHS.md` cleanly; replaces §8 in `PROJECT.md` without duplication
+  - Output: `docs/api/HAPPY-PATHS.md` (canonical journeys doc) + §8 in `PROJECT.md` (short reference list)
+  - 2 new files: `.claude/agents/happy-path-author.md`, `.claude/commands/happy-paths.md`
+  - 5 edited files: `synthesize-brief.md` (step 3 now suggests `/happy-paths → /preflight`), `CLAUDE.md` (Optional agents + bootstrap order), `workflow.md` (Optional agents), `templates/PROJECT.md` (§8 placeholder), `README.md` (Quick start)
+  - Branch `feat/happy-paths` → PR #33 → squash-merged `b67cfeb` — CI green
+  - No contract change (`spec/`/`openapi.yml` untouched); no semver bump; consumers: no action needed
+  - Template count: **12 agents** · **23 commands** · 21 rules · 6 skills · 5 CI gates
+
 ## 2026-06-10 (session 7)
 - feat: `scripts/seed.sh` + README "Quick install" — PR #32 — CI: green — tag: none
   - Added `scripts/seed.sh`: one-liner seed script (`bash <(curl -fsSL .../scripts/seed.sh)`) modelled after `claude-react-mui`
