@@ -251,8 +251,14 @@ do_replace "package-lock.json" '"name": "claude-api-contract"' "\"name\": \"${SL
 echo ""
 echo "[personalize] --- Tier 2: reset ---"
 
-# Reset version to 0.0.0 (new project, no release yet)
-do_replace "package.json" '"version": "0.2.0"' '"version": "0.0.0"'
+# Reset version to 0.0.0 (new project, no release yet). Read the current
+# version dynamically so the reset never drifts when the template is re-tagged.
+CUR_VER="$(python3 -c "import json; print(json.load(open('package.json'))['version'])" 2>/dev/null || true)"
+if [[ -n "$CUR_VER" && "$CUR_VER" != "0.0.0" ]]; then
+  do_replace "package.json" "\"version\": \"${CUR_VER}\"" '"version": "0.0.0"'
+else
+  echo "[personalize] package.json version already 0.0.0 or unreadable — skip reset"
+fi
 
 # Delete template-internal audit docs (irrelevant in derived projects)
 for f in docs/AUDIT-*.md; do

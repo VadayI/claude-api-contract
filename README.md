@@ -303,7 +303,7 @@ openapi.yml      ◄ CANONICAL OUTPUT (bundled, OpenAPI 3.1)
 .spectral.yaml   layered ruleset
 ```
 
-> Status: **v0.3.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Docker packaging + VPS deploy (`/ship-contract`). `/check-readme` freshness command. See `docs/HANDOFF.md` for current state.
+> Status: **v0.4.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Docker packaging + VPS deploy (`/ship-contract`). `/check-readme` freshness command. See `docs/HANDOFF.md` for current state.
 
 ## Uninstall
 
