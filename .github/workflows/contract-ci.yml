@@ -11,6 +11,12 @@ on:
 permissions:
   contents: read
 
+# Пінимо oasdiff заради відтворюваного breaking-гейту (раніше було @latest).
+# Має збігатися з локальною версією команди (scripts/setup-wsl.sh) — тоді
+# `npm run breaking` локально і в CI дають однаковий результат.
+env:
+  OASDIFF_VERSION: v1.18.4
+
 concurrency:
   group: contract-ci-${{ github.ref }}
   cancel-in-progress: true
@@ -33,20 +39,34 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Guard: spec/ absent = fresh template state, skip contract gates
+      # Guard: чи запускати контрактні гейти.
+      #  - spec/ присутній                         → ганяємо 5 гейтів.
+      #  - spec/ відсутній + це апстрим-шаблон      → чистий skip (свіжий
+      #    каркас ще не має контракту). Сигнал — package.json name досі
+      #    "claude-api-contract"; personalize.sh перейменовує пакет на derive,
+      #    тож реальний проєкт НЕ може мовчки успадкувати цей skip.
+      #  - spec/ відсутній у derived-проєкті        → FAIL (fail-closed):
+      #    проєкт, що втратив контракт, має червоніти, а не мовчки зеленіти.
       - name: Detect spec/ (template-state guard)
         id: guard
         run: |
           if [ -d spec ]; then
             echo "has_spec=true"  >> "$GITHUB_OUTPUT"
+            echo "spec/ present — contract gates will run."
           else
-            echo "has_spec=false" >> "$GITHUB_OUTPUT"
-            echo "No spec/ found — template scaffold only, contract gates skipped."
+            PKG_NAME="$(node -p "require('./package.json').name" 2>/dev/null || echo '')"
+            if [ "$PKG_NAME" = "claude-api-contract" ]; then
+              echo "has_spec=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::No spec/ and this is the upstream template (package '$PKG_NAME') — contract gates skipped (scaffold only)."
+            else
+              echo "::error::spec/ is missing in a derived project (package '$PKG_NAME'). Contract gates cannot run. Restore spec/ (or run the contract pipeline); never merge a contract-less green build."
+              exit 1
+            fi
           fi
 
       - name: Install oasdiff (breaking-change gate)
         if: steps.guard.outputs.has_spec == 'true'
-        run: go install github.com/oasdiff/oasdiff@latest
+        run: go install "github.com/oasdiff/oasdiff@${OASDIFF_VERSION}"
 
       - name: Add Go bin to PATH
         if: steps.guard.outputs.has_spec == 'true'
