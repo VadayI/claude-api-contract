@@ -26,7 +26,11 @@ Optional `$ARGUMENTS`: the target version `vX.Y.Z`. If empty, derive it from the
 
 2. **Breaking classification.** `npm run breaking`; dispatch `breaking-change-analyst`. Confirm the version bump matches (breaking ⇒ major).
 
-3. **Changelog.** Dispatch `docs-writer`: `oasdiff changelog <prev-tag> openapi.yml` → prepend a `CHANGELOG.md` entry (flag breaking items + bump). Update `docs/api/INDEX.md` if endpoints changed.
+3. **Changelog (ADR 0007 — fragments + stamp).** Dispatch `docs-writer`:
+   - rename `## [Unreleased]` → `## [vX.Y.Z] — <date>` (the per-PR human fragments);
+   - run `oasdiff changelog <prev-tag> openapi.yml` to **verify/augment** — add any wire change the fragments missed, flag breaking items + the bump (`oasdiff` is the safety net, not the sole source);
+   - open a fresh empty `## [Unreleased]`.
+   Update `docs/api/INDEX.md` if endpoints changed.
 
 4. **Tag + push the tag** (not main):
    ```bash
