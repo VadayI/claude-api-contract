@@ -1,0 +1,81 @@
+name: scheduled-audit
+
+# Періодичний health-чек шаблону (nice-to-have, найнижчий пріоритет).
+# Пише job-summary; падає ЛИШЕ якщо контрактний гейт червоний на main.
+#   - STUB/TODO-інвентар у контрактних артефактах,
+#   - version/doc-drift (README == package.json == останній тег),
+#   - gate-health (validate + breaking) коли spec/ присутній.
+# Запускається за розкладом + вручну (workflow_dispatch).
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # щопонеділка 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheduled-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # --- STUB / TODO інвентар (інформативно) ---
+      - name: STUB / TODO inventory
+        run: |
+          {
+            echo "## STUB / TODO inventory"
+            stubs="$(grep -rnE 'STUB:' spec examples openapi.yml 2>/dev/null || true)"
+            if [ -n "$stubs" ]; then
+              echo "Tracked \`STUB:\` debt:"; echo '```'; echo "$stubs"; echo '```'
+            else echo "No \`STUB:\` markers."; fi
+            todos="$(grep -rnE '\b(TODO|FIXME)\b' spec examples openapi.yml 2>/dev/null | grep -v 'STUB:' || true)"
+            if [ -n "$todos" ]; then
+              echo "Bare TODO/FIXME (resolve or convert to a documented \`STUB:\`):"; echo '```'; echo "$todos"; echo '```'
+            else echo "No bare TODO/FIXME in contract artifacts."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # --- version / doc drift (інформативно) ---
+      - name: Version / doc drift
+        run: |
+          {
+            echo "## Version / doc drift"
+            PKG="$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' package.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+            RM="$(grep -oE 'Status: \*\*v[0-9]+\.[0-9]+\.[0-9]+' README.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+            TAG="$(git tag --list 'v*' --sort=-version:refname | head -1)"
+            echo "- package.json: v${PKG:-?}"
+            echo "- README status line: v${RM:-?}"
+            echo "- latest tag: ${TAG:-none}"
+            if [ -n "$TAG" ] && [ "v$PKG" = "$TAG" ] && [ "$PKG" = "$RM" ]; then
+              echo "- aligned ✓"
+            else
+              echo "- ⚠️ drift — reconcile README / package.json / latest tag (versioning.md)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # --- gate-health: падає, якщо контракт червоний на main ---
+      - name: Gate health
+        run: |
+          if [ -d spec ]; then
+            npm ci
+            npm run validate
+            npm run breaking
+            echo "## Gate health" >> "$GITHUB_STEP_SUMMARY"
+            echo "validate + breaking: passed ✓" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Gate health" >> "$GITHUB_STEP_SUMMARY"
+            echo "No spec/ — contract gates skipped (template scaffold)." >> "$GITHUB_STEP_SUMMARY"
+          fi

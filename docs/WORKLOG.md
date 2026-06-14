@@ -2,6 +2,42 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-13/14 (session 9 — template self-audit follow-ups)
+
+> Implements `docs/AUDIT-2026-06-14-followups.md` (from the `deep-research-report.md` self-audit). Template-internal — `personalize.sh` Tier 2 strips `docs/AUDIT-*.md` on derive, so only the committed gates/rules/scripts reach derived projects.
+
+- chore(ci): contract-policy PR gate (lean + advisory) — PR #38 — `37c477e` — CI: green — tag: none
+  - NEW `.github/workflows/contract-policy.yml` — diff-scoped PR gate complementing `contract-ci`
+  - 3 blocking checks: no bare TODO/FIXME in `spec/`/`examples/`/`openapi.yml` (documented `STUB:` allowed); ADR required when `.oasdiff-ignore.txt` changes; CHANGELOG `## [Unreleased]` fragment required on contract changes (ADR 0007)
+  - 1 advisory (non-blocking): suggest a living plan on `spec/` changes
+  - Audit item #2. No contract change; no semver bump
+
+- docs: changelog policy — ADR 0007 (Model A: Unreleased fragments + release stamping) — PR #37 — `80e0629` — CI: green — tag: none
+  - NEW `docs/decisions/0007-changelog-policy.md` — PR adds a human line under `## [Unreleased]`; `/release` stamps `[vX.Y.Z]` and runs `oasdiff changelog` to verify/augment (oasdiff = safety net, not sole source)
+  - Resolves the PR-time vs release-time changelog contradiction; unblocks the contract-policy CHANGELOG check
+  - Edited `.claude/rules/git-operations.md`, `.claude/commands/release.md`, `.claude/commands/create-pr.md`
+  - Audit item #8
+
+- chore: PR template — PR #36 — `b51355b` — CI: green — tag: none
+  - NEW `.github/PULL_REQUEST_TEMPLATE.md` — checklist mirroring the git-operations PR checklist (validate / breaking + semver / CHANGELOG / no hand-edit of `openapi.yml`)
+  - Audit item #10. No contract change
+
+- fix: version coherence → v0.4.0 + version-agnostic personalize reset — PR #35 — `efb0c16` — CI: green — tag: none
+  - `package.json` / `package-lock.json` aligned to latest tag `v0.4.0`; `README.md` status line updated
+  - `scripts/personalize.sh` Tier 2 reset made version-agnostic (resets to `0.0.0` regardless of current value)
+  - Audit item: README/version drift. No contract change
+
+- chore(ci): fail-closed spec-guard + pin oasdiff — PR #34 — `1bd3276` — CI: green — tag: none
+  - `.github/workflows/contract-ci.yml` — spec-guard now fail-closed (missing `spec/` in a *derived* project → FAIL, not skip), detected via `package.json` name == `claude-api-contract`
+  - Pinned `OASDIFF_VERSION: v1.18.4` (matches local; module `github.com/oasdiff/oasdiff`)
+  - Audit items #1 + #5. No contract change
+
+- **OPEN (not yet merged):** #39 CODEOWNERS — branch `origin/chore/codeowners` (`b94ac8c`), pushed, PR open
+  - `.github/CODEOWNERS` (zoned: contract / CI / docs, owner `@VadayI`) + `scripts/personalize.sh` owner tokenization (`@VadayI` → `@${OWNER}`)
+  - Audit item #4. Merge on host to land it.
+
+- Template count: **12 agents** · **23 commands** · **20 rules** · 6 skills · 2 workflows (`contract-ci`, `contract-policy`)
+
 ## 2026-06-11 (session 8)
 - feat: `/happy-paths` command + `happy-path-author` agent — PR #33 — CI: green — tag: none
   - Designed and implemented a new slash command `/happy-paths` and dedicated agent `happy-path-author`

@@ -86,3 +86,33 @@ jobs:
               echo "::notice::spec/ changed without docs/plans/NNNN-*.md. For non-trivial contract work consider adding a living plan (living-plan.md). Advisory only — not blocking."
             fi
           fi
+
+      # --- Блок 4: README status-line версія == package.json version ---
+      # Ловить version-drift (README відстав від package.json чи навпаки).
+      # Diff-scoped: лише коли README.md або package.json у дифі.
+      - name: README status line matches package.json version
+        run: |
+          if ! grep -qE '^(README\.md|package\.json)$' /tmp/changed.txt; then
+            echo "README.md / package.json not changed — skip."; exit 0
+          fi
+          PKG="$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' package.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          if [ -z "$PKG" ]; then echo "::error::cannot read version from package.json"; exit 1; fi
+          RM="$(grep -oE 'Status: \*\*v[0-9]+\.[0-9]+\.[0-9]+' README.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          if [ -z "$RM" ]; then
+            echo "::error::README.md has no 'Status: **vX.Y.Z' line to verify (README freshness)."; exit 1
+          fi
+          if [ "$RM" != "$PKG" ]; then
+            echo "::error::README status line (v$RM) != package.json version (v$PKG) — keep them in sync (versioning.md)."; exit 1
+          fi
+          echo "README status line matches package.json version (v$PKG)."
+
+      # --- Advisory (НЕ блокує): package.json version vs останній v* тег ---
+      - name: Advisory — package.json version vs latest tag
+        run: |
+          PKG="$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' package.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          TAG="$(git tag --list 'v*' --sort=-version:refname | head -1)"
+          if [ -n "$TAG" ] && [ -n "$PKG" ] && [ "v$PKG" != "$TAG" ]; then
+            echo "::notice::package.json is v$PKG but the latest tag is $TAG. Expected on a release-prep PR; otherwise version drift (versioning.md)."
+          else
+            echo "package.json version aligned with the latest tag (or no tag yet)."
+          fi

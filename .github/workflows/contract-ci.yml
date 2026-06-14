@@ -2,6 +2,8 @@ name: contract-ci
 
 # Контракт-first гейти. 5 перевірок: TypeSpec drift, Spectral lint,
 # валідація прикладів, oasdiff breaking (--fail-on ERR), Prism mock smoke.
+# Плюс verification-перевірка (не входить у канонічну п'ятірку):
+# endpoints-registry coverage (verification.md).
 on:
   push:
     branches: [main]
@@ -98,3 +100,12 @@ jobs:
       - name: Gate 5 — Prism mock smoke
         if: steps.guard.outputs.has_spec == 'true'
         run: npm run mock:smoke
+
+      # --- Verification: endpoints registry coverage (verification.md) ---
+      # Доповнює 5 гейтів (не канонічна п'ятірка). Кожна операція (method, path)
+      # в openapi.yml має запис у .claude/memory/endpoints.json. State-перевірка,
+      # не diff-scoped: не фаєрить на зміни лише моделей/описів — лише на
+      # незареєстрований ендпоінт.
+      - name: Verify — Endpoints registry coverage
+        if: steps.guard.outputs.has_spec == 'true'
+        run: npm run check:endpoints

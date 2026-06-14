@@ -53,6 +53,42 @@
     "context7@claude-plugins-official": true
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/policy/block_protected_edits.sh",
+            "statusMessage": "Checking protected-file edit policy..."
+          }
+        ]
+      }
+    ],
+    "UserPromptExpansion": [
+      {
+        "matcher": "release|ship-contract|create-pr",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/policy/check_command_gate.sh",
+            "statusMessage": "Checking command preconditions..."
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "ba|api-architect|tsp-author|contract-reviewer|breaking-change-analyst|mock-validator|docs-writer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/policy/check_plan_execution_log.sh",
+            "statusMessage": "Checking living-plan execution log..."
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

@@ -1,0 +1,10 @@
+# pre-push (husky) — heavier contract gates before sharing (mirror CI).
+# Self-skips on a fresh template scaffold (no spec/).
+set -e
+if [ -d spec ]; then
+  npm run validate
+  npm run breaking
+  npm run mock:smoke
+else
+  echo "[pre-push] no spec/ — contract gates skipped (template scaffold)."
+fi
