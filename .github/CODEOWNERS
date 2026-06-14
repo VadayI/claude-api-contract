@@ -1,0 +1,37 @@
+# CODEOWNERS — review ownership by path. GitHub auto-requests review from the
+# owner(s) of the changed paths on every PR.
+#
+# To ENFORCE it (block merge until a code owner approves), turn on
+# "Require review from Code Owners" in branch protection / a ruleset for `main`.
+# Note: on a solo repo this would block you (you cannot code-owner-approve your
+# own PR) — enforcement is meant for team projects.
+#
+# Template notes:
+#   - The owner handles below are the upstream template owner; `scripts/personalize.sh`
+#     rewrites them to your GitHub owner on derive.
+#   - If your owner is an ORGANISATION, replace handles with `@org/team`
+#     (a bare `@org` is NOT a valid code owner), and split the zones below
+#     across your real teams.
+
+# Default — anything not matched by a more specific rule below.
+*                       @VadayI
+
+# --- Contract & process surface (the contract + the agents/rules/commands that shape it) ---
+/spec/                  @VadayI
+/openapi.yml            @VadayI
+/examples/              @VadayI
+/.claude/agents/        @VadayI
+/.claude/rules/         @VadayI
+/.claude/commands/      @VadayI
+
+# --- CI, gates & tooling ---
+/.github/               @VadayI
+/scripts/               @VadayI
+/.spectral.yaml         @VadayI
+/tspconfig.yaml         @VadayI
+/Dockerfile             @VadayI
+
+# --- Documentation ---
+/docs/                  @VadayI
+/README.md              @VadayI
+/CHANGELOG.md           @VadayI

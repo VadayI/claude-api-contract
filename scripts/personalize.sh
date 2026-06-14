@@ -245,6 +245,10 @@ do_replace "package.json" "\"description\": \"${TEMPLATE_DESC}\"" "\"description
 # package-lock.json — name appears twice (root entry and first packages entry)
 do_replace "package-lock.json" '"name": "claude-api-contract"' "\"name\": \"${SLUG}\""
 
+# CODEOWNERS — point review ownership at the derived project's GitHub owner.
+# If ${OWNER} is an org, edit .github/CODEOWNERS to @org/team afterwards.
+do_replace ".github/CODEOWNERS" "@VadayI" "@${OWNER}"
+
 # --------------------------------------------------------------------------- #
 # Tier 2 — reset / normalize
 # --------------------------------------------------------------------------- #
