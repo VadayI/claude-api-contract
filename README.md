@@ -260,6 +260,22 @@ ba → api-architect → tsp-author → [contract-reviewer | breaking-change-ana
 | Breaking-change | `oasdiff breaking --fail-on ERR` | breaking change without a major bump |
 | Mock smoke | Prism | mock does not come up / returns invalid response |
 
+> These 5 are the canonical contract-integrity gates (always on, every maturity stage). Two more layers complement them:
+>
+> - **Process gates** — `contract-policy.yml` (PR-scoped, diff-aware): no bare TODO/FIXME in contract artifacts (a documented `STUB:` is allowed), an ADR alongside any `.oasdiff-ignore.txt` change, a CHANGELOG `[Unreleased]` fragment on contract changes, and README ↔ `package.json` version coherence. Plus a supplementary **endpoints-registry coverage** check in `contract-ci.yml` — every `openapi.yml` path is recorded in `.claude/memory/endpoints.json` (`npm run check:endpoints`).
+> - **Local Claude Code hooks** — `.claude/settings.json` (run in the CLI, not CI): hard-block direct edits to the generated `openapi.yml`, gate `/release` + `/ship-contract` on cheap preconditions (`/create-pr` is advisory), and nudge the living-plan execution log. A weekly **`scheduled-audit`** workflow reports STUB/TODO inventory, version drift, and gate health.
+
+## Local git hooks (optional)
+
+For commits made **outside** Claude Code, opt into Husky + commitlint to mirror the gates locally:
+
+```bash
+npm i -D husky@^9 @commitlint/cli@^19 @commitlint/config-conventional@^19
+npm pkg set scripts.prepare="husky" && npm run prepare
+```
+
+`pre-commit` (no hand-edited `openapi.yml`, no bare TODO in contract files, Spectral), `commit-msg` (Conventional Commits — English type prefix; Ukrainian subject/body allowed), `pre-push` (validate + breaking + mock). commitlint is pinned to **v19**: v21 requires Node ≥ 22.12 while this template targets Node ≥ 20.19.
+
 ## Delivery & versioning
 
 Releases are **git tags** `vX.Y.Z`. Consumers pin `CONTRACT_VERSION` and fetch:
@@ -303,7 +319,7 @@ openapi.yml      ◄ CANONICAL OUTPUT (bundled, OpenAPI 3.1)
 .spectral.yaml   layered ruleset
 ```
 
-> Status: **v0.4.0 released** — full contract slice (auth + articles CRUD), 5 CI gates, Prism mock. Docker packaging + VPS deploy (`/ship-contract`). `/check-readme` freshness command. See `docs/HANDOFF.md` for current state.
+> Status: **v0.4.0 released** — full contract slice (auth + articles CRUD), 5 CI gates + process gates + local Claude Code policy hooks, Prism mock (reference + derived-aware). Docker packaging + VPS deploy (`/ship-contract`). `/check-readme` freshness command. See `docs/HANDOFF.md` for current state.
 
 ## Uninstall
 

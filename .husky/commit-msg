@@ -1,0 +1,3 @@
+# commit-msg (husky) — enforce Conventional Commits (English type prefix).
+# Ukrainian is allowed in the subject text and body (see commitlint.config.mjs).
+npx --no-install commitlint --edit "$1"

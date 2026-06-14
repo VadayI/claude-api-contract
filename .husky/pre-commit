@@ -1,0 +1,28 @@
+# pre-commit (husky) — fast local guards for commits made OUTSIDE Claude Code.
+# Mirrors the CI policy gates + Claude Code PreToolUse hook. Opt-in: active only
+# after installing husky + commitlint (devDeps) and running `npm run prepare`.
+set -e
+
+# 1) openapi.yml is generated — never commit it without the spec/ that produced it.
+if git diff --cached --name-only | grep -qx 'openapi.yml'; then
+  if ! git diff --cached --name-only | grep -qE '^spec/'; then
+    echo "[pre-commit] openapi.yml staged without spec/ changes — it is generated." >&2
+    echo "             Edit spec/**/*.tsp, then: npm run api:compile && npm run api:bundle (contract-first.md)." >&2
+    exit 1
+  fi
+fi
+
+# 2) No bare TODO/FIXME added to contract artifacts (documented 'STUB:' allowed).
+staged="$(git diff --cached --name-only | grep -E '^(spec/|examples/|openapi\.yml)' || true)"
+for f in $staged; do
+  [ -f "$f" ] || continue
+  if git diff --cached -- "$f" | grep -E '^\+' | grep -E '\b(TODO|FIXME)\b' | grep -qv 'STUB:'; then
+    echo "[pre-commit] bare TODO/FIXME added in $f — resolve it or use a documented 'STUB:' (no-stubs.md)." >&2
+    exit 1
+  fi
+done
+
+# 3) Spectral lint when a contract exists.
+if [ -f openapi.yml ]; then npm run lint --silent; fi
+
+echo "[pre-commit] OK"
