@@ -1,6 +1,6 @@
 # Spectral linting (layered ruleset, enforced)
 
-> Loaded per-agent by `tsp-author`, `contract-reviewer`, `mock-validator`. Gate: `npm run lint`.
+> Loaded by `contract-reviewer` (agent) and `/validate-contract`, `/review-pr`, `/fix-ci` (commands). Gate: `npm run lint`.
 
 `.spectral.yaml` is a **layered** ruleset — not a copy of someone else's. It `extends: [[spectral:oas, all]]` and adds custom rules for this repo's naming / codes / envelope.
 

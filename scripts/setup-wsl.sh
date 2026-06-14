@@ -31,7 +31,7 @@ fi
 echo "[setup] 4/4 — oasdiff (breaking-change gate)"
 if ! command -v oasdiff >/dev/null 2>&1; then
   echo "[setup]   oasdiff missing. Install (one of):"
-  echo "[setup]     go install github.com/oasdiff/oasdiff@latest"
+  echo "[setup]     go install github.com/oasdiff/oasdiff@v1.18.4"
   echo "[setup]     brew tap oasdiff/homebrew-oasdiff && brew install oasdiff"
 else
   echo "[setup]   oasdiff: $(oasdiff --version 2>/dev/null | head -n1)"

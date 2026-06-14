@@ -31,6 +31,6 @@ Controls dynamic generation per property.
 Prism validates request AND response against the schema — covers the mock-smoke and example-validation gates at once.
 
 ## Notes
-- In Docker: `prism mock -h 0.0.0.0 ...` or it is unreachable outside the container.
+- In Docker: `prism mock -h 0.0.0.0 -m false ...` — `-h 0.0.0.0` makes it reachable outside the container; `-m false` (single-process) is REQUIRED: Prism 5's default multiprocess mode reads `cluster.isPrimary` (undefined in a container) and crashes. See `deploy.md` / `Dockerfile`.
 - Live-reloads on openapi.yml change.
 - Smoke test: bring it up, hit each endpoint with the documented request, expect a 2xx valid body and the documented error codes.

@@ -1,6 +1,6 @@
 # MCP stack & docs verification
 
-> Loaded per-agent by `api-architect`, `tsp-author`, `docs-writer`, `contract-reviewer`.
+> Loaded per-agent by `api-architect`, `tsp-author`, `contract-reviewer`, `breaking-change-analyst`, `docs-writer`.
 
 ## Servers (committed baseline)
 

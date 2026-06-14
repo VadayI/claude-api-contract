@@ -3,7 +3,7 @@ model: sonnet
 description: "[claude-api-contract] Bootstrap a contract project from this template (Mode A fresh scaffold / Mode B resume)."
 ---
 
-Bootstrap a `claude-api-contract` project from this template config. You orchestrate; delegate implementation steps to agents (`devops`-style tasks run via Bash). Two modes:
+Bootstrap a `claude-api-contract` project from this template config. You orchestrate; delegate implementation steps to agents (scaffolding/setup tasks run via Bash). Two modes:
 
 - **A. Fresh** — `.claude/`, `CLAUDE.md`, `templates/` copied (Quick start done) but no `.git/` and no `spec/`.
 - **B. Resume** — existing git+GitHub repo with a partial scaffold.
