@@ -27,7 +27,7 @@ if command -v oasdiff >/dev/null 2>&1; then
   echo "[install] oasdiff present: $(oasdiff --version 2>/dev/null | head -n1)"
 else
   echo "[install] NOTE: oasdiff not installed (needed for the breaking-change gate)."
-  echo "[install]   Go:    go install github.com/oasdiff/oasdiff@latest"
+  echo "[install]   Go:    go install github.com/oasdiff/oasdiff@v1.18.4"
   echo "[install]   Brew:  brew tap oasdiff/homebrew-oasdiff && brew install oasdiff"
   echo "[install]   Or download a release binary: https://github.com/oasdiff/oasdiff/releases"
 fi

@@ -18,7 +18,7 @@ node scripts/log-cmd.mjs /check-readme "$ARGUMENTS"
 
 1. **Dispatch `docs-writer`** to audit README.md against live state:
    - **Version drift:** compare the status line in README (the `> Status:` blockquote near the bottom) against `git tag --list 'v*' --sort=-version:refname | head -n1`. If they differ, flag as stale.
-   - **Command/agent/rule counts:** compare README claims (e.g. "11 agents / 20 commands / 19 rules / 6 skills / 5 CI gates") against actual directory counts:
+   - **Command/agent/rule counts:** compare README claims against actual directory counts (derive the live numbers from the globs below — never trust a frozen example):
      - `ls .claude/commands/*.md | wc -l` for commands
      - `ls .claude/agents/*.md | wc -l` for agents
      - `ls .claude/rules/*.md | wc -l` for rules

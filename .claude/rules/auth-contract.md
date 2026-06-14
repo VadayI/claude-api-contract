@@ -1,6 +1,6 @@
 # Auth in the contract (Bearer/JWT, user-flow + service-flow)
 
-> Loaded per-agent by `api-architect` and `tsp-author`. Decisions #4, D1, D2, D5.
+> Loaded by `api-architect`, `tsp-author`, `contract-reviewer`, `happy-path-author` (agents) and `/bootstrap` (command). Decisions #4, D1, D2, D5.
 
 The contract **describes its own auth** so the Prism mock can issue tokens and a frontend can authenticate autonomously before any real backend exists.
 

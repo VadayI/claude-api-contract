@@ -1,6 +1,6 @@
 # Examples (validated; feed the mock)
 
-> Loaded per-agent by `mock-validator` and `docs-writer`.
+> Loaded by `mock-validator`, `docs-writer`, `tsp-author` (agents) and `/validate-contract`, `/fix-ci` (commands).
 
 `examples/**` holds request/response examples that (a) feed Prism's static mock and (b) double as documentation. They must always be valid against the schema.
 
