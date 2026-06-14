@@ -6,6 +6,21 @@
 
 > Implements `docs/AUDIT-2026-06-14-followups.md` (from the `deep-research-report.md` self-audit). Template-internal — `personalize.sh` Tier 2 strips `docs/AUDIT-*.md` on derive, so only the committed gates/rules/scripts reach derived projects.
 
+- feat: session-9 audit follow-ups — 4.1–4.7 + README (consolidated) — PR #40 — `05ce21f` — CI: green — tag: none
+  - **4.2** endpoints-registry coverage: NEW `scripts/check_endpoints_registry.mjs` + `npm run check:endpoints` + supplementary "Verify" step in `contract-ci.yml` (NOT a 6th canonical gate — "5 CI gates" wording preserved)
+  - **4.1** Claude Code policy hooks: NEW `scripts/policy/{block_protected_edits,check_command_gate,check_plan_execution_log}.sh` + wired in `.claude/settings.json` (PreToolUse hard-block direct `openapi.yml` edit; UserPromptExpansion `/release`+`/ship-contract` BLOCK, `/create-pr` ADVISORY; SubagentStop ADVISORY). Hook events verified vs official docs.
+  - **4.6** README-freshness + version-coherence checks added to `contract-policy.yml`
+  - **4.3** ADR 0008 — declined `oasdiff-action` (PR comments require oasdiff Pro); kept the pinned CLI
+  - **4.4** `check_mock.sh` — reference/derived auto-detect (template behaviour unchanged; derived no longer false-fails)
+  - **4.7** NEW `.github/workflows/scheduled-audit.yml` (weekly STUB/TODO inventory + version-drift + gate-health)
+  - **4.5** (opt-in) NEW `.husky/{pre-commit,commit-msg,pre-push}` + `commitlint.config.mjs` — devDeps added on host; commitlint pinned **@19** (v21 needs Node >=22.12)
+  - docs: `docs/WORKLOG.md` (this block) + `docs/HANDOFF.md` + `README.md` refresh
+  - 18 files; no contract change (`spec/`/`openapi.yml` untouched); no semver bump; consumers: no action needed
+
+- chore: CODEOWNERS (zoned) + personalize owner-tokenization — PR #39 — `53ce953` — CI: green — tag: none
+  - `.github/CODEOWNERS` (zoned: contract / CI / docs, owner `@VadayI`) + `scripts/personalize.sh` owner tokenization (`@VadayI` → `@${OWNER}`)
+  - Audit item #4. No contract change
+
 - chore(ci): contract-policy PR gate (lean + advisory) — PR #38 — `37c477e` — CI: green — tag: none
   - NEW `.github/workflows/contract-policy.yml` — diff-scoped PR gate complementing `contract-ci`
   - 3 blocking checks: no bare TODO/FIXME in `spec/`/`examples/`/`openapi.yml` (documented `STUB:` allowed); ADR required when `.oasdiff-ignore.txt` changes; CHANGELOG `## [Unreleased]` fragment required on contract changes (ADR 0007)
@@ -32,11 +47,7 @@
   - Pinned `OASDIFF_VERSION: v1.18.4` (matches local; module `github.com/oasdiff/oasdiff`)
   - Audit items #1 + #5. No contract change
 
-- **OPEN (not yet merged):** #39 CODEOWNERS — branch `origin/chore/codeowners` (`b94ac8c`), pushed, PR open
-  - `.github/CODEOWNERS` (zoned: contract / CI / docs, owner `@VadayI`) + `scripts/personalize.sh` owner tokenization (`@VadayI` → `@${OWNER}`)
-  - Audit item #4. Merge on host to land it.
-
-- Template count: **12 agents** · **23 commands** · **20 rules** · 6 skills · 2 workflows (`contract-ci`, `contract-policy`)
+- Template count: **12 agents** · **23 commands** · **20 rules** · 6 skills · **3 workflows** (`contract-ci`, `contract-policy`, `scheduled-audit`) · NEW `scripts/policy/` + `scripts/check_endpoints_registry.mjs`
 
 ## 2026-06-11 (session 8)
 - feat: `/happy-paths` command + `happy-path-author` agent — PR #33 — CI: green — tag: none
