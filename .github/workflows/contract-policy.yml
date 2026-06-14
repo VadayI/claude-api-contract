@@ -1,0 +1,88 @@
+name: contract-policy
+
+# PR-gate політик процесу (доповнює contract-ci). Усі перевірки diff-scoped:
+# спрацьовують лише коли в дифі є релевантні файли, тож звичайні process-PR
+# (.claude/**, docs/**, scripts/**) проходять без зайвого тертя.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-policy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for base diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute changed files (PR diff vs base)
+        run: |
+          git fetch --no-tags origin "${{ github.base_ref }}" >/dev/null 2>&1 || true
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/changed.txt
+          echo "Changed files in this PR:"; sed 's/^/  /' /tmp/changed.txt
+
+      # --- Блок 1: жодних bare TODO/FIXME у контрактних артефактах ---
+      # `STUB:` (із обґрунтуванням, no-stubs.md) дозволено; bare TODO/FIXME — ні.
+      - name: No bare TODO/FIXME in contract artifacts
+        run: |
+          files="$(grep -E '^(spec/|examples/|openapi\.yml)' /tmp/changed.txt || true)"
+          if [ -z "$files" ]; then echo "No contract artifacts changed — skip."; exit 0; fi
+          bad=0
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            [ -f "$f" ] || continue   # видалені файли пропускаємо
+            matches="$(grep -nE '\b(TODO|FIXME)\b' "$f" | grep -v 'STUB:' || true)"
+            if [ -n "$matches" ]; then
+              echo "::error file=$f::bare TODO/FIXME in contract artifact — resolve it or use a documented 'STUB:' marker (no-stubs.md)"
+              echo "$matches" | sed 's/^/    /'
+              bad=1
+            fi
+          done <<< "$files"
+          [ "$bad" -eq 0 ] || exit 1
+          echo "Contract artifacts free of bare TODO/FIXME."
+
+      # --- Блок 2: зміна .oasdiff-ignore.txt вимагає ADR ---
+      - name: ADR required when .oasdiff-ignore.txt changes
+        run: |
+          if ! grep -Fxq '.oasdiff-ignore.txt' /tmp/changed.txt; then
+            echo ".oasdiff-ignore.txt not changed — skip."; exit 0
+          fi
+          if grep -qE '^docs/decisions/.+\.md$' /tmp/changed.txt; then
+            echo "ADR present alongside .oasdiff-ignore.txt change — OK."
+          else
+            echo "::error::.oasdiff-ignore.txt changed without an ADR in docs/decisions/ — record the consciously-allowed breaking change in an ADR (breaking-changes.md)."
+            exit 1
+          fi
+
+      # --- Блок 3: contract-зміна вимагає CHANGELOG [Unreleased] fragment (ADR 0007) ---
+      - name: CHANGELOG [Unreleased] fragment required for contract changes
+        run: |
+          if grep -qE '^(spec/|openapi\.yml)' /tmp/changed.txt; then
+            if grep -Fxq 'CHANGELOG.md' /tmp/changed.txt; then
+              echo "CHANGELOG.md updated alongside the contract change — OK."
+            else
+              echo "::error::Contract changed (spec/ or openapi.yml) but CHANGELOG.md has no new ## [Unreleased] fragment (ADR 0007)."
+              exit 1
+            fi
+          else
+            echo "No contract change — CHANGELOG fragment not required."
+          fi
+
+      # --- Advisory (НЕ блокує): нагадування про living plan на spec/-змінах ---
+      - name: Advisory — suggest a living plan for spec/ changes
+        run: |
+          if grep -qE '^spec/' /tmp/changed.txt; then
+            if grep -qE '^docs/plans/.+\.md$' /tmp/changed.txt; then
+              echo "Living plan present for this spec/ change."
+            else
+              echo "::notice::spec/ changed without docs/plans/NNNN-*.md. For non-trivial contract work consider adding a living plan (living-plan.md). Advisory only — not blocking."
+            fi
+          fi
