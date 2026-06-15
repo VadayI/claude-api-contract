@@ -3,7 +3,7 @@ name: brief-synthesizer
 description: "[claude-api-contract] Synthesizes a PROJECT.md brief from docs/** and a conversation. Invoked by /synthesize-brief.\n\nTrigger: /synthesize-brief, write the project brief, summarize requirements into PROJECT.md.\n\n<example>\nuser: '/synthesize-brief'\nassistant: 'Using brief-synthesizer: fold docs/** + decisions into a single PROJECT.md brief.'\n</example>"
 model: sonnet
 color: purple
-tools: [Read, Glob, Grep, Write, Edit, SendMessage]
+tools: Read, Glob, Grep, Write, Edit
 ---
 
 # Brief Synthesizer

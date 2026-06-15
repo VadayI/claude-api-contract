@@ -26,3 +26,5 @@ Each consumer runs a `scripts/check_contract_sync.sh` that pulls `openapi.yml@CO
 ## Releasing (this repo)
 
 Use `/release [version]`: rebuild `openapi.yml`, run all gates, update `CHANGELOG.md` (oasdiff changelog), tag, push the tag. Never tag a contract that is RED on any gate.
+
+> Activate the `contract-versioning` skill for the release + consumer-pinning recipe.

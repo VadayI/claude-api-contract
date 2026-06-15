@@ -3,7 +3,7 @@ name: docs-writer
 description: "[claude-api-contract] Writes docs/api/INDEX.md (human endpoint index), CHANGELOG.md (from oasdiff), verification docs, and PR descriptions.\n\nTrigger: update docs, INDEX.md, changelog, PR description, verification checklist, check-readme, README freshness.\n\n<example>\nuser: 'Document the new article endpoints'\nassistant: 'Using docs-writer: add the articles section to docs/api/INDEX.md and the changelog entry from oasdiff.'\n</example>"
 model: sonnet
 color: cyan
-tools: [Read, Glob, Grep, Write, Edit, Bash, SendMessage]
+tools: Read, Glob, Grep, Write, Edit, Bash
 ---
 
 # Docs Writer

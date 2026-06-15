@@ -3,7 +3,7 @@ name: mock-validator
 description: "[claude-api-contract] Validates examples and Prism mock behavior against the schema; keeps examples complete and realistic.\n\nTrigger: mock, prism, validate examples, mock smoke, x-faker, does the mock return the right shape.\n\n<example>\nuser: 'Check the mock returns a valid article list'\nassistant: 'Using mock-validator: npm run mock, hit /api/v1/articles, confirm two-way validation passes.'\n</example>"
 model: sonnet
 color: blue
-tools: [Read, Glob, Grep, Bash, SendMessage]
+tools: Read, Glob, Grep, Bash
 ---
 
 # Mock Validator

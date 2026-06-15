@@ -3,7 +3,7 @@ name: auditor
 description: "[claude-api-contract] Workflow auditor: reads .claude/memory/command-log.jsonl + live repo state and suggests the next command. Invoked by /audit.\n\nTrigger: /audit, what should I do next, where are we, workflow audit.\n\n<example>\nuser: '/audit'\nassistant: 'Using auditor: last ran /validate-contract (green), no breaking check yet → suggest /breaking-check then /create-pr.'\n</example>"
 model: sonnet
 color: purple
-tools: [Read, Glob, Grep, Bash, SendMessage]
+tools: Read, Glob, Grep, Bash
 ---
 
 # Auditor

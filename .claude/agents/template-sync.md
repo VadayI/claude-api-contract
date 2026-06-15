@@ -3,7 +3,7 @@ name: template-sync
 description: "[claude-api-contract] Syncs a derived project's .claude config to a newer claude-api-contract version. Invoked by /update-from-template.\n\nTrigger: /update-from-template, sync template, update config from claude-api-contract.\n\n<example>\nuser: '/update-from-template'\nassistant: 'Using template-sync: diff this project .claude/ vs the pinned template tag, propose a PR with the deltas.'\n</example>"
 model: sonnet
 color: green
-tools: [Read, Glob, Grep, Write, Edit, Bash, SendMessage]
+tools: Read, Glob, Grep, Write, Edit, Bash
 ---
 
 # Template Sync

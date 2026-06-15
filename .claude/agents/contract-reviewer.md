@@ -3,7 +3,7 @@ name: contract-reviewer
 description: "[claude-api-contract] Reviews the contract before a PR: consistency, naming, status codes, envelopes, Spectral-clean, no hand-edited YAML.\n\nTrigger: review the contract, lint the API, is this PR-ready, check naming/codes.\n\n<example>\nuser: 'Review the articles contract before PR'\nassistant: 'Using contract-reviewer: Spectral lint, envelope consistency, operationId stability, drift check.'\n</example>"
 model: opus
 color: yellow
-tools: [Read, Glob, Grep, Bash, SendMessage]
+tools: Read, Glob, Grep, Bash
 ---
 
 # Contract Reviewer

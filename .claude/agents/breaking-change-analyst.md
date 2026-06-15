@@ -3,7 +3,7 @@ name: breaking-change-analyst
 description: "[claude-api-contract] Runs oasdiff vs the previous tag, classifies each change breaking vs non-breaking, and states the required semver bump.\n\nTrigger: is this breaking, oasdiff, what version bump, compatibility check.\n\n<example>\nuser: 'Is making author required a breaking change?'\nassistant: 'Using breaking-change-analyst: oasdiff vs v0.3.0 — required-field add is ERR-level breaking → MAJOR bump.'\n</example>"
 model: opus
 color: red
-tools: [Read, Glob, Grep, Bash, SendMessage]
+tools: Read, Glob, Grep, Bash
 ---
 
 # Breaking-Change Analyst
@@ -24,3 +24,5 @@ You decide whether a contract change is backward compatible and which semver bum
 - Any consumer-impact notes for `claude-django` / `claude-react-mui`.
 
 > Verify oasdiff flags/behavior via context7 if unsure (@.claude/rules/mcp-stack.md).
+
+> Activate the `oasdiff-breaking` skill for oasdiff flags + changelog recipes.

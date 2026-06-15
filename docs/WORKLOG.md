@@ -2,6 +2,22 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-06-15 (session 10 — template self-audit + fixes, via Cowork)
+
+> Full audit of every agent/command/skill/rule/script/hook/CI workflow + applied fixes. Audit doc: `docs/AUDIT-2026-06-14-template.md` (untracked; `personalize.sh` Tier 2 strips `docs/AUDIT-*.md` on derive). 1 HIGH · 4 MEDIUM · 6 low/verify.
+
+- chore: audit fixes — husky+commitlint wired, SendMessage removed, doc-drift — `2bab66e` (branch `chore/audit-2026-06-14-doc-drift`; not pushed/PR'd) — gates: validate green · mock:smoke 11/11 · check:endpoints 10/10 · breaking host-only — tag: none
+  - **Audit:** no orphan rules; all script/agent/skill refs resolve; 4/6 skills already had activation hooks; live gates green.
+  - **H1** husky+commitlint wired: `prepare: husky` + devDeps; `core.hooksPath=.husky/_`; commitlint good/bad tested.
+  - **M1** activated the 2 skills that lacked a hook: `oasdiff-breaking` (breaking-change-analyst) + `contract-versioning` (versioning.md).
+  - **M2** HANDOFF reconciled: removed dead `/HANDOFF.md` from `.gitignore`; aligned `wrap-up.md` to CLAUDE.md (tracked).
+  - **M3** clarified ADR reset list in `clean.sh` + `node-commands.md` (0002–0004 demo-contract; 0005–0008 infra, kept like 0001).
+  - **M4/L1** removed `SendMessage`; `tools` array → comma-separated string across all 12 agents.
+  - **L4** import-block insert pointer → `project-maturity.md` (CLAUDE.md + set-language.md).
+  - **Post-commit fix (uncommitted):** commitlint re-pinned **v21→v19** — npm default pulled v21 (`engines.node >=22.12`, breaks the `>=20.19` floor); corrected per `docs/lessons.md`. `package.json` + `package-lock.json` await commit.
+  - **Deferred (low/verify):** L2 `UserPromptExpansion`, L3 `statusMessage`, L5 `SubagentStop` matcher, L6 spectral `warn`→`error`.
+  - No contract/wire change; no semver bump; consumers: no action.
+
 ## 2026-06-13/14 (session 9 — template self-audit follow-ups)
 
 > Implements `docs/AUDIT-2026-06-14-followups.md` (from the `deep-research-report.md` self-audit). Template-internal — `personalize.sh` Tier 2 strips `docs/AUDIT-*.md` on derive, so only the committed gates/rules/scripts reach derived projects.
