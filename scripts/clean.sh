@@ -12,6 +12,7 @@
 #     state; DESTRUCTIVE — deletes spec/, examples/, openapi.yml and local artifacts):
 #     LOCAL/  spec/  examples/  openapi.yml  docs/decisions/0002–0004
 #     .claude/memory/endpoints.json  .env  .claude/settings.local.json
+#     (docs/decisions: 0002–0004 = demo-contract ADRs removed here; 0005–0008 are template infra, kept like 0001)
 #     Requires confirmation (--yes to skip).
 #
 # Flags:
@@ -90,7 +91,7 @@ if [[ "$RESET_TO_CLONE" == true ]]; then
   echo "[clean]    examples/       ← request/response examples"
   echo "[clean]    openapi.yml     ← canonical build output"
   echo "[clean]    LOCAL/          ← local developer notes"
-  echo "[clean]    docs/decisions/0002–0004 ← project-level ADRs"
+  echo "[clean]    docs/decisions/0002–0004 ← demo-contract ADRs (0005–0008 = template infra, kept)"
   echo "[clean]    .env            ← local secrets"
   echo "[clean]    .claude/settings.local.json"
   echo "[clean]    .claude/memory/endpoints.json"

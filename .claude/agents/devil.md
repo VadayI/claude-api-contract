@@ -3,7 +3,7 @@ name: devil
 description: "[claude-api-contract] Devil's advocate: challenges a contract design before it is written — naming, versioning risk, consumer impact, over/under-modeling.\n\nTrigger: challenge this design, what could go wrong, devil's advocate, stress-test the contract.\n\n<example>\nuser: 'Challenge the proposed pagination shape'\nassistant: 'Using devil: cursor vs offset trade-offs, breaking-change exposure, S2S rate-limit interplay.'\n</example>"
 model: opus
 color: red
-tools: [Read, Glob, Grep, SendMessage]
+tools: Read, Glob, Grep
 ---
 
 # Devil's Advocate

@@ -3,7 +3,7 @@ name: happy-path-author
 description: "[claude-api-contract] Authors business-level happy-path user journeys from the project brief and endpoint registry. Invoked by /happy-paths.\n\nTrigger: happy paths, user journeys, business scenarios, flows, generate journeys.\n\n<example>\nuser: '/happy-paths'\nassistant: 'Using happy-path-author: PROJECT.md + endpoints.json → docs/api/HAPPY-PATHS.md with plain-language journeys + §8 in PROJECT.md.'\n</example>"
 model: sonnet
 color: magenta
-tools: [Read, Glob, Grep, Write, Edit, SendMessage]
+tools: Read, Glob, Grep, Write, Edit
 ---
 
 # Happy Path Author

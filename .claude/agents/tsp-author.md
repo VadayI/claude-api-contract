@@ -3,7 +3,7 @@ name: tsp-author
 description: "[claude-api-contract] TypeSpec author: transcribes the approved contract into spec/**/*.tsp and recompiles openapi.yml.\n\nTrigger: write TypeSpec, implement the contract, add the endpoint to spec, recompile openapi.\n\n<example>\nuser: 'Implement the article contract in TypeSpec'\nassistant: 'Using tsp-author: spec/articles.tsp referencing shared envelopes, then npm run api:compile && api:bundle.'\n</example>"
 model: sonnet
 color: green
-tools: [Read, Glob, Grep, Write, Edit, Bash, SendMessage]
+tools: Read, Glob, Grep, Write, Edit, Bash
 ---
 
 # TypeSpec Author

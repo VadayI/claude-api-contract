@@ -75,5 +75,5 @@ Class A (safe to delete any time — fully regenerable): `node_modules/`, `tsp-o
 `.claude/memory/env-detect.json`, `.claude/memory/command-log.jsonl`.
 
 Class B (only present on the template's own working copy — absent on a fresh clone): `LOCAL/`,
-`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004`, `.env`, `.claude/memory/endpoints.json`,
+`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004` (demo-contract ADRs — 0005–0008 are template infra, kept), `.env`, `.claude/memory/endpoints.json`,
 `.claude/settings.local.json`. See `docs/AUDIT-2026-06-08.md` for the full inventory.
