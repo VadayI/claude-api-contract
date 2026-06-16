@@ -6,6 +6,7 @@ name: contract-policy
 on:
   pull_request:
     branches: [main]
+  merge_group:
 
 permissions:
   contents: read
@@ -25,8 +26,12 @@ jobs:
 
       - name: Compute changed files (PR diff vs base)
         run: |
-          git fetch --no-tags origin "${{ github.base_ref }}" >/dev/null 2>&1 || true
-          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/changed.txt
+          # base_ref is set for pull_request; for merge_group it comes from the
+          # event payload (refs/heads/<branch>) — strip the refs/heads/ prefix.
+          BASE_REF="${{ github.base_ref || github.event.merge_group.base_ref }}"
+          BASE_REF="${BASE_REF#refs/heads/}"
+          git fetch --no-tags origin "$BASE_REF" >/dev/null 2>&1 || true
+          git diff --name-only "origin/${BASE_REF}...HEAD" > /tmp/changed.txt
           echo "Changed files in this PR:"; sed 's/^/  /' /tmp/changed.txt
 
       # --- Блок 1: жодних bare TODO/FIXME у контрактних артефактах ---

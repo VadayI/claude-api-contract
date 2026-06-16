@@ -1,9 +1,9 @@
 ---
 model: sonnet
-description: "[claude-api-contract] Validate the contract locally — TypeSpec drift + Spectral lint + example validation."
+description: "[claude-api-contract] Validate the contract locally — TypeSpec drift + Spectral lint + example validation + endpoints registry."
 ---
 
-Run the full local contract validation. This is the pre-PR gate; it mirrors the CI gates so failures surface before review.
+Run the local contract validation. This is the pre-PR gate for the **static** contract gates (drift + lint + examples + endpoints registry); the heavier gates (`/breaking-check`, Prism mock smoke) run separately. It surfaces failures before review.
 
 ## Log
 ```bash
@@ -33,6 +33,12 @@ node scripts/log-cmd.mjs /validate-contract "$ARGUMENTS"
    ```
    RED → route to `mock-validator` (@.claude/rules/examples-validation.md).
 
-4. **Report** a pass/fail checklist. On all-green, suggest `/breaking-check` then `/create-pr`.
+4. **Endpoints registry.**
+   ```bash
+   npm run check:endpoints
+   ```
+   RED → route to `api-architect`: every operation in `openapi.yml` must have an entry in `.claude/memory/endpoints.json` (@.claude/rules/verification.md).
 
-> `npm run validate` runs steps 1–3 in one shot.
+5. **Report** a pass/fail checklist. On all-green, suggest `/breaking-check` then `/create-pr`.
+
+> `npm run validate` runs steps 1–3 in one shot; step 4 (`npm run check:endpoints`) is a separate verification gate (also enforced in CI).

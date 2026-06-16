@@ -10,6 +10,7 @@
 #   2. check_mock.sh         — Prism smoke (boots mock, exercises all endpoints)
 #   3. check_breaking.sh     — oasdiff ERR gate (SKIP on first release is a pass)
 #   4. Artifacts present     — openapi.yml + .claude/memory/endpoints.json (non-empty)
+#   4b. Registry coverage    — npm run check:endpoints (every openapi.yml operation is in endpoints.json)
 #   5. Auth paths present    — /api/v1/auth/login, /api/v1/auth/refresh, /api/v1/auth/token
 #
 # WARN (non-blocking, exit 0 otherwise) when HEAD is not on any v* tag.
@@ -79,6 +80,20 @@ elif ! grep -q '"method"' "$ENDPOINTS_JSON"; then
   fail "$ENDPOINTS_JSON exists but contains no endpoint entries (empty array or malformed). Run the pipeline to populate it."
 else
   ok "$ENDPOINTS_JSON present and non-empty."
+fi
+
+# ---------------------------------------------------------------------------
+# 4b. Endpoints registry coverage (mirror CI verification — verification.md)
+# ---------------------------------------------------------------------------
+echo "[ready] --- 4b   endpoints registry coverage (check:endpoints) ---"
+if [[ -f openapi.yml && -f "$ENDPOINTS_JSON" ]]; then
+  if npm run check:endpoints --silent; then
+    ok "endpoints registry covers all operations."
+  else
+    fail "endpoints registry incomplete. Run: npm run check:endpoints  (an operation in openapi.yml has no entry in $ENDPOINTS_JSON)."
+  fi
+else
+  warn "registry coverage skipped — openapi.yml or $ENDPOINTS_JSON absent (counted above)."
 fi
 
 # ---------------------------------------------------------------------------

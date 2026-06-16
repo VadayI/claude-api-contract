@@ -5,6 +5,7 @@ if [ -d spec ]; then
   npm run validate
   npm run breaking
   npm run mock:smoke
+  npm run check:endpoints
 else
   echo "[pre-push] no spec/ — contract gates skipped (template scaffold)."
 fi
