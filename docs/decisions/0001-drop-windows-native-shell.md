@@ -1,6 +1,6 @@
 # ADR 0001 — Drop Windows-native shell; require Linux/macOS/WSL2
 
-**Status:** accepted · **Date:** 2026-06-06
+**Status:** superseded by [0009](0009-allow-best-effort-windows-git-bash.md) (2026-06-18) · **Date:** 2026-06-06
 
 ## Context
 Gate scripts and the SessionStart hook are bash + Node. PowerShell/cmd cannot run them, and PATH interop on Windows resolves `claude`/`node` to the Windows binaries, producing a mis-detected runtime.

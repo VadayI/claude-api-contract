@@ -6,8 +6,9 @@ Before any contract work on a new project, verify the inputs and access exist. S
 
 Read `.claude/memory/env-detect.json` (written ONLY by the Claude Code CLI SessionStart hook).
 
-- **Missing** → `NO_ENV_DETECT`: STOP. The runtime is unverified — this template is supported only in **Claude Code CLI on Linux / macOS / WSL2**. Run `node scripts/detect-env.mjs` once manually; if that fails, install Node 20.19+. Never hand-write the file.
-- **`platform_supported == false`** → `UNSUPPORTED_PLATFORM`: hard STOP. Install WSL2 Ubuntu and relaunch `claude` inside it.
+- **Missing** → `NO_ENV_DETECT`: STOP. The runtime is unverified. Run `node scripts/detect-env.mjs` once manually; if that fails, install Node 20.19+. Never hand-write the file.
+- **`platform_tier == "unsupported"`** → `UNSUPPORTED_PLATFORM`: hard STOP. Native Windows without a POSIX `bash`/`git` on PATH, or a runner we cannot execute the bash gates on. Install Git for Windows (Git Bash) or WSL2 Ubuntu, then relaunch.
+- **`platform_tier == "best-effort"`** (native Windows + Git Bash) → WARN, do not STOP. Gate scripts run through Git Bash; there is **no OS-level Bash-tool sandbox** (`sandbox_available == false`) and this path is less tested than Linux/macOS/WSL2. Recommend WSL2 for sandbox/Docker parity. The legacy boolean `platform_supported` stays `true` here.
 - **`node_supported == false`** → STOP. Install Node 20.19+ (`scripts/setup-wsl.sh`).
 
 ## Build-input gate (CRITICAL items)

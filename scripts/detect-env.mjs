@@ -51,7 +51,27 @@ try {
   }
 } catch { /* ignore */ }
 
-const platformSupported = detectedPlatform === 'linux' || detectedPlatform === 'darwin';
+// --- Platform tier (supported / best-effort / unsupported) ---
+// supported   : linux / macOS / WSL2 — fully tested; OS-level Bash-tool sandbox available.
+// best-effort : native Windows WITH a POSIX bash (Git Bash) + git on PATH — gate scripts run
+//               through Git Bash, but there is NO OS-level Bash-tool sandbox; less tested.
+// unsupported : native Windows WITHOUT bash, or any platform we cannot run the bash gates on.
+let platformTier;
+let sandboxAvailable;
+if (detectedPlatform === 'linux' || detectedPlatform === 'darwin') {
+  platformTier = 'supported';
+  sandboxAvailable = true;
+} else if (detectedPlatform === 'windows') {
+  const hasBashBin = hasBin('bash');
+  const hasGitBin = hasBin('git');
+  platformTier = hasBashBin && hasGitBin ? 'best-effort' : 'unsupported';
+  sandboxAvailable = false;
+} else {
+  platformTier = 'unsupported';
+  sandboxAvailable = false;
+}
+// Backward-compat boolean (coarse gate): anything not 'unsupported' passes.
+const platformSupported = platformTier !== 'unsupported';
 
 // --- Wrong-runner heuristic (WSL2 user launched Windows node.exe via PATH interop) ---
 let wrongRunnerSuspected = false;
@@ -120,7 +140,9 @@ const result = {
   generated_at: new Date().toISOString(),
   platform: detectedPlatform,
   is_wsl2: isWsl2,
+  platform_tier: platformTier,
   platform_supported: platformSupported,
+  sandbox_available: sandboxAvailable,
   shell,
   node: { version, major: nodeMajor, execPath },
   node_supported: nodeSupported,
@@ -140,7 +162,12 @@ try {
   console.error(`[detect-env] ERROR: could not write ${outFile}: ${err.message}`);
 }
 
-const supportedStr = platformSupported ? 'SUPPORTED' : 'NOT SUPPORTED (install WSL2)';
+const tierLabel = {
+  supported: 'SUPPORTED',
+  'best-effort': 'BEST-EFFORT (native Windows / Git Bash; no sandbox)',
+  unsupported: 'UNSUPPORTED (install WSL2, or Git Bash on native Windows)',
+};
+const supportedStr = tierLabel[platformTier] || 'UNKNOWN';
 const nodeStr = nodeSupported ? `Node ${version} OK` : `Node ${version} TOO OLD (need 20.19+)`;
 const wslStr = isWsl2 ? ' [WSL2]' : '';
 const wrongStr = wrongRunnerSuspected ? ' WRONG RUNNER SUSPECTED' : '';

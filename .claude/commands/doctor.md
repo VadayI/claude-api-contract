@@ -20,9 +20,10 @@ Optional `$ARGUMENTS`: a scope — `system`, `claude`, `project`, `git`. Default
 
 0. **Output-language gate (FIRST).** If `.claude/rules/output-language.md` does NOT exist, ask via `AskUserQuestion` (header `Language`): `English` (Recommended), `Українська`, `Polski`. On a non-English pick: copy `templates/output-language.md` → `.claude/rules/output-language.md` replacing both `{LANGUAGE_NATIVE}` tokens, and append `@.claude/rules/output-language.md` to the `CLAUDE.md` import block. If `templates/output-language.md` is missing → report `NO_TEMPLATES`, proceed in English. Skip entirely if the rule already exists.
 
-0.5. **Runtime gate (hard STOP).** Read `.claude/memory/env-detect.json` (written ONLY by the CLI SessionStart hook).
+0.5. **Runtime gate.** Read `.claude/memory/env-detect.json` (written ONLY by the CLI SessionStart hook).
    - Missing → `NO_ENV_DETECT`: run `node scripts/detect-env.mjs` once; if it fails, install Node 20.19+. Never fabricate the file.
-   - `platform_supported == false` → `UNSUPPORTED_PLATFORM`: install WSL2, relaunch `claude` inside it.
+   - `platform_tier == "unsupported"` → `UNSUPPORTED_PLATFORM` (hard STOP): native Windows without `bash`/`git`, or an unrunnable runner. Install Git for Windows (Git Bash) or WSL2, then relaunch.
+   - `platform_tier == "best-effort"` → native Windows via Git Bash: proceed, but WARN that there is no OS-level sandbox (`sandbox_available == false`) and recommend WSL2 for sandbox/Docker parity.
    - `wrong_runner_suspected == true` → you launched Windows `claude.exe` from WSL2; install/launch the Linux-native CLI (`scripts/setup-wsl.sh`).
    - `node_supported == false` → install Node 20.19+.
 

@@ -17,7 +17,7 @@ If a CRITICAL item is missing, STOP — do not start the feature pipeline. Repor
 Optional `$ARGUMENTS`: a scope — `brief`, `toolchain`, `access`. Default: all.
 
 ## Steps
-0. **Runtime gate (hard STOP).** Read `.claude/memory/env-detect.json`. Missing → `NO_ENV_DETECT` (see `/doctor`). `platform_supported == false` → `UNSUPPORTED_PLATFORM`.
+0. **Runtime gate.** Read `.claude/memory/env-detect.json`. Missing → `NO_ENV_DETECT` (see `/doctor`). `platform_tier == "unsupported"` → `UNSUPPORTED_PLATFORM` (hard STOP); `platform_tier == "best-effort"` (native Windows + Git Bash) → proceed with a warning (no OS-level sandbox; recommend WSL2).
 1. **Brief** — `PROJECT.md`/`docs/**` describe the API purpose and resources, record a maturity stage (`demo / prototype / PoC / MVP / production`), and contain a completed Definition of Done (§7 — standard gates + project-specific criteria, not blank). Missing stage or missing/blank DoD → dispatch `ba` to surface these for explicit team agreement; do NOT invent resources or assume a stage (@.claude/rules/project-maturity.md).
 2. **Toolchain** — node/npm + TypeSpec/Spectral/Prism installed (`bash scripts/install.sh`), `oasdiff` on PATH.
 3. **Access** — `gh auth status` ok, repo reachable, context7 reachable.

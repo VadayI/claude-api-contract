@@ -10,9 +10,10 @@ In the old flow the contract was born in the backend (`drf-spectacular` generate
 
 ## Where this runs
 
-- **Supported:** Claude Code CLI on **Linux / macOS / WSL2 Ubuntu**.
-- **Not supported:** Cowork, Windows-native shells (PowerShell/cmd), Claude API/SDK standalone — the `SessionStart` hook (which writes `.claude/memory/env-detect.json`) does not run there. See `docs/decisions/0001-drop-windows-native-shell.md`.
-- On Windows: install WSL2 Ubuntu and run every command (`node`, `npm`, `git`, `gh`, `claude`) inside it.
+- **Supported (tested):** Claude Code CLI on **Linux / macOS / WSL2 Ubuntu** — full tier; OS-level Bash-tool sandbox available.
+- **Best-effort:** Claude Code on **native Windows** runs the Bash tool through **Git Bash** (Git for Windows required). The `.sh` gate scripts run, but there is no OS-level sandbox and the path is less tested. Setup: `scripts/setup-windows.md`. See `docs/decisions/0009-allow-best-effort-windows-git-bash.md` (supersedes `0001`).
+- **Not supported:** Windows-native **PowerShell/cmd** (they cannot run the bash gates), Cowork, Claude API/SDK standalone — the `SessionStart` hook that writes `.claude/memory/env-detect.json` does not run there.
+- For sandboxing or Docker parity on Windows, prefer WSL2 Ubuntu and run every command (`node`, `npm`, `git`, `gh`, `claude`) inside it.
 
 ## Requirements
 
@@ -48,9 +49,9 @@ Options: `--ref v0.4.0` (pin a tag), `--url <fork>` (use a fork), `--force` (re-
 ## Installation (step by step)
 
 Follow these steps once on a fresh machine. Every command is meant to run in a **bash shell**
-(Linux / macOS / WSL2 Ubuntu). Windows users: complete Step 0 first.
+(Linux / macOS / WSL2 Ubuntu, or Git Bash on native Windows). Windows users: complete Step 0 first.
 
-### Step 0 — Windows only: install WSL2
+### Step 0 — Windows only: install WSL2 (recommended) or use Git Bash
 
 Open **PowerShell as Administrator** and run:
 
@@ -59,6 +60,8 @@ wsl --install -d Ubuntu    # installs WSL2 + Ubuntu; reboot when prompted
 ```
 
 After reboot, open the **Ubuntu** app — every subsequent step runs **inside Ubuntu**, not PowerShell.
+
+> **Prefer not to use WSL2?** Claude Code also runs natively on Windows via **Git Bash** (best-effort tier — no OS-level sandbox). Install Git for Windows + Node + gh per `scripts/setup-windows.md`, then run the bash steps below from **Git Bash** instead of Ubuntu.
 
 ### Step 1 — Go to your project folder
 

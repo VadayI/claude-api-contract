@@ -24,7 +24,7 @@
 #   README prose: self-description, consumer names, status line
 #   CLAUDE.md consumer section, contract-first.md diagram
 #
-# Requires: bash, python3, git
+# Requires: bash, node, git
 set -uo pipefail
 
 # --------------------------------------------------------------------------- #
@@ -161,47 +161,46 @@ fi
 # Helpers
 # --------------------------------------------------------------------------- #
 
-# Literal string replacement via python3 — values passed as argv, no shell escaping needed.
-# Idempotent: if `old` is not in the file, exits 0 (no-op).
-_py_replace() {
+# Literal string replacement via node — values passed as argv, no shell escaping needed.
+# Idempotent: if old is not in the file, exits 0 (no-op).
+_node_replace() {
   local path="$1" old="$2" new="$3"
-  python3 - "$path" "$old" "$new" <<'PYEOF'
-import sys, pathlib
-path = pathlib.Path(sys.argv[1])
-old  = sys.argv[2]
-new  = sys.argv[3]
-try:
-    content = path.read_text(encoding='utf-8')
-except Exception as e:
-    print(f'[personalize] WARNING: cannot read {path}: {e}', flush=True)
-    sys.exit(0)
-if old not in content:
-    sys.exit(0)  # already replaced or not present — idempotent
-path.write_text(content.replace(old, new), encoding='utf-8')
-PYEOF
+  node - "$path" "$old" "$new" <<'NODEEOF'
+const fs = require('fs');
+const targetPath = process.argv[2];
+const oldStr = process.argv[3];
+const newStr = process.argv[4];
+let content;
+try {
+  content = fs.readFileSync(targetPath, 'utf8');
+} catch (e) {
+  console.log('[personalize] WARNING: cannot read ' + targetPath + ': ' + e.message);
+  process.exit(0);
+}
+if (!content.includes(oldStr)) process.exit(0);
+fs.writeFileSync(targetPath, content.split(oldStr).join(newStr));
+NODEEOF
 }
 
-# Wrapper: dry-run just reports; apply calls _py_replace.
+# Wrapper: dry-run just reports; apply calls _node_replace.
 do_replace() {
   local file="$1" from="$2" to="$3"
   [[ -f "$file" ]] || return 0
 
   if [[ "$DRY_RUN" == true ]]; then
-    if python3 -c "
-import sys, pathlib
-path=pathlib.Path(sys.argv[1])
-try:
-    c=path.read_text(encoding='utf-8')
-except:
-    sys.exit(1)
-sys.exit(0 if sys.argv[2] in c else 1)
-" "$file" "$from" 2>/dev/null; then
+    if node - "$file" "$from" 2>/dev/null <<'NODEEOF'
+const fs = require('fs');
+let c;
+try { c = fs.readFileSync(process.argv[2], 'utf8'); } catch (e) { process.exit(1); }
+process.exit(c.includes(process.argv[3]) ? 0 : 1);
+NODEEOF
+    then
       echo "[personalize] (dry-run) $file"
       echo "[personalize]   FROM: $from"
       echo "[personalize]     TO: $to"
     fi
   else
-    _py_replace "$file" "$from" "$to"
+    _node_replace "$file" "$from" "$to"
     echo "[personalize] updated: $file"
   fi
 }
@@ -257,7 +256,7 @@ echo "[personalize] --- Tier 2: reset ---"
 
 # Reset version to 0.0.0 (new project, no release yet). Read the current
 # version dynamically so the reset never drifts when the template is re-tagged.
-CUR_VER="$(python3 -c "import json; print(json.load(open('package.json'))['version'])" 2>/dev/null || true)"
+CUR_VER="$(node -e "process.stdout.write(require('./package.json').version)" 2>/dev/null || true)"
 if [[ -n "$CUR_VER" && "$CUR_VER" != "0.0.0" ]]; then
   do_replace "package.json" "\"version\": \"${CUR_VER}\"" '"version": "0.0.0"'
 else
