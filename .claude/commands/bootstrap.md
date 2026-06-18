@@ -33,7 +33,7 @@ console.log(!hasSpec?"MODE_A":(hasGit&&hasRemote?"MODE_B":"MODE_AMBIGUOUS"));
 - `NO_ENV_DETECT` → STOP (runtime unverified; see `/doctor`). Never fabricate the file.
 
 ## Hard preflight (refuse if any blocker)
-Read `env-detect.json`: `platform_supported`, `node_supported`, `gh.authenticated`. Supported only in Claude Code CLI on Linux/macOS/WSL2.
+Read `env-detect.json`: `platform_tier`, `node_supported`, `gh.authenticated`. Hard STOP only on `platform_tier == "unsupported"` or `node_supported == false`. `best-effort` (native Windows + Git Bash) proceeds with a warning — recommend WSL2 for sandbox/Docker parity. Tested path: Linux/macOS/WSL2.
 
 ## Mode A flow
 1. `bash scripts/install.sh` (npm deps + oasdiff check).

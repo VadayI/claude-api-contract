@@ -6,7 +6,7 @@ Defines the **expected local environment** for a `claude-api-contract` project. 
 
 ## Scope 1 — System tools
 
-Bash on Linux / macOS / WSL2 Ubuntu. Windows-native PowerShell/cmd is NOT supported (`docs/decisions/0001-drop-windows-native-shell.md`); on Windows, install WSL2 and run everything inside it.
+Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native Windows is **best-effort**: Claude Code runs the Bash tool through **Git Bash** (Git for Windows), so the `.sh` gate scripts execute, but there is no OS-level Bash-tool sandbox and the path is less tested (`docs/decisions/0001-drop-windows-native-shell.md`, superseded by `docs/decisions/0009-allow-best-effort-windows-git-bash.md`). Windows-native **PowerShell/cmd** remain unsupported — they cannot run the bash gates. Prefer WSL2 when you need sandboxing or Docker parity.
 
 | Requirement | Expected | Check |
 |---|---|---|
@@ -14,7 +14,7 @@ Bash on Linux / macOS / WSL2 Ubuntu. Windows-native PowerShell/cmd is NOT suppor
 | **npm (HARD)** | bundled with Node; a Linux path, not `/mnt/c/...` | `npm --version` |
 | git | present | `git --version` |
 | GitHub CLI | present in WSL2 (a Windows `gh.exe` is invisible inside WSL2) | `gh --version` |
-| **Claude Code CLI (WSL2-native)** | `which claude` → `/home/...` or `/usr/...`, never `/mnt/c/...` | install: `npm i -g @anthropic-ai/claude-code` |
+| **Claude Code CLI** | WSL2/Linux/macOS → `which claude` is `/home/...` or `/usr/...` (never `/mnt/c/...`); native Windows → Windows-native install, Git Bash on PATH | install: `npm i -g @anthropic-ai/claude-code`, or the native Windows installer |
 | **oasdiff** | on PATH (breaking-change gate) | `oasdiff --version` |
 | Docker (OPTIONAL) | only for containerized Prism / proxy parity | `docker info` |
 

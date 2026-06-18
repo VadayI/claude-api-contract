@@ -18,7 +18,7 @@ node scripts/log-cmd.mjs /ship-contract "$ARGUMENTS"
 
 ## Steps
 
-0. **Runtime gate.** Read `.claude/memory/env-detect.json`. If missing → `NO_ENV_DETECT`. If `platform_supported == false` → STOP. If `node_supported == false` → STOP.
+0. **Runtime gate.** Read `.claude/memory/env-detect.json`. If missing → `NO_ENV_DETECT`. If `platform_tier == "unsupported"` → STOP. If `node_supported == false` → STOP. `best-effort` (native Windows + Git Bash) proceeds, but Docker may be unavailable for the mock image — prefer WSL2/Linux for `/ship-contract`.
 
 1. **Readiness gate.**
    ```bash
