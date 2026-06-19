@@ -35,3 +35,10 @@ Rollout is **staged**. This slice ships the model: the rule, the registries, the
 - Two committed registries instead of one (`endpoints.json` + `pages.json`); both are session-permanent template methodology (kept on derive, like ADRs 0005–0009 — not the demo-contract ADRs 0002–0004).
 - `endpoints.json` gains a `surface` field; the existing `check_endpoints_registry.mjs` is unaffected (it keys on `METHOD path`), so adding the field is non-breaking.
 - Adopting projects must classify each endpoint and declare pages; the staged gates make this a warning, then an error, on the project's own timeline.
+
+## Update — 2026-06-19 (enforcement enabled)
+The staged gates from the Decision are now **active**:
+- Spectral rule `operation-x-surface-required` (`.spectral.yaml`, severity error, `recommended: true`) — `x-surface ∈ {resource, system}` on every operation.
+- `check_endpoints_registry.mjs` extended to cross-check `x-surface` presence/validity, registry `surface` ↔ `x-surface` consistency, and page-map integrity (`consumes` resolves and is not `system`; no `page` route under `/api/v1/`).
+
+Both run in CI (`npm run lint` Gate 2 + the `check:endpoints` verification step) and locally via the husky pre-commit / pre-push hooks. A derived project may stage adoption by setting the Spectral rule `recommended: false`.
