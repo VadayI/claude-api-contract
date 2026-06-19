@@ -8,8 +8,9 @@
 ## 1. Purpose
 <Why this API exists; who consumes it (services / browser SPA / mobile).>
 
-## 2. Resources
-<List the resources and their endpoints (method + path + purpose + auth/scopes).>
+## 2. Resources & surfaces
+<List the resources and their endpoints (method + path + purpose + auth/scopes + surface: `resource` | `system` — @.claude/rules/endpoint-surface.md).>
+<Frontend pages: the SPA routes (page-map in `.claude/memory/pages.json`) and which operations each consumes. `system` endpoints (e.g. S2S `/api/v1/auth/token`) get no page.>
 
 ## 3. Auth profile
 - User-flow (D1): register / login / refresh / logout — Bearer/JWT, refresh in body (D2).

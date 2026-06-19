@@ -10,10 +10,10 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
 { "method": "POST", "path": "/api/v1/articles", "tag": "articles",
   "operationId": "createArticle", "auth": "bearerAuth",
   "scopes": ["articles:write"], "statuses": [201, 400, 401, 403, 429],
-  "envelope": "single|list", "notes": "..." }
+  "envelope": "single|list", "surface": "resource", "notes": "..." }
 ```
 
-Append/update; never duplicate a `method+path`. The contract is incomplete until the registry entry exists.
+Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `.claude/memory/pages.json` page-map (@.claude/rules/endpoint-surface.md). The contract is incomplete until the registry entry exists.
 
 ## Verification doc
 

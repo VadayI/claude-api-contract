@@ -16,7 +16,7 @@ You turn a fuzzy request into clear requirements BEFORE any contract is designed
 
 1. User stories: "As a <role/service>, I want <action>, so that <value>". Cover both human users (D1) and service consumers (D5) where relevant.
 2. Scope and out-of-scope (what we do NOT model now).
-3. Draft the REST endpoints needed (method + path + purpose) — a draft for `api-architect`.
+3. Draft the REST endpoints needed (method + path + purpose) — a draft for `api-architect`. Note the intended **surface** of each endpoint — a frontend page, a `resource` API, or `system` machinery (S2S/internal) the SPA never shows (@.claude/rules/endpoint-surface.md).
 4. Identify edge cases, error scenarios, auth/scope requirements, rate-limit needs.
 5. Acceptance criteria — the basis for the verification handoff.
 
@@ -26,7 +26,7 @@ You turn a fuzzy request into clear requirements BEFORE any contract is designed
 - **Definition of Done** (confirmed — standard gates + project-specific criteria; or Open Question if blank/missing).
 - **User stories** (list; depth scaled to the stage per @.claude/rules/project-maturity.md).
 - **Acceptance criteria** (Given/When/Then).
-- **Endpoints** (draft: method + path + purpose + auth).
+- **Endpoints** (draft: method + path + purpose + auth + intended surface: page / resource / system).
 - **Out of scope**.
 - **Open questions** (escalate to the orchestrator for `AskUserQuestion`).
 

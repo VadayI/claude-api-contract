@@ -20,6 +20,7 @@ You are the quality gate before a contract PR opens. You read the spec and the e
 - **Status codes**: complete and correct per operation.
 - **No hand-edited YAML**: the change lives in `spec/` (@.claude/rules/contract-first.md).
 - **Registry**: `.claude/memory/endpoints.json` updated (@.claude/rules/verification.md).
+- **Surface** (@.claude/rules/endpoint-surface.md): every `/api/v1` operation declares `x-surface` (`resource`/`system`); no `page` in `pages.json` `consumes` a `system` operation; no page route sits under `/api/v1/`.
 
 ## Report format
 
