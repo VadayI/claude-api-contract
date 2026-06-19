@@ -57,3 +57,21 @@ rules:
   # built-in oas3-server-not-example.com rule (which fires even for
   # recommended:false when using [spectral:oas, all]).
   oas3-server-not-example.com: off
+
+  # Frontend page-vs-system separation (ADR 0010 / endpoint-surface.md).
+  # Every operation must declare x-surface = resource | system. Shipped
+  # recommended:true (hard — severity error). A derived project not yet ready
+  # to classify its endpoints may set recommended:false to stage the rollout.
+  operation-x-surface-required:
+    description: Every operation must declare x-surface (resource|system).
+    message: "{{path}}: operation must set x-surface to 'resource' or 'system' (endpoint-surface.md)."
+    severity: error
+    recommended: true
+    given: $.paths[*][get,post,put,patch,delete]
+    then:
+      - field: x-surface
+        function: truthy
+      - field: x-surface
+        function: enumeration
+        functionOptions:
+          values: [resource, system]

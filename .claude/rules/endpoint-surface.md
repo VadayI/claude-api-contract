@@ -51,10 +51,11 @@ Many-to-many: a page may `consume` several operations (a detail+edit page consum
 - `contract-reviewer` — block any `/api/v1` operation missing `x-surface`; verify no page `consumes` a `system` operation; verify page routes are not under `/api/v1/`.
 - `docs-writer` — `docs/api/INDEX.md` separates **Pages** from **API (resource/system)**; mark each API row's surface.
 
-## Enforcement (staged — ADR 0010)
+## Enforcement (enabled — ADR 0010)
 
-The hard gates are a deliberate **follow-up slice**, kept off until derived projects adopt the field:
-- a Spectral rule requiring `x-surface ∈ {resource, system}` on every operation (introduce as `recommended: true` for gradual rollout, @.claude/rules/spectral-style.md);
-- a `check_endpoints_registry.mjs` cross-check that every operation's `surface` matches its `x-surface` in `openapi.yml`, that every `consumes` target exists and is not `system`, and that no `page` route is under `/api/v1/`.
+Both gates are **active** (severity error). A derived project not yet ready to classify its endpoints may set the Spectral rule `recommended: false` to stage the rollout:
 
-Until those land, this rule is the authority and `contract-reviewer` enforces it by reading.
+- **Spectral** `operation-x-surface-required` (`.spectral.yaml`): every operation must declare `x-surface ∈ {resource, system}` (@.claude/rules/spectral-style.md). Runs in `npm run lint` — CI Gate 2 + the pre-commit hook.
+- **`check_endpoints_registry.mjs`** (`npm run check:endpoints` — CI verification step + the pre-push hook): every operation's `x-surface` is present, valid, and equals its `surface` in `endpoints.json`; every `pages.json` `consumes` target exists and is not `system`; no `page` route sits under `/api/v1/`.
+
+`contract-reviewer` still reviews surface *intent*; these gates make the mechanics non-negotiable.
