@@ -308,7 +308,7 @@ http://<IP>:<PORT>
 
 **Backend** (`claude-django`): vendor `openapi.yml`, run your `check_contract_sync.sh` gate in CI, write a `contract.lock.json` (`repo` + `version` + `sha256`).
 
-**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses).
+**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses). Scaffold pages **only** for the `page` routes in `.claude/memory/pages.json` — never for `system` endpoints like `/api/v1/auth/token` (@.claude/rules/endpoint-surface.md).
 
 ## Structure
 

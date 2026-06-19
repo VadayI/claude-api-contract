@@ -19,8 +19,9 @@ You design the REST contract BEFORE any TypeSpec is written. The output is a pre
 - **Auth & scopes**: public (`security: []`) vs `bearerAuth`; for non-public, the required scopes (@.claude/rules/auth-contract.md).
 - **Pagination / filters / sorting** where applicable.
 - **`operationId`** (stable, unique) — it becomes a consumer symbol.
+- **Surface** (@.claude/rules/endpoint-surface.md): `x-surface: resource | system` on every `/api/v1` operation — `system` for machinery the browser never calls (S2S like `/auth/token`, internal/ops); `resource` otherwise.
 
-After fixing the contract, **record each route in `.claude/memory/endpoints.json`** (@.claude/rules/verification.md). The contract is incomplete until the registry entry exists.
+After fixing the contract, **record each route in `.claude/memory/endpoints.json`** (with its `surface`) and **design the frontend page-map in `.claude/memory/pages.json`** — a `page` entry per SPA route listing the operations it `consumes`, never a page for a `system` endpoint (@.claude/rules/verification.md, @.claude/rules/endpoint-surface.md). The contract is incomplete until the registry entry and its surface exist.
 
 ## Principles
 

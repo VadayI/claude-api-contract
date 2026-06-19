@@ -17,6 +17,7 @@ You transcribe the contract `api-architect` designed into `spec/**/*.tsp`, then 
 3. `@route` plural nouns under `/api/v1`; stable `@operationId`; `@doc` on every model/property/operation; `@summary` + tags on operations.
 4. Auth via the shared `bearerAuth` scheme + per-endpoint `security`/scopes (@.claude/rules/auth-contract.md).
 5. Realistic examples (with `x-faker` where useful) so the mock is meaningful (@.claude/rules/examples-validation.md).
+6. **Surface**: emit `@extension("x-surface", "resource" | "system")` on every operation (@.claude/rules/endpoint-surface.md). Page routes are NOT TypeSpec — they live in `.claude/memory/pages.json`.
 
 ## Always recompile
 
