@@ -16,3 +16,11 @@ The toolchain (TypeSpec emitter, Spectral rules, Prism flags, oasdiff flags, `op
 - `tsp-author` — verify `@typespec/*` decorators and emitter options.
 - `api-architect` / `contract-reviewer` — verify OpenAPI 3.1 + Spectral rule semantics.
 - `docs-writer` — verify oasdiff `changelog` flags.
+
+## Layer boundaries — superpowers plugin vs repo rules
+
+`superpowers` ships **process technique**; repo rules own **domain invariants**. Expected active skills here: `brainstorming` (socratic probing BEFORE `ba`/`api-architect` design), `writing-plans`/`executing-plans` (planning technique — `.claude/rules/living-plan.md` adds the domain artifact: `docs/plans/NNNN-*.md` + append-only Execution log), `verification-before-completion` (prove-before-done discipline — complements, never replaces, `.claude/rules/verification.md` and its `endpoints.json`/verify docs), `dispatching-parallel-agents`, `writing-skills`.
+
+- `devil` agent vs `brainstorming` skill: different phases — brainstorming probes before a design exists; `devil` attacks a drafted design. Keep both.
+- Inert in a spec-only repo (accepted): TDD, systematic-debugging, using-git-worktrees, finishing-a-development-branch, subagent-driven-development.
+- Contract-integrity invariants (gates, envelopes, drift) live only in repo rules and agent bodies — never delegated to plugin skills.
