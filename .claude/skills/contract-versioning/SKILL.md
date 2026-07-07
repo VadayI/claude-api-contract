@@ -1,25 +1,23 @@
 ---
 name: contract-versioning
-description: "[claude-api-contract] Semver-on-git-tags release flow and consumer pinning. Activate for /release, version bumps, or consumer sync setup."
+description: "[claude-api-contract] Step-by-step release flow and consumer pin-bump recipes. Activate for /release, version bumps, or consumer sync setup. Policy (semver table, delivery URL, pin forms, sync gate) lives in .claude/rules/versioning.md."
 ---
 
-# Contract Versioning & Release
+# Contract Versioning & Release — recipes
 
-## Semver rule
-- major = breaking (oasdiff ERR forces it). minor = new endpoint/optional field. patch = docs/examples/fixes.
+> Policy (semver table, raw-URL delivery, pin forms, consumer sync gate) — `.claude/rules/versioning.md`; this skill is the flow.
 
 ## Release flow (/release)
+
 ```bash
 npm run validate         # compile + drift + lint + examples (must be green)
 npm run breaking         # classify; confirm the bump
-oasdiff changelog <prev-tag> openapi.yml >> CHANGELOG.md   # via docs-writer
+oasdiff changelog <prev-tag> openapi.yml       # docs-writer folds into CHANGELOG.md (ADR 0007)
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
-Never tag a RED contract.
 
-## Consumer pinning (their side)
-- `CONTRACT_REPO=https://github.com/VadayI/claude-api-contract`, `CONTRACT_VERSION=vX.Y.Z`.
-- Fetch: `https://raw.githubusercontent.com/VadayI/claude-api-contract/<tag>/openapi.yml`.
-- Committed `contract.lock.json` (repo + version + path + sha256) next to the vendored copy.
-- Consumer `check_contract_sync.sh` diffs vendored copy vs `openapi.yml@CONTRACT_VERSION` — RED on divergence.
-- Bumping the pin = deliberate PR in the consumer.
+## Consumer pin bump (their side)
+
+1. Update `CONTRACT_VERSION` and refresh the vendored `openapi.yml` from the raw URL at the new tag.
+2. Recompute `sha256` in `contract.lock.json`.
+3. Open the PR; their `check_contract_sync.sh` must go green.

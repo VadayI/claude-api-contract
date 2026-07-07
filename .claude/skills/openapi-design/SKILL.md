@@ -1,30 +1,23 @@
 ---
 name: openapi-design
-description: "[claude-api-contract] REST/OpenAPI design principles — resources, methods, status codes, envelopes, scopes, versioning. Activate when designing endpoint contracts."
+description: "[claude-api-contract] Generic REST/OpenAPI design heuristics + index of the repo's contract rules. Activate when designing endpoint contracts (api-architect phase)."
 ---
 
-# OpenAPI / REST Design
+# OpenAPI / REST Design — heuristics & index
 
-## Resources
-- Plural nouns: `/api/v1/articles`, `/api/v1/articles/{id}`.
-- Action = HTTP method (GET/POST/PATCH/PUT/DELETE), never a verb in the path.
+> Generic heuristics here; repo-binding specifics live in the rules indexed below — do not restate them.
 
-## Status codes
-- 200 OK, 201 Created, 204 No Content.
-- 400 validation, 401 unauthenticated, 403 forbidden, 404 not found, 409 conflict, 429 throttled, 500 server error.
+## REST heuristics
 
-## Envelopes (repo-wide, one shape)
-- List: `{ count, next, previous, results: T[] }`.
-- Error (simple): `{ detail }`. Error (validation, 400): `{ errors: [{ field, code, message }] }`.
-- 429: simple error + `Retry-After` header.
+- Resources are plural nouns (`/api/v1/articles`, `/api/v1/articles/{id}`); action = HTTP method, never a verb in the path.
+- Status codes: 200 read/update, 201 create, 204 delete/no-body; 400 validation, 401 unauthenticated, 403 forbidden, 404 not found, 409 conflict, 429 throttled, 500 server error.
+- Full JSON Schema (OpenAPI 3.1): named components & enums, no anonymous inline objects.
+- Design for the consumer's branch points: stable `operationId`s, stable error `code` tokens, explicit per-operation error responses.
 
-## Auth & scopes
-- Global `bearerAuth` (JWT). Public endpoints `security: []`.
-- Service endpoints: scopes (`orders:read`), not roles. `/auth/token` client-credentials for S2S.
+## Repo canon (the specifics live there)
 
-## Versioning
-- Backward-incompatible change → new MAJOR (git tag). Never change the contract silently.
-- Stable `operationId` — renaming is breaking.
-
-## OpenAPI 3.1
-- Full JSON Schema; named components & enums; no anonymous inline objects.
+- Envelopes — list / error / 429 + `Retry-After`: `.claude/rules/api-envelope.md`
+- Auth flows (user + S2S), scopes-not-roles: `.claude/rules/auth-contract.md`
+- Surface classification (`resource` / `system` / page-map): `.claude/rules/endpoint-surface.md`
+- Breaking vs safe + semver policy: `.claude/rules/breaking-changes.md`, `.claude/rules/versioning.md`
+- TypeSpec authoring norms: `.claude/rules/typespec-style.md`

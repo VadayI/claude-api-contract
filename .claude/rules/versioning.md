@@ -1,5 +1,7 @@
 # Versioning & delivery (semver on git tags)
 
+> **Policy lives here; step-by-step release/pin recipes live in the `contract-versioning` skill.**
+
 The contract is delivered as **git tags** (`vX.Y.Z`) plus the raw `openapi.yml` URL. Consumers pin a version; they never track a moving branch.
 
 ## Semver rules (decision #6 / D3)

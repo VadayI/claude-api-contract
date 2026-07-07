@@ -1,12 +1,14 @@
 # Breaking changes (first-class gate)
 
+> **Policy and classification live here; oasdiff CLI recipes live in the `oasdiff-breaking` skill.**
+
 Because **two repositories** consume this contract, a breaking change that slips through silently breaks both teams at once. So breaking-change detection is a hard, first-class CI gate — not an afterthought.
 
 ## The gate
 
-`scripts/check_breaking.sh` runs `oasdiff breaking <previous-tag> <working-tree> --fail-on ERR`. Exit 1 on any ERR-level change. That is the **major-bump gate**: an ERR-level breaking change is only allowed to merge if it is accompanied by a MAJOR version bump.
+`scripts/check_breaking.sh` compares the previous tag against the working tree via `oasdiff breaking` with `--fail-on ERR` — exit 1 on any ERR-level change. That is the **major-bump gate**: an ERR-level breaking change is only allowed to merge if it is accompanied by a MAJOR version bump.
 
-- Base ref defaults to the latest `v*` tag (`git tag --sort=-version:refname | head -1`).
+- Base ref defaults to the latest `v*` tag.
 - First release (no prior tag) → the gate SKIPs (nothing to compare).
 
 ## What counts as breaking (ERR) vs safe
@@ -26,6 +28,7 @@ Sometimes a breaking change is intended and the major bump is the plan. Do **not
 
 ## Changelog
 
-`oasdiff changelog <base> <revision>` generates a human-readable diff; `docs-writer` folds it into `CHANGELOG.md` on release. Breaking items are flagged explicitly.
+`docs-writer` folds the oasdiff changelog output into `CHANGELOG.md` on release (ADR 0007); breaking items are flagged explicitly.
 
 > Reviewer / `breaking-change-analyst` duty: classify every contract diff as breaking vs non-breaking BEFORE the PR is opened, and state the required semver bump.
+> Activate the `oasdiff-breaking` skill for CLI invocations (breaking / err-ignore / changelog / tag comparison).
