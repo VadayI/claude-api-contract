@@ -97,7 +97,11 @@ log "Copying template files"
 find "$CLONE" -mindepth 1 -maxdepth 1 ! -name '.git' | while IFS= read -r item; do
   name="$(basename "$item")"
   if [ -d "$item" ]; then
-    cp -r "$item" "$TARGET/$name"
+    # copy CONTENTS into the target dir: overwrites template files without
+    # nesting ($TARGET/$name/$name) when the dir already exists (--force),
+    # and never deletes unrelated user files. GNU + BSD cp compatible.
+    mkdir -p "$TARGET/$name"
+    cp -r "$item/." "$TARGET/$name/"
   else
     cp "$item" "$TARGET/$name"
   fi
