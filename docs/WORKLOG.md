@@ -2,6 +2,17 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-07-07 (session 13 — F×6 rules↔skills dedup, via Cowork)
+- chore(rules,skills): dedup 6 rule↔skill pairs — "rule = norms, skill = recipes" (audit §4 / N3) — PR: pending (host, single commit by user decision) — gates: n/a (no contract change) — tag: none
+  - F1 `typespec-style.md` ↔ `typespec-authoring`: emitter mechanics (3.1 nullability) + commands → skill; layout/naming/semver norms stay in rule; commit discipline → pointer to `contract-first.md`. Bonus: `x-surface` added to both (norm line + `@extension` recipe) — the gate existed, neither file mentioned it
+  - F2 `spectral-style.md` ↔ `spectral-lint`: must-enforce list (incl. x-surface) rule-only; crafting order / run / borrowed sources skill-only; skill examples now mirror the LIVE `.spectral.yaml` (snake-case @ warn, x-surface @ error)
+  - F3 `prism-mock.md` ↔ `prism-mock`: rule = invariants (two-way gate, static default, Docker `-h 0.0.0.0 -m false`, port); skill = run / x-faker / smoke recipes; `cluster.isPrimary` story stays only in `deploy.md`
+  - F4 `breaking-changes.md` ↔ `oasdiff-breaking`: ERR table rule-only (skill cheatsheet deleted); CLI invocations skill-only; stale "Official Action" line fixed → declined per ADR 0008
+  - F5 `versioning.md` ↔ `contract-versioning`: rule policy untouched (+pointer subtitle); skill = release flow + consumer pin-bump steps; semver/pinning restatements deleted from skill
+  - F6 `openapi-design`: rewritten as "heuristics + index" — envelope/auth/versioning restatements → pointers to owning rules
+  - Every rewritten file carries a mutual pointer ("norms here / recipes there"); no non-backticked `@`-refs introduced (N1 discipline). 11 pair files + 3 docs
+  - No contract change; no semver bump; consumers: no action
+
 ## 2026-07-07 (session 12 — audit queue D+E + .git repair, via Cowork)
 - chore(agents): superpowers layer-boundaries note + agent tails (audit §7 D+E) — PR: pending (host) — gates: n/a (no contract change) — tag: none
   - **D** `mcp-stack.md`: new "Layer boundaries — superpowers plugin vs repo rules" section — expected-active skills (brainstorming / writing-plans / executing-plans / verification-before-completion / dispatching-parallel-agents / writing-skills) vs repo rules (`living-plan.md`, `verification.md`); devil<->brainstorming phase split; inert skills accepted; contract invariants never delegated to plugin skills
