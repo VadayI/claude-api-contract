@@ -28,7 +28,7 @@ Optional `$ARGUMENTS`: a scope — `system`, `claude`, `project`, `git`. Default
    - `node_supported == false` → install Node 20.19+.
 
 1. **Scope 1 — system tools:** node/npm/git/gh/oasdiff present and correct versions.
-2. **Scope 2 — Claude config & access:** plugin baseline, `GITHUB_PERSONAL_ACCESS_TOKEN` + `CONTEXT7_API_KEY` set (never print), `gh auth status`, repo reachable.
+2. **Scope 2 — Claude config & access:** plugin baseline (incl. `family-core@claude-family-marketplace` present and current vs the marketplace tag — ADR 0011), `GITHUB_PERSONAL_ACCESS_TOKEN` + `CONTEXT7_API_KEY` set (never print), `gh auth status`, repo reachable.
 3. **Scope 3 — project state:** `spec/`, `.spectral.yaml`, `package.json`, deps installed; `npm run validate` green. A pre-`/bootstrap` repo legitimately lacks these → report as "not set up yet" (info), not failure.
 4. **Scope 4 — git hygiene:** feature branch (not `main`), branch protection, clean tree, no tracked `.env`.
 

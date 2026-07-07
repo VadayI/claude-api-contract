@@ -55,7 +55,7 @@ You DO:
 
 Core (default pipeline): `ba`, `api-architect`, `tsp-author`, `contract-reviewer`, `breaking-change-analyst`, `mock-validator`, `docs-writer`
 
-Optional: `devil` (challenge a design), `auditor` (`/audit`), `brief-synthesizer` (`/synthesize-brief`), `happy-path-author` (`/happy-paths`), `template-sync` (`/update-from-template`)
+Optional: `devil` (challenge a design), `brief-synthesizer` (`/synthesize-brief`), `happy-path-author` (`/happy-paths`). From the `family-core` plugin (ADR 0011): `auditor` (`/audit`), `template-sync` (`/update-from-template`), plus `/handoff`, `/wrap-up`, `/set-language`.
 
 ## Stack
 

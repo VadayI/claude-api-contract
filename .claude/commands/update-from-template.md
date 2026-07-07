@@ -3,7 +3,7 @@ model: sonnet
 description: "[claude-api-contract] Sync a derived project's .claude config to a newer claude-api-contract version."
 ---
 
-Bring a derived project's `.claude/` config up to a newer template version. Delegates to `template-sync`.
+Bring a derived project's `.claude/` config up to a newer template version. Delegates to `template-sync` (ships from the `family-core` plugin; if bare-name dispatch does not resolve, use the scoped name `family-core:template-sync`).
 
 ## Log
 ```bash

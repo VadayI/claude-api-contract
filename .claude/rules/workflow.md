@@ -37,4 +37,4 @@ ba → api-architect (designs the contract) → tsp-author (writes TypeSpec)
 
 ## Optional agents
 
-`devil` (challenge the design), `auditor` (`/audit` — next-command suggestion from the command log), `brief-synthesizer` (`/synthesize-brief`), `happy-path-author` (`/happy-paths` — business user journeys from the brief, re-runnable after the contract is designed), `template-sync` (sync a derived project to a newer template version).
+`devil` (challenge the design), `brief-synthesizer` (`/synthesize-brief`), `happy-path-author` (`/happy-paths` — business user journeys from the brief, re-runnable after the contract is designed); from the `family-core` plugin (ADR 0011): `auditor` (`/audit` — next-command suggestion from the command log), `template-sync` (sync a derived project to a newer template version).
