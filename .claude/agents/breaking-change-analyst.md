@@ -1,7 +1,7 @@
 ---
 name: breaking-change-analyst
 description: "[claude-api-contract] Runs oasdiff vs the previous tag, classifies each change breaking vs non-breaking, and states the required semver bump.\n\nTrigger: is this breaking, oasdiff, what version bump, compatibility check.\n\n<example>\nuser: 'Is making author required a breaking change?'\nassistant: 'Using breaking-change-analyst: oasdiff vs v0.3.0 — required-field add is ERR-level breaking → MAJOR bump.'\n</example>"
-model: opus
+model: fable
 color: red
 tools: Read, Glob, Grep, Bash
 ---
