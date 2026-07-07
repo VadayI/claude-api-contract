@@ -2,6 +2,16 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-07-07 (session 15 — family-core v0.1.0 + pilot, via Cowork)
+- feat(family): `claude-family-marketplace` repo + `family-core v0.1.0` (Phase 1, ADR 0011) + pilot enabled in this repo — PR: pending (host) — gates: n/a (no contract change) — marketplace tag: `v0.1.0`
+  - Marketplace: github.com/VadayI/claude-family-marketplace — `.claude-plugin/marketplace.json` + `plugins/family-core/` (manifests verified against the official plugin docs); 11 files; main `462d160`
+  - Plugin content (generalized, self-contained, no `@`-rule imports): agents `auditor` (reads host CLAUDE.md workflow + commands inventory), `template-sync` (template source via template.json -> README -> ask); commands `/audit` `/handoff` `/wrap-up` `/set-language` (log-cmd via CLAUDE_PLUGIN_ROOT); `scripts/log-cmd.mjs`
+  - Pilot in this repo: `settings.json` += `extraKnownMarketplaces` + `family-core@claude-family-marketplace`; **deleted 6 local duplicates** (agents auditor/template-sync; commands audit/handoff/wrap-up/set-language); mentions updated (CLAUDE.md, workflow.md, doctor.md, update-from-template.md); environment.md baseline fixed (stale `engineering` dropped — doc-drift since PR #48 — family-core added)
+  - ADR 0011: proposed -> **accepted** (Phase 1 shipped)
+  - Counts now: **10 agents · 19 commands** · 21 rules · 6 skills (local) + family-core plugin
+  - Pilot exit criteria (a week): plugin commands appear & run in the CLI; `log-cmd` writes to host `.claude/memory/command-log.jsonl`; `/update-from-template` resolves `template-sync` by bare name (else scoped `family-core:template-sync` — documented fallback)
+  - No contract change; contract stays v0.4.0
+
 ## 2026-07-07 (session 14 — H gate toggles + ADR 0011 draft, via Cowork)
 - chore(gates): H1 Spectral warn→error + H2 validate ⊇ check:endpoints; docs(adr): 0011 family-core (proposed) — PR: pending (host) — gates: lint pre-verified clean at warn before tightening — tag: none
   - **H1** `.spectral.yaml`: `schema-property-snake-case` + `schema-description-required` severity warn→error (pre-verified: 0 findings at warn on the demo contract); staging comments added (`recommended:false` for derived projects); `spectral-lint` skill example synced

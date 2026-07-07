@@ -24,7 +24,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 
 | Requirement | Expected | Check |
 |---|---|---|
-| Plugins baseline | `superpowers@superpowers-marketplace`, `engineering@knowledge-work-plugins`, `github@claude-plugins-official`, `context7@claude-plugins-official` (auto-enabled in `.claude/settings.json`) | `/plugins` vs `enabledPlugins` |
+| Plugins baseline | `superpowers@superpowers-marketplace`, `github@claude-plugins-official`, `context7@claude-plugins-official`, `family-core@claude-family-marketplace` (auto-enabled in `.claude/settings.json`; the family marketplace auto-registers via `extraKnownMarketplaces`) | `/plugins` vs `enabledPlugins` |
 | `GITHUB_PERSONAL_ACCESS_TOKEN` | set (push/PR/release) | `[ -n "$GITHUB_PERSONAL_ACCESS_TOKEN" ]` (never print) |
 | `CONTEXT7_API_KEY` | set (doc lookups) | `[ -n "$CONTEXT7_API_KEY" ]` (never print) |
 | GitHub auth & repo | authenticated; repo reachable (fine-grained PAT: Contents RW, Metadata RO, Pull requests RW, Workflows RW, Administration RW) | `gh auth status`; `gh repo view <owner>/<repo>` |

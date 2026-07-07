@@ -46,7 +46,14 @@
       "Read(secrets/**)"
     ]
   },
+  "extraKnownMarketplaces": {
+    "claude-family-marketplace": {
+      "source": "github",
+      "repo": "VadayI/claude-family-marketplace"
+    }
+  },
   "enabledPlugins": {
+    "family-core@claude-family-marketplace": true,
     "superpowers@superpowers-marketplace": true,
     "github@claude-plugins-official": true,
     "context7@claude-plugins-official": true
