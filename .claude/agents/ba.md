@@ -1,7 +1,7 @@
 ---
 name: ba
 description: "[claude-api-contract] Business analyst: requirements, user stories, scope, endpoint drafts before any contract is written.\n\nTrigger: requirements, user story, what API do we need, scope, define the resource.\n\n<example>\nuser: 'We need an articles API'\nassistant: 'Using ba: user stories, scope, and a draft list of article endpoints for api-architect.'\n</example>"
-model: opus
+model: fable
 color: purple
 tools: Read, Glob, Grep
 ---
