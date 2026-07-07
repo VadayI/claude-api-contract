@@ -18,7 +18,7 @@
 
 ## PR checklist (enforced by review)
 
-- [ ] `npm run validate` green (compile + drift + lint + examples).
+- [ ] `npm run validate` green (compile + drift + lint + examples + endpoints registry).
 - [ ] `npm run breaking` classified; semver bump stated in the PR description.
 - [ ] `docs/api/INDEX.md` updated; for a user-facing / contract change, a `CHANGELOG.md` `## [Unreleased]` fragment added (ADR 0007).
 - [ ] No hand-edit of `openapi.yml` (it must equal `spec/` output).

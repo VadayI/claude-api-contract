@@ -31,7 +31,7 @@ fail() { echo "[ready] FAIL: $*"; FAILS=$((FAILS + 1)); }
 warn() { echo "[ready] WARN: $*"; }
 
 # ---------------------------------------------------------------------------
-# 1. npm run validate (compile + drift + spectral + examples)
+# 1. npm run validate (compile + drift + spectral + examples + endpoints registry)
 # ---------------------------------------------------------------------------
 echo "[ready] --- 1/5  npm run validate ---"
 if npm run validate --silent; then

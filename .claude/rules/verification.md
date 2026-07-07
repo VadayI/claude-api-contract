@@ -27,7 +27,7 @@ Regenerate on demand with `/verify`.
 
 ## What "verified" means here
 
-- `npm run validate` green (compile + drift + lint + examples).
+- `npm run validate` green (compile + drift + lint + examples + endpoints registry).
 - `npm run breaking` classified, semver bump stated.
 - Prism mock comes up and returns valid responses for the new endpoints.
 - `endpoints.json` and `docs/api/INDEX.md` reflect reality.

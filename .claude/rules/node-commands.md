@@ -22,7 +22,7 @@ npm run format              # tsp format spec/**/*.tsp
 ## Quality gates (run before pushing)
 
 ```bash
-npm run validate            # compile + drift gate + spectral lint + examples gate
+npm run validate            # compile + drift gate + spectral lint + examples gate + endpoints registry
 npm run lint                # spectral lint openapi.yml
 bash scripts/check_typespec_drift.sh   # openapi.yml == spec/ output
 bash scripts/check_examples.sh         # examples validate against schema

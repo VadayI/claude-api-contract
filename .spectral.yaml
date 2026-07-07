@@ -31,9 +31,10 @@ rules:
       function: truthy
 
   # Property casing — snake_case repo-wide (matches the DRF consumer default).
+  # Shipped severity:error (decision H, 2026-07-07); a derived project may stage via recommended:false.
   schema-property-snake-case:
     description: Schema properties must be snake_case.
-    severity: warn
+    severity: error
     recommended: true
     given: $.components.schemas..properties.*~
     then:
@@ -43,9 +44,10 @@ rules:
         disallowDigits: false
 
   # Descriptions everywhere (no empty/TODO docs — see no-stubs rule).
+  # Shipped severity:error (decision H, 2026-07-07); a derived project may stage via recommended:false.
   schema-description-required:
     description: Named schemas should have a description.
-    severity: warn
+    severity: error
     recommended: true
     given: $.components.schemas[*]
     then:

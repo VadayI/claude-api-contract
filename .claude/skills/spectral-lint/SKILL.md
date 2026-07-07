@@ -14,7 +14,7 @@ extends: [[spectral:oas, all]]
 rules:
   schema-property-snake-case:
     description: Schema properties must be snake_case.
-    severity: warn            # staged; tightening to error is decision H
+    severity: error           # derived projects may stage via recommended: false
     recommended: true
     given: $.components.schemas..properties.*~
     then:

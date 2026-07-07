@@ -2,6 +2,14 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-07-07 (session 14 — H gate toggles + ADR 0011 draft, via Cowork)
+- chore(gates): H1 Spectral warn→error + H2 validate ⊇ check:endpoints; docs(adr): 0011 family-core (proposed) — PR: pending (host) — gates: lint pre-verified clean at warn before tightening — tag: none
+  - **H1** `.spectral.yaml`: `schema-property-snake-case` + `schema-description-required` severity warn→error (pre-verified: 0 findings at warn on the demo contract); staging comments added (`recommended:false` for derived projects); `spectral-lint` skill example synced
+  - **H2** `package.json`: `validate` += `npm run check:endpoints`; composition mentions updated in 9 files (git-operations, node-commands, verification, deploy, contract-versioning skill, validate-contract cmd footer, check_ready.sh comment, setup-windows, todo)
+  - **G Phase 0** `docs/decisions/0011-family-core-plugin.md` (**proposed**): layering rule (domain-words criterion), plugin ships agents/commands/skills/hooks (not rules/CLAUDE.md), safety invariants stay in repos, self-contained plugin skills (no rule pointers), fallback = degradation, Phases 0–3, non-goals (CI gates stay)
+  - Audit §7 queue after this: G implementation (Phase 1+) only; inherited L2 + AUDIT-file tracking decision
+  - No contract change; no semver bump; consumers: no action
+
 ## 2026-07-07 (session 13 — F×6 rules↔skills dedup, via Cowork)
 - chore(rules,skills): dedup 6 rule↔skill pairs — "rule = norms, skill = recipes" (audit §4 / N3) — PR: pending (host, single commit by user decision) — gates: n/a (no contract change) — tag: none
   - F1 `typespec-style.md` ↔ `typespec-authoring`: emitter mechanics (3.1 nullability) + commands → skill; layout/naming/semver norms stay in rule; commit discipline → pointer to `contract-first.md`. Bonus: `x-surface` added to both (norm line + `@extension` recipe) — the gate existed, neither file mentioned it

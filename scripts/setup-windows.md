@@ -35,7 +35,7 @@ Git Bash is the shell Claude Code uses for the Bash tool, so run the gates there
 
 ```bash
 bash scripts/install.sh     # npm deps (TypeSpec, Spectral, Prism) + oasdiff check
-npm run validate            # compile + drift + lint + examples
+npm run validate            # compile + drift + lint + examples + endpoints registry
 ```
 
 ## 3. Verify the runtime tier

@@ -41,4 +41,4 @@ node scripts/log-cmd.mjs /validate-contract "$ARGUMENTS"
 
 5. **Report** a pass/fail checklist. On all-green, suggest `/breaking-check` then `/create-pr`.
 
-> `npm run validate` runs steps 1–3 in one shot; step 4 (`npm run check:endpoints`) is a separate verification gate (also enforced in CI).
+> `npm run validate` runs steps 1–4 in one shot (decision H); step 4 also runs standalone via `npm run check:endpoints` and in CI + pre-push.

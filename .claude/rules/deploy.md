@@ -26,7 +26,7 @@ openapi.yml + Dockerfile ──build──► image ──push──► pull ─
 
 ## Readiness gate
 
-`bash scripts/check_ready.sh` must pass before packaging. It verifies: compile + drift + lint + examples + Prism smoke + breaking + artifact presence + auth endpoints. A contract that fails this gate is not ready for consumers.
+`bash scripts/check_ready.sh` must pass before packaging. It verifies: compile + drift + lint + examples + endpoints registry + Prism smoke + breaking + artifact presence + auth endpoints. A contract that fails this gate is not ready for consumers.
 
 ## Security notes
 
