@@ -10,7 +10,7 @@ description: "[claude-api-contract] Step-by-step release flow and consumer pin-b
 ## Release flow (/release)
 
 ```bash
-npm run validate         # compile + drift + lint + examples (must be green)
+npm run validate         # compile + drift + lint + examples + endpoints registry (must be green)
 npm run breaking         # classify; confirm the bump
 oasdiff changelog <prev-tag> openapi.yml       # docs-writer folds into CHANGELOG.md (ADR 0007)
 git tag vX.Y.Z && git push origin vX.Y.Z

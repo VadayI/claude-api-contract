@@ -16,7 +16,7 @@
     "mock": "prism mock openapi.yml -p ${PRISM_PORT:-4010}",
     "mock:dynamic": "prism mock openapi.yml -d -p ${PRISM_PORT:-4010}",
     "mock:smoke": "bash scripts/check_mock.sh",
-    "validate": "npm run api:compile && bash scripts/check_typespec_drift.sh && npm run lint && bash scripts/check_examples.sh",
+    "validate": "npm run api:compile && bash scripts/check_typespec_drift.sh && npm run lint && bash scripts/check_examples.sh && npm run check:endpoints",
     "breaking": "bash scripts/check_breaking.sh",
     "check:endpoints": "node scripts/check_endpoints_registry.mjs",
     "ready": "bash scripts/check_ready.sh",
