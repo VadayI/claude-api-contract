@@ -2,6 +2,14 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-07-07 (duplication & plugin audit + context hygiene, via Cowork)
+- docs: `docs/AUDIT-2026-07-07.md` (delta over 06-14/06-16 audits) + applied quick wins — PR: pending (host) — gates: n/a (no contract change) — tag: none
+  - N1 (key finding): inline `@`-mentions leaked globally (doc-verified: imports at launch, recursive <=4 hops, code spans skipped) -> backticked: CLAUDE.md 13 repl., 13 rules 27 repl.; import block untouched
+  - N2: removed `engineering@knowledge-work-plugins` from enabledPlugins (skills shadow contract-reviewer/api-architect/docs-writer + bundles a 2nd GitHub MCP); local-only: dropped `enabledMcpjsonServers` from settings.local.json (was double MCP)
+  - Decisions locked: rules<->skills dedup as "norms vs recipes" (6 pairs, plan F); family-core plugin design + migration (report section 6, plan G)
+  - Prior-audit statuses re-verified: P1 endpoints-gate DONE (except `validate` scope), P2 merge_group DONE, P3 agent tails still open
+  - Note: sessions between #33 and #47 were not logged here — see git log
+
 ## 2026-06-15 (session 10 — template self-audit + fixes, via Cowork)
 
 > Full audit of every agent/command/skill/rule/script/hook/CI workflow + applied fixes. Audit doc: `docs/AUDIT-2026-06-14-template.md` (untracked; `personalize.sh` Tier 2 strips `docs/AUDIT-*.md` on derive). 1 HIGH · 4 MEDIUM · 6 low/verify.

@@ -13,7 +13,7 @@ The contract is consumed by two repos with **different jobs**: `claude-django` i
 | `page` | A frontend page/route of the SPA itself | NOT under `/api/v1/` (e.g. `/products`, `/login`) | scaffolds a page/route; lists the operations it `consumes` | not its concern |
 
 - **One `x-surface` per entry.** Every `/api/v1/...` operation declares `resource` or `system`. Every page-map entry is `page`.
-- `system` answers the core concern directly: *the frontend must not build a page for it.* The canonical example is `POST /api/v1/auth/token` (service-to-service — a browser can never hold a client secret; @.claude/rules/auth-contract.md).
+- `system` answers the core concern directly: *the frontend must not build a page for it.* The canonical example is `POST /api/v1/auth/token` (service-to-service — a browser can never hold a client secret; `.claude/rules/auth-contract.md`).
 - Judgment calls (e.g. `auth/refresh`, `auth/logout`) are frontend-facing transport, so they are `resource` with simply **no page** in the page-map — not `system`. A project may mark transport-only endpoints `system` if it prefers; document the choice.
 
 ## "Both a page and data" → a **pair**, never a dual flag
@@ -55,7 +55,7 @@ Many-to-many: a page may `consume` several operations (a detail+edit page consum
 
 Both gates are **active** (severity error). A derived project not yet ready to classify its endpoints may set the Spectral rule `recommended: false` to stage the rollout:
 
-- **Spectral** `operation-x-surface-required` (`.spectral.yaml`): every operation must declare `x-surface ∈ {resource, system}` (@.claude/rules/spectral-style.md). Runs in `npm run lint` — CI Gate 2 + the pre-commit hook.
+- **Spectral** `operation-x-surface-required` (`.spectral.yaml`): every operation must declare `x-surface ∈ {resource, system}` (`.claude/rules/spectral-style.md`). Runs in `npm run lint` — CI Gate 2 + the pre-commit hook.
 - **`check_endpoints_registry.mjs`** (`npm run check:endpoints` — CI verification step + the pre-push hook): every operation's `x-surface` is present, valid, and equals its `surface` in `endpoints.json`; every `pages.json` `consumes` target exists and is not `system`; no `page` route sits under `/api/v1/`.
 
 `contract-reviewer` still reviews surface *intent*; these gates make the mechanics non-negotiable.

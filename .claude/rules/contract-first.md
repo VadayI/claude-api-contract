@@ -23,7 +23,7 @@ Both consumers **only consume** the contract. Neither generates it. A contract c
 2. **One flat bundled file** (decision #3) — no external `$ref`, no multi-file output. Consumers fetch one URL.
 3. **No language-specific code in the canon.** No TS types, no Python models. Consumers generate/validate locally.
 4. **Every change ships as a versioned git tag** (`vX.Y.Z`). Consumers pin `CONTRACT_VERSION`; bumping the pin is a deliberate PR in the consumer.
-5. **The contract describes its own auth** (`/auth/*`) so the mock can issue tokens and a frontend can log in autonomously before any backend endpoint exists (@.claude/rules/auth-contract.md).
+5. **The contract describes its own auth** (`/auth/*`) so the mock can issue tokens and a frontend can log in autonomously before any backend endpoint exists (`.claude/rules/auth-contract.md`).
 
 ## What is NOT a build output
 

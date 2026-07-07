@@ -1,6 +1,6 @@
 # Deploy model (Prism mock → Docker → VPS)
 
-> Loaded per-command by `/ship-contract` (@.claude/rules/deploy.md).
+> Loaded per-command by `/ship-contract` (`.claude/rules/deploy.md`).
 
 The contract is delivered as a **static Prism mock** packaged into a Docker image and deployed directly on a VPS at `http://IP:PORT` (no nginx, no TLS). This is appropriate for development/staging mocks — the mock is stateless, read-only, and returns only contract-defined shapes.
 

@@ -6,7 +6,7 @@ The contract is delivered as **git tags** (`vX.Y.Z`) plus the raw `openapi.yml` 
 
 | Bump | When | Gate |
 |---|---|---|
-| **major** (`vX+1.0.0`) | any backward-incompatible change | forced by the breaking-change gate (oasdiff `--fail-on ERR`, @.claude/rules/breaking-changes.md) |
+| **major** (`vX+1.0.0`) | any backward-incompatible change | forced by the breaking-change gate (oasdiff `--fail-on ERR`, `.claude/rules/breaking-changes.md`) |
 | **minor** (`vX.Y+1.0`) | new endpoint or new optional field — backward compatible | — |
 | **patch** (`vX.Y.Z+1`) | descriptions, examples, fixes that do not change the wire shape | — |
 

@@ -14,7 +14,7 @@
 
 ## Releases
 
-- Releases are **git tags** `vX.Y.Z` (@.claude/rules/versioning.md), created via `/release` after all gates are green. Tags are pushed; `main` is moved only by merged PRs.
+- Releases are **git tags** `vX.Y.Z` (`.claude/rules/versioning.md`), created via `/release` after all gates are green. Tags are pushed; `main` is moved only by merged PRs.
 
 ## PR checklist (enforced by review)
 
