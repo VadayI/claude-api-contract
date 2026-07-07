@@ -31,8 +31,8 @@ ba → api-architect (designs the contract) → tsp-author (writes TypeSpec)
 
 1. **First action on any task: classify and delegate.** Do not open `spec/` files until an agent runs. Ambiguous request → one round of clarification first (`AskUserQuestion`).
 2. **Plan first for non-trivial work.** Stay in Plan Mode; present scope, sub-tasks, files, risks; change nothing until the user approves.
-3. **PRs only** — never commit to `main` (@.claude/rules/git-operations.md).
-4. **Contract-first** — every change flows `spec/ → openapi.yml`, never the reverse (@.claude/rules/contract-first.md).
+3. **PRs only** — never commit to `main` (`.claude/rules/git-operations.md`).
+4. **Contract-first** — every change flows `spec/ → openapi.yml`, never the reverse (`.claude/rules/contract-first.md`).
 5. If a task touches more than ~3 files, split it and run each slice through the pipeline.
 
 ## Optional agents

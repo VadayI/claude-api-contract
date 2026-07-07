@@ -48,7 +48,6 @@
   },
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
-    "engineering@knowledge-work-plugins": true,
     "github@claude-plugins-official": true,
     "context7@claude-plugins-official": true
   },

@@ -32,7 +32,7 @@ security:
 | `POST /api/v1/auth/token` | `[]` public | `grant_type=client_credentials`, `client_id`, `client_secret` (+ optional `scope`) | `access` (+ `expires_in`, `scope`) |
 
 - **Scopes, not roles**, for services: granular authorization via scopes in the token and `security` on endpoints. Optionally model an explicit `serviceAuth: oauth2 clientCredentials` scheme with a named `scopes` map.
-- S2S recommendations (also bind backend): short-lived access (minutes) + a revocation strategy; scopes on every non-public endpoint instead of a bare `bearerAuth: []`; rate limiting (`429` + `Retry-After`, @.claude/rules/api-envelope.md).
+- S2S recommendations (also bind backend): short-lived access (minutes) + a revocation strategy; scopes on every non-public endpoint instead of a bare `bearerAuth: []`; rate limiting (`429` + `Retry-After`, `.claude/rules/api-envelope.md`).
 
 ## Frontend note
 

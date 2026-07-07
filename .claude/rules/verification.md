@@ -13,7 +13,7 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
   "envelope": "single|list", "surface": "resource", "notes": "..." }
 ```
 
-Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `.claude/memory/pages.json` page-map (@.claude/rules/endpoint-surface.md). The contract is incomplete until the registry entry exists.
+Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `.claude/memory/pages.json` page-map (`.claude/rules/endpoint-surface.md`). The contract is incomplete until the registry entry exists.
 
 ## Verification doc
 

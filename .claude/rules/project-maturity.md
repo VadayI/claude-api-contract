@@ -32,7 +32,7 @@ completeness. It does **not** gate-skip or relax contract integrity.
 mock smoke) and `@doc` on every model/property/operation are ALWAYS ON, regardless of stage.**
 A stage modulates process depth and completeness — it does not touch contract integrity.
 A missing `@doc`, a fake example, or a hand-edited `openapi.yml` is always forbidden
-(@.claude/rules/no-stubs.md, @.claude/rules/contract-first.md).
+(`.claude/rules/no-stubs.md`, `.claude/rules/contract-first.md`).
 
 ## Where the stage lives
 
@@ -48,10 +48,10 @@ Never assume a stage.
 - **`devil`:** "skip" means the orchestrator may omit it by default; the user may always
   invoke it explicitly.
 - **Examples:** a count here is a floor, not a ceiling — always add examples for error
-  shapes that consumers would branch on (@.claude/rules/examples-validation.md).
+  shapes that consumers would branch on (`.claude/rules/examples-validation.md`).
 - **Breaking-change:** "low" relaxes urgency of semver precision, not the gate itself
-  (@.claude/rules/breaking-changes.md). ERR-level changes always require a MAJOR bump.
+  (`.claude/rules/breaking-changes.md`). ERR-level changes always require a MAJOR bump.
 
 > First action on any task: read `PROJECT.md` for the declared stage. No stage → Open
 > Question before proceeding. Scale the pipeline against the matrix; never silently skip
-> an invariant (@.claude/rules/workflow.md, @.claude/rules/preflight.md).
+> an invariant (`.claude/rules/workflow.md`, `.claude/rules/preflight.md`).
