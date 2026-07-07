@@ -78,7 +78,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "ba|api-architect|tsp-author|contract-reviewer|breaking-change-analyst|mock-validator|docs-writer",
+        "matcher": "ba|api-architect|tsp-author|contract-reviewer|breaking-change-analyst|mock-validator|docs-writer|happy-path-author",
         "hooks": [
           {
             "type": "command",

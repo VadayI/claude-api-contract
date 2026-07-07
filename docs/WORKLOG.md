@@ -2,6 +2,14 @@
 
 > Append-only chronicle of what changed each session (newest first).
 
+## 2026-07-07 (session 12 — audit queue D+E + .git repair, via Cowork)
+- chore(agents): superpowers layer-boundaries note + agent tails (audit §7 D+E) — PR: pending (host) — gates: n/a (no contract change) — tag: none
+  - **D** `mcp-stack.md`: new "Layer boundaries — superpowers plugin vs repo rules" section — expected-active skills (brainstorming / writing-plans / executing-plans / verification-before-completion / dispatching-parallel-agents / writing-skills) vs repo rules (`living-plan.md`, `verification.md`); devil<->brainstorming phase split; inert skills accepted; contract invariants never delegated to plugin skills
+  - **E** `ba` -> read-only tools (`Read, Glob, Grep`; report goes to the orchestrator, which appends the plan-log line — inline note in ba.md); `settings.json` SubagentStop matcher += `happy-path-author`; `template-sync` tools verified — justified (diff/apply/PR), no change
+  - **Repair (local, not in PR):** `.git/config` + `.git/HEAD` NUL-padded, `.git/index` corrupt tail (mount write quirk) -> NULs stripped (tr -d '\0'), index rebuilt from HEAD; `git fsck` clean. Git WRITE ops — host only
+  - Status update: previous entry's "PR: pending" landed as **PR #48** + seed `--force` fix **PR #49** (merged 2026-07-07)
+  - No contract change; no semver bump; consumers: no action
+
 ## 2026-07-07 (duplication & plugin audit + context hygiene, via Cowork)
 - docs: `docs/AUDIT-2026-07-07.md` (delta over 06-14/06-16 audits) + applied quick wins — PR: pending (host) — gates: n/a (no contract change) — tag: none
   - N1 (key finding): inline `@`-mentions leaked globally (doc-verified: imports at launch, recursive <=4 hops, code spans skipped) -> backticked: CLAUDE.md 13 repl., 13 rules 27 repl.; import block untouched

@@ -2,25 +2,26 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
-## Where we are (2026-07-07, end of session — duplication/plugin audit + quick wins, via Cowork)
-- Branch: `main` == `origin/main` (`bb1a804`, PR #47) + **uncommitted local changes from this session**: 15 tracked files (CLAUDE.md, 13 rules, settings.json) + 4 docs (AUDIT-2026-07-07, HANDOFF, WORKLOG, todo). Awaiting branch/PR on the host.
-- ⚠️ Stale `.git/index.lock` left by the sandbox — on the host run `rm -f .git/index.lock` BEFORE any git command.
-- Class B artifacts untracked as designed (`spec/`, `examples/`, `openapi.yml`, `.claude/memory/`, ADR 0002–0004, `docs/AUDIT-*.md`).
-- Contract untouched this session (no `spec/`/`openapi.yml` diff) → no semver movement. Latest tag: **v0.4.0**.
-- Counts: **12 agents · 23 commands · 21 rules · 6 skills · 3 workflows**. Plugin baseline now: **superpowers + github + context7** (engineering removed).
+## Where we are (2026-07-07, session 12 end — audit queue D+E, via Cowork)
+- Branch: `main` == `origin/main` (`a6a5468`, PR #49) + **uncommitted local changes from this session**: 3 config files (`.claude/rules/mcp-stack.md`, `.claude/agents/ba.md`, `.claude/settings.json`) + 3 docs (HANDOFF, WORKLOG, todo). Awaiting branch/PR on the host.
+- Audit 2026-07-07 (`docs/AUDIT-2026-07-07.md`, N1–N5): quick wins A/B1/B2/C **merged** (PR #48); **D+E applied this session** (uncommitted). Remaining queue: F×6 → G → H (+ inherited L2).
+- ⚠️ `.git` was corrupt (config/HEAD NUL-padded, index broken tail — mount write quirk) → **repaired in-session**, `git fsck` clean. Git WRITE ops (branch/commit/push) — host only.
+- Contract untouched (no `spec/`/`openapi.yml` diff) → no semver movement. Latest tag: **v0.4.0**.
+- Counts: 12 agents · 23 commands · 21 rules · 6 skills · 3 workflows. Plugin baseline: superpowers + github + context7.
 
 ## What was done this session
-- **`docs/AUDIT-2026-07-07.md`** — delta audit: N1 global-context leak via inline `@`-imports (doc-verified; the "11 global + 10 scoped" design was silently defeated — ~1050 lines loaded instead of ~350); N2 plugin duplication (engineering out; up-to-3× GitHub MCP dedup); N3 six rule↔skill content-overlap pairs (plan); N4 internal process overlaps; N5 family-core plugin design + migration plan; prioritized PR plan A–H.
-- **Applied (B1/B2/C):** CLAUDE.md prose `@`-mentions → backticks (13; import block intact); 27 cross-refs in 13 rules → backticks; `settings.json` minus `engineering@knowledge-work-plugins`; local `settings.local.json` minus `enabledMcpjsonServers`.
-- **Verified:** both settings JSON-parse; zero non-backticked `@.claude/rules` refs outside the import block; diffs reviewed against `/tmp/audit-bak`.
+- **D:** `mcp-stack.md` — "Layer boundaries — superpowers plugin vs repo rules": expected-active vs inert plugin skills, devil↔brainstorming phase split, invariants stay in repo rules/agent bodies.
+- **E:** `ba` → `Read, Glob, Grep` (read-only; inline note — orchestrator appends its plan-log line); SubagentStop matcher += `happy-path-author`; `template-sync` tools verified (no change needed).
+- **Repair:** `.git/config`, `.git/HEAD`, `.git/index` NUL-corruption fixed (`tr -d '\0'`, index rebuilt from HEAD).
 
 ## What's next
-1. **HOST:** `rm -f .git/index.lock` → `git checkout -b chore/audit-2026-07-07` → `git add CLAUDE.md .claude/rules .claude/settings.json docs/AUDIT-2026-07-07.md docs/HANDOFF.md docs/WORKLOG.md docs/todo.md` → commit (uk body, per report §7) → push → PR. One PR is fine (mechanical, homogeneous); split B1/B2/C into three if preferred.
-2. After merge: derived projects pick the fixes up via `/update-from-template`.
-3. Queue (see `docs/todo.md`): D mcp-stack note → E agent tails → F×6 rules↔skills dedup → G family-core Phase 0–1 (ADR 0011 + marketplace repo) → H decisions.
-4. Inherited: L2 confirm `UserPromptExpansion` on the live CLI; AUDIT-file tracking decision.
+1. **HOST:** `git checkout -b chore/audit-queue-d-e` → `git add .claude/rules/mcp-stack.md .claude/agents/ba.md .claude/settings.json docs/HANDOFF.md docs/WORKLOG.md docs/todo.md` → commit (uk body) → push → PR.
+2. **F×6 (P2):** rules↔skills dedup, one PR per pair (typespec, spectral, prism, oasdiff, versioning, openapi-design) — rule = norms, skill = recipes (AUDIT §4).
+3. **G (P2):** family-core plugin — ADR 0011 → `claude-family-marketplace` repo → v0.1.0 pilot here → roll out to claude-django / claude-react-mui (AUDIT §6).
+4. **H (P4) decisions:** Spectral `warn`→`error`; `npm run validate` ⊇ `check:endpoints`. Inherited: L2 `UserPromptExpansion` on live CLI; AUDIT-file tracking.
 
 ## Open questions / risks
-- family-core: exact core/domain boundary for `ba`/`devil`/`brief-synthesizer` (domain tails) — to be settled in ADR 0011.
+- family-core: exact core/domain boundary for `ba`/`devil`/`brief-synthesizer` (domain tails) — to settle in ADR 0011.
 - Plugin-hook behavior parity Cowork vs CLI — test during family-core Phase 1 pilot.
-- superpowers stays with some inert skills (TDD, worktrees…) — accepted consciously; note D adds the layer boundaries.
+- `living-plan.md` wording ("each agent appends via Edit") vs read-only `ba` (orchestrator appends) and Bash-appending reviewers — reconcile wording within F if that pair is touched.
+- Mount write quirk now proven to hit even `.git/*` — keep ALL git write ops on host; sandbox is for file edits + read-only git.
