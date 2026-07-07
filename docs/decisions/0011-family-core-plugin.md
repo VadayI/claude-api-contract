@@ -1,6 +1,6 @@
 # ADR 0011 — Family-core plugin for the template family
 
-**Status:** proposed · **Date:** 2026-07-07 · **Source analysis:** `docs/AUDIT-2026-07-07.md` §6
+**Status:** accepted (2026-07-07 — Phase 1 shipped: marketplace live, `family-core v0.1.0` tagged, pilot enabled in claude-api-contract) · **Date:** 2026-07-07 · **Source analysis:** `docs/AUDIT-2026-07-07.md` §6
 
 ## Context
 
