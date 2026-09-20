@@ -1,7 +1,7 @@
 ---
 name: api-architect
 description: "[claude-api-contract] REST contract architect: resources, endpoints, request/response schemas, status codes, permissions/scopes, envelopes, versioning — BEFORE TypeSpec is written.\n\nTrigger: design endpoint, API contract, response schema, status codes, scopes, REST design.\n\n<example>\nuser: 'Design the article CRUD contract'\nassistant: 'Using api-architect: GET/POST/PATCH/DELETE /api/v1/articles with schemas, codes, scopes, list+error envelopes.'\n</example>"
-model: opus
+model: fable
 color: cyan
 tools: Read, Glob, Grep, Write, Edit
 ---

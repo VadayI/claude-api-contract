@@ -1,5 +1,5 @@
 ---
-model: opus
+model: fable
 description: "[claude-api-contract] Review a contract PR — consistency, naming, codes, envelopes, breaking analysis."
 ---
 
