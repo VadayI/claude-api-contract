@@ -1,0 +1,63 @@
+{
+  "core_version": "0.1.0-dev",
+  "files": {
+    "README.md": {
+      "ownership": "template",
+      "sha256": "98f03ab9bbf046d1989e3475948d34bdf3af15b4ce3ce2bd249e6a3084f37f0e"
+    },
+    "core.json": {
+      "ownership": "template",
+      "sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf"
+    },
+    "docs/ai/decisions/0001-portable-family-core.md": {
+      "ownership": "template",
+      "sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9"
+    },
+    "docs/ai/legacy/contract-maturity.md": {
+      "ownership": "template",
+      "sha256": "5732178b6b64d6ceddcdfca578f1706d982377db5abca8e452acbeba9ed427ef"
+    },
+    "docs/ai/legacy/django-maturity.md": {
+      "ownership": "template",
+      "sha256": "85a5e4054e9ceb49efe68250c199f41b20c1963444d2c53c3d5c286b7d33307b"
+    },
+    "docs/ai/maturity-migration.md": {
+      "ownership": "template",
+      "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
+    },
+    "scripts/ai/core_paths.py": {
+      "ownership": "template",
+      "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
+    },
+    "scripts/ai/core_sync.py": {
+      "ownership": "template",
+      "sha256": "1b307ecbad6c84217ba40cd6bc55dce56ee68e96bf3f249ce7b68d274da573c3"
+    },
+    "scripts/ai/generate_core.py": {
+      "ownership": "template",
+      "sha256": "b244e718cbbf1ba42debab95d854649d314c85f6ac5a359c613f8d610c64c596"
+    },
+    "scripts/ai/install_core.py": {
+      "ownership": "template",
+      "sha256": "434c080fe02c24f1dbbf7cf9bb97f9c9cd696c903864f12ae7bef8db17225374"
+    },
+    "scripts/ai/readiness.py": {
+      "ownership": "template",
+      "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
+    },
+    "templates/ai/readiness-catalog.json": {
+      "ownership": "template",
+      "sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5"
+    },
+    "tests/test_core_sync.py": {
+      "ownership": "template",
+      "sha256": "6e84943b9b5d103bafacb070254f379af90a45de0fa62189865e1bf32a81a3b2"
+    },
+    "tests/test_readiness.py": {
+      "ownership": "template",
+      "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
+    }
+  },
+  "phase": "P04-in-progress",
+  "schema_version": 1
+}

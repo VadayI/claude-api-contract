@@ -28,3 +28,8 @@ tsp-output/
 .claude/memory/command-log.jsonl
 
 # Last reviewed/updated: 2026-06-06
+
+# Shared Python tooling runtime artifacts
+__pycache__/
+*.py[cod]
+.ai-runtime/
