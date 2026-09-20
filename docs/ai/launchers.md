@@ -54,3 +54,21 @@ Existing stack-specific `scripts/claude.*` and Makefile targets are untouched by
 core installation. P04/P12 delivery must replace their legacy env-sourcing behavior
 with explicit, reviewed wiring to this launcher while preserving needed variables.
 Installing the shared files alone does not prove those entry points are migrated.
+
+## Legacy entry-point compatibility
+
+`legacy_launch.py` is a separate adapter for existing Claude wrappers. It accepts
+`claude|codex --root PROJECT --env-file .env -- CLI_ARGS`. Only CONTRACT_REPO,
+CONTRACT_VERSION, VITE_API_BASE_URL, VITE_OPENAPI_URL, VITE_MSW_ENABLED,
+GITHUB_PERSONAL_ACCESS_TOKEN and CONTEXT7_API_KEY are read as literal dotenv data.
+Unknown application variables are not inherited. No shell evaluation or variable
+expansion occurs; quoted single-line values and whitespace-prefixed comments are
+supported, ambiguous duplicate/multiline values fail without logging their values.
+
+Nonempty values override inherited selected variables; blank placeholders preserve
+existing values. A nonempty PAT supplies GH_TOKEN and removes stale GITHUB_TOKEN
+only in the child. The parent process is never modified. CLI argv/exit status are
+preserved with no implicit model/trust/approval overrides. This explicitly selected
+compatibility path reads dotenv data; the normal launch.py does not read .env.
+Applications must load their own runtime environment separately. Configure secrets
+through the intended project file or child environment, never global trust changes.

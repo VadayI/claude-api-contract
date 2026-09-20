@@ -10,7 +10,7 @@
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
-      "sha256": "3a169997806df29f52d7523e92ce59f32eb756f043a6c7665936657e51fdb51f"
+      "sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -60,6 +60,10 @@
       "ownership": "template",
       "sha256": "76a237581761312e881819e441d613f21a687998cc72615e4d62a69275311a9b"
     },
+    "scripts/ai/legacy_launch.py": {
+      "ownership": "template",
+      "sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc"
+    },
     "scripts/ai/readiness.py": {
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
@@ -88,7 +92,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "2d3d06920e5a167cf0a844b8772b2cebddc6a3d1ce1c13e2e870cf4c6a4e26fe",
+  "source_manifest_digest": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.1.0-dev"

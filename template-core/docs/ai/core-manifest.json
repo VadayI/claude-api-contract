@@ -19,7 +19,7 @@
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
-      "sha256": "3a169997806df29f52d7523e92ce59f32eb756f043a6c7665936657e51fdb51f"
+      "sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -77,6 +77,10 @@
       "ownership": "template",
       "sha256": "76a237581761312e881819e441d613f21a687998cc72615e4d62a69275311a9b"
     },
+    "scripts/ai/legacy_launch.py": {
+      "ownership": "template",
+      "sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc"
+    },
     "scripts/ai/readiness.py": {
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
@@ -112,6 +116,10 @@
     "tests/test_launch.py": {
       "ownership": "template",
       "sha256": "3f8d67e6e31eb8d0577fc2e5c0d7ec40c64845f8bd88d1b7d048af0575f5cd21"
+    },
+    "tests/test_legacy_launch.py": {
+      "ownership": "template",
+      "sha256": "00446d33ea5864f2a9057faf92b2196dba49e89d02076f2723a903850fa896bb"
     },
     "tests/test_readiness.py": {
       "ownership": "template",
