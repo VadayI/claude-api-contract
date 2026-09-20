@@ -348,3 +348,10 @@ rm -rf /mnt/d/Dev/My/VMT/contract
 
 > This deletes everything — source files, git history, dependencies. Make sure you have pushed
 > your work to GitHub (or have a backup) before running this.
+
+## Shared-core readiness draft
+
+`template-core/` contains the independent P09 maturity/readiness resolver for
+Python 3.13+ (standard library only). See [its README](template-core/README.md)
+and [migration report](template-core/docs/ai/maturity-migration.md). It does not
+change contract application behavior or declare production family integration.

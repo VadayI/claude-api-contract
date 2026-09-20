@@ -1,0 +1,42 @@
+{
+  "files": {
+    "README.md": {
+      "ownership": "template",
+      "sha256": "29605e3a4d45b44dd9bf0a637ad0138cc063bc7a8daf3d79b1d5e4ea73c022ae"
+    },
+    "docs/ai/legacy/contract-maturity.md": {
+      "ownership": "template",
+      "sha256": "5732178b6b64d6ceddcdfca578f1706d982377db5abca8e452acbeba9ed427ef"
+    },
+    "docs/ai/legacy/django-maturity.md": {
+      "ownership": "template",
+      "sha256": "85a5e4054e9ceb49efe68250c199f41b20c1963444d2c53c3d5c286b7d33307b"
+    },
+    "docs/ai/maturity-migration.md": {
+      "ownership": "template",
+      "sha256": "ace73b5eeeae044ca679b70a69b6d333f45b3c51bcbe844e460e14bd16d4a1bd"
+    },
+    "scripts/ai/generate_core.py": {
+      "ownership": "template",
+      "sha256": "bbff283b4c3224e82c33fb16251eead3d5973c41f11c6781f647a0e7a888a02e"
+    },
+    "scripts/ai/install_core.py": {
+      "ownership": "template",
+      "sha256": "1d49727eedabc81eaa23d334918428c983e06dc17482cc4a89d110e0f3759c9f"
+    },
+    "scripts/ai/readiness.py": {
+      "ownership": "template",
+      "sha256": "bc516ef160679410d34350e2bc5845b99b60ec14e982e0ffa02a8bd2440ff21a"
+    },
+    "templates/ai/readiness-catalog.json": {
+      "ownership": "template",
+      "sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5"
+    },
+    "tests/test_readiness.py": {
+      "ownership": "template",
+      "sha256": "f134d92252c33f31a383fe13cea0a0ebf35db0f2ffea69c61c25bb97369d6584"
+    }
+  },
+  "phase": "P09-draft",
+  "schema_version": 1
+}
