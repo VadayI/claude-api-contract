@@ -6,13 +6,16 @@ import json
 from pathlib import Path
 import sys
 
+from schema import check_schema, load_json
+
 
 def manifest(root: Path) -> str:
     """Hash all core source/delivery files with normalized UTF-8 ownership.
 
     Args: root contains only the shared-core source, not application files.
     Returns: Deterministic JSON; the manifest excludes itself and Python caches.
-    Raises: ValueError for linked paths; file/decode errors propagate.
+    Raises: ValueError for linked paths or unsupported bundled schemas;
+        file/decode errors propagate. Schemas are checked before publication.
     Side effects: File reads only; no database, subprocess or network operations.
     """
     files = {}
@@ -22,9 +25,11 @@ def manifest(root: Path) -> str:
         name = path.relative_to(root).as_posix()
         if not path.is_file() or "__pycache__" in path.parts or name == "docs/ai/core-manifest.json":
             continue
-        if path.suffix not in (".md", ".py", ".json"):
+        if path.suffix not in (".md", ".py", ".json", ".sh", ".ps1", ".toml"):
             raise ValueError(f"Unclassified core file: {name}")
         text = path.read_text(encoding="utf-8")
+        if name.startswith("templates/ai/schemas/") and name.endswith(".schema.json"):
+            check_schema(load_json(path))
         files[name] = {"sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(), "ownership": "template"}
     version = json.loads((root / "core.json").read_text(encoding="utf-8"))["version"]
     return json.dumps({"schema_version": 1, "phase": "P04-in-progress", "core_version": version, "files": files}, sort_keys=True, indent=2) + "\n"
