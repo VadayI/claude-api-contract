@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "98f03ab9bbf046d1989e3475948d34bdf3af15b4ce3ce2bd249e6a3084f37f0e"
+      "sha256": "d3ca6816d4a8a85022f4f2b40683d1842c2cb53a76df5801948540aad385f377"
     },
     "core.json": {
       "ownership": "template",
@@ -25,6 +25,10 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "docs/ai/schemas.md": {
+      "ownership": "template",
+      "sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47"
+    },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
       "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
@@ -35,7 +39,7 @@
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "b244e718cbbf1ba42debab95d854649d314c85f6ac5a359c613f8d610c64c596"
+      "sha256": "e7adbb2abf5c20e8a97f8729747c6222a9b32a4b499cb02044f6f5453bf1135e"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -45,9 +49,21 @@
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
     },
+    "scripts/ai/schema.py": {
+      "ownership": "template",
+      "sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487"
+    },
     "templates/ai/readiness-catalog.json": {
       "ownership": "template",
       "sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5"
+    },
+    "templates/ai/schemas/catalog.schema.json": {
+      "ownership": "template",
+      "sha256": "e93913fbf1059b8b9e95c1c9c541a385f652d2329afa5ceb5817544bf7ad5b28"
+    },
+    "templates/ai/schemas/project.schema.json": {
+      "ownership": "template",
+      "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
     },
     "tests/test_core_sync.py": {
       "ownership": "template",
@@ -56,6 +72,10 @@
     "tests/test_readiness.py": {
       "ownership": "template",
       "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
+    },
+    "tests/test_schema.py": {
+      "ownership": "template",
+      "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     }
   },
   "phase": "P04-in-progress",

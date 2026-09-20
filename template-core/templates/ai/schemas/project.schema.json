@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Family project configuration v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "template": {
+      "type": "object",
+      "required": [
+        "kind",
+        "is_scaffold"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "react",
+            "django",
+            "contract",
+            "adopted"
+          ]
+        },
+        "is_scaffold": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ci": {
+      "type": "object",
+      "required": [
+        "execution"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "execution": {
+          "type": "string",
+          "enum": [
+            "local",
+            "github"
+          ]
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "required": [
+        "merge_policy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "merge_policy": {
+          "type": "string",
+          "const": "user_command"
+        }
+      }
+    },
+    "orchestration": {
+      "type": "object",
+      "required": [
+        "coordinator_read"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "coordinator_read": {
+          "type": "string",
+          "const": "reported_files_only"
+        }
+      }
+    },
+    "maturity": {
+      "type": "object",
+      "required": [
+        "stage"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": [
+            "experiment",
+            "poc",
+            "prototype",
+            "mvp",
+            "beta",
+            "production"
+          ]
+        },
+        "legacy": {
+          "type": "object",
+          "description": "Migration provenance is validated by the readiness resolver."
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "source",
+        "artifact"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "repo_pin",
+            "django_schema_url",
+            "url_snapshot"
+          ]
+        },
+        "artifact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pin": {
+          "type": "string",
+          "minLength": 1
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Saved profiles are validated by the readiness resolver."
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Project-owned extension data; never interpreted as permissions."
+    }
+  },
+  "required": [
+    "schema_version",
+    "template",
+    "ci",
+    "git",
+    "orchestration",
+    "maturity",
+    "contract",
+    "documentation",
+    "features",
+    "deployment"
+  ],
+  "additionalProperties": false
+}

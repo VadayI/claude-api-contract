@@ -4,7 +4,14 @@ This directory is the planned shared-core source in the API-contract repository.
 The P09 resolver was developed independently of runtime pilot P03. The measured
 pilot is now accepted with documented runtime limitations. The delivery decision
 is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 is in progress;
-production launchers/schemas and full downstream integration remain pending.
+production launchers, remaining machine contracts and full downstream integration
+remain pending.
+
+Project configuration and instruction catalog schemas now have an offline
+standard-library validator; see [machine contracts](docs/ai/schemas.md) for its
+supported vocabulary, policy checks and CLI. This does not create project settings
+or claim operational evidence. Launchers and full downstream integration remain
+pending.
 
 Python 3.13+ is required; only its standard library is used. This adds no runtime
 dependency to a React, Django or contract application.
