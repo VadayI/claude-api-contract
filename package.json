@@ -8,6 +8,10 @@
     "node": ">=20.19"
   },
   "scripts": {
+    "ai:core:check": "python scripts/ai/core_sync.py --local-source --check",
+    "ai:core:sync": "python template-core/scripts/ai/core_sync.py --local-source --apply",
+    "ai:claude": "python scripts/ai/launch.py claude",
+    "ai:codex": "python scripts/ai/launch.py codex",
     "prepare": "husky",
     "api:compile": "tsp compile spec --emit @typespec/openapi3",
     "api:bundle": "node scripts/bundle-openapi.mjs",

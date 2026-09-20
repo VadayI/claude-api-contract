@@ -142,3 +142,14 @@
 
 ## <YYYY-MM-DD>
 - <change> — gates: <result> — tag: <if any>
+
+## 2026-09-20 — P04 local-source runtime delivery
+
+- Added digest-based owner delivery with explicit source checks and ownership conflicts;
+  no future commit pin, domain changes, release or deploy.
+- Integrated delivered runtime into contract installer/npm entry points and CI.
+- Windows Python 3.14: 40 PASS, 1 host symlink SKIP; Linux Python 3.13 + Git:
+  all 41 PASS with read-only source and no network. Initial slim-image run lacked
+  Git and failed setup; the corrected toolchain run is the Linux evidence.
+- Codex/Claude version probes PASS; not model-session or full role-migration proof.
+- P04 continues with Django and legacy bootstrap; merge requires user command.

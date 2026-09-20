@@ -2,6 +2,22 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-20 — local core delivery continuation
+
+Verified base: `b6d1b3d3582c4a18545050be6f475d270f53bc48` (merged core PR #56).
+Task branch: `feat/local-core-delivery`, isolated checkout. This change delivers
+the owner's `template-core` runtime using manifest digests, with no future commit
+SHA. Canonical source and installed payload checks are read-only; ownership
+conflicts preserve custom files. Installer, npm entry points and hosted checks
+include delivery. No contract schema, application models or migrations changed.
+
+Windows Python 3.14: 40 tests passed, one host symlink test skipped. Local delivery
+and repeat/source checks passed. Hosted verification and Linux results must be
+read from the candidate PR; this paragraph does not assert their success.
+P04 remains in progress: Django delivery and legacy bootstrap migration follow;
+full role migration, runner, CI choice and family acceptance are not complete.
+Merge requires a new explicit user command. Earlier snapshot below is history.
+
 ## Where we are (2026-07-07, session 15 end — family-core v0.1.0 pilot, via Cowork)
 - Branch: `main` == `origin/main` (PR #52 merged) + **uncommitted pilot changes**: `settings.json` (+`extraKnownMarketplaces`, +`family-core@claude-family-marketplace`), 6 local duplicates DELETED (agents auditor/template-sync, commands audit/handoff/wrap-up/set-language), 5 mention-files updated, ADR 0011 -> accepted, docs. Awaiting branch/PR on the host.
 - **family-core v0.1.0 live:** github.com/VadayI/claude-family-marketplace (main `462d160`, tag `v0.1.0`).

@@ -1,14 +1,5 @@
 {
-  "core_version": "0.1.0-dev",
   "files": {
-    "README.md": {
-      "ownership": "template",
-      "sha256": "b951623a3665d695795a76706605fd96dd8e256efbc02be4a22221e1ef0bd853"
-    },
-    "core.json": {
-      "ownership": "template",
-      "sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf"
-    },
     "docs/ai/adapter-generation.md": {
       "ownership": "template",
       "sha256": "3d6f0b37c2ba5dc2829fb379a39ef67856e90736fb0b82fa45e7d5c114fd5db1"
@@ -57,14 +48,6 @@
       "ownership": "template",
       "sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13"
     },
-    "scripts/ai/generate_core.py": {
-      "ownership": "template",
-      "sha256": "6a5e069d7b59d1e2b56e3e116c68efa71217c3108536d51068baffbb12a81d49"
-    },
-    "scripts/ai/install_core.py": {
-      "ownership": "template",
-      "sha256": "434c080fe02c24f1dbbf7cf9bb97f9c9cd696c903864f12ae7bef8db17225374"
-    },
     "scripts/ai/launch.ps1": {
       "ownership": "template",
       "sha256": "e7164d6a9c89d1caf284735cc0c5f97bb898f20384d2a75b119b5124215be0ae"
@@ -100,28 +83,13 @@
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
       "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
-    },
-    "tests/test_adapters.py": {
-      "ownership": "template",
-      "sha256": "7e4cce06cb154cd71f899ca4531d6fbc419c22cba7d806fd590247f9dc8a52fd"
-    },
-    "tests/test_core_sync.py": {
-      "ownership": "template",
-      "sha256": "2bd718d229d4ffba9e66cb3ee016f413bd4dfb036daa0609766bfd54fc44714f"
-    },
-    "tests/test_launch.py": {
-      "ownership": "template",
-      "sha256": "3f8d67e6e31eb8d0577fc2e5c0d7ec40c64845f8bd88d1b7d048af0575f5cd21"
-    },
-    "tests/test_readiness.py": {
-      "ownership": "template",
-      "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
-    },
-    "tests/test_schema.py": {
-      "ownership": "template",
-      "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     }
   },
-  "phase": "P04-in-progress",
-  "schema_version": 1
+  "pin_status": "local",
+  "schema_version": 1,
+  "source_kind": "local",
+  "source_manifest_digest": "2d3d06920e5a167cf0a844b8772b2cebddc6a3d1ce1c13e2e870cf4c6a4e26fe",
+  "source_path": "template-core",
+  "source_repository": "https://github.com/VadayI/claude-api-contract.git",
+  "version": "0.1.0-dev"
 }

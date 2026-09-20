@@ -127,5 +127,18 @@ locally available Git objects. A missing remote/object or unintegrated commit
 fails; it never falls back to a development pin, fetches, or merges. After a
 squash merge, select the actual integrated commit and verify its content digest.
 This check uses normal Git authentication and does not change trust/config.
-No actual downstream integrated pin has been installed yet. Per-file hashes
+React has an integrated pin to the merged core source. Per-file hashes
 establish drift, not authenticity or successful stack validation.
+
+## Owning repository delivery
+
+The contract owner uses `python template-core/scripts/ai/core_sync.py --local-source`
+to preview its local source delivery; add `--apply` to write or `--check` to
+compare without repairs. Source is always `TARGET/template-core`, and cannot be
+combined with a commit or another source. First regenerate the source manifest.
+The receipt records `source_kind: local`, the manifest digest and per-file hashes,
+without a future SHA. The same ownership preflight preserves customized files.
+Source README/tests and source-only installers never overwrite project files.
+An installed `core_sync.py --check` validates payload drift autonomously;
+`--local-source --check` additionally checks canonical source and receipt drift.
+Downstream React/Django delivery continues to use exact committed source pins.
