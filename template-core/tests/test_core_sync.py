@@ -25,7 +25,9 @@ class CoreSyncTests(unittest.TestCase):
         self.target.mkdir()
         self.core = self.source / "template-core"
         self.files = {"core.json": json.dumps({"schema_version": 1, "version": "0.1.0-dev", "source_repository": "https://example.invalid/core.git"}),
-                      "scripts/ai/example.py": "print('first')\n", "README.md": "source documentation\n"}
+                      "scripts/ai/example.py": "print('first')\n", "README.md": "source documentation\n",
+                      "scripts/ai/generate_core.py": "# source-only generator\n",
+                      "scripts/ai/install_core.py": "# source-only draft installer\n"}
         for name, text in self.files.items():
             path = self.core / name
             path.parent.mkdir(parents=True, exist_ok=True)

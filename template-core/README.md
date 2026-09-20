@@ -93,7 +93,9 @@ including the 24-profile matrix. Fresh/repeat Unicode-path delivery also passed.
 `core_sync.py` reads committed Git blobs, verifies the source manifest, and
 previews the complete update before writing. Dirty source files do not affect
 the selected revision. It delivers only `scripts/ai`, `templates/ai` and `docs/ai`
-payloads; it never replaces the project's README, tests, notes or settings.
+payloads, excluding source-only `generate_core.py` and `install_core.py`; it never
+replaces the project's README, tests, notes or settings. Runtime delivery uses
+`core_sync.py` with `core_paths.py`, not the standalone source-draft installer.
 
 ```text
 python template-core/scripts/ai/core_sync.py --source . --commit FULL_SOURCE_SHA --target "../derived project" --development-pin

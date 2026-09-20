@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "1714db558a21df5ae3edf37b352d819d15f9b34723c3d5e2a8f713ce8b80f91b"
+      "sha256": "98f03ab9bbf046d1989e3475948d34bdf3af15b4ce3ce2bd249e6a3084f37f0e"
     },
     "core.json": {
       "ownership": "template",
@@ -25,9 +25,13 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "scripts/ai/core_paths.py": {
+      "ownership": "template",
+      "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
+    },
     "scripts/ai/core_sync.py": {
       "ownership": "template",
-      "sha256": "80975e743811b354f01c6ab97b7f34409cf04326ae07d89d603f1d571d801200"
+      "sha256": "1b307ecbad6c84217ba40cd6bc55dce56ee68e96bf3f249ce7b68d274da573c3"
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
@@ -35,7 +39,7 @@
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
-      "sha256": "1d49727eedabc81eaa23d334918428c983e06dc17482cc4a89d110e0f3759c9f"
+      "sha256": "434c080fe02c24f1dbbf7cf9bb97f9c9cd696c903864f12ae7bef8db17225374"
     },
     "scripts/ai/readiness.py": {
       "ownership": "template",
@@ -47,7 +51,7 @@
     },
     "tests/test_core_sync.py": {
       "ownership": "template",
-      "sha256": "bb80b65c81f92648369cfb7fcf3cc7f34fb60b7fac256beab6aa588e641f53cd"
+      "sha256": "6e84943b9b5d103bafacb070254f379af90a45de0fa62189865e1bf32a81a3b2"
     },
     "tests/test_readiness.py": {
       "ownership": "template",

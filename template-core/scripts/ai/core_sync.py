@@ -1,14 +1,13 @@
 """Preview, install or verify core files from an immutable reviewed Git revision."""
 
 import argparse
-import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
 
-from install_core import contained, digest
+from core_paths import contained, digest
 
 PIN = "docs/ai/core-source.json"
 MANIFEST = "docs/ai/core-manifest.json"
@@ -75,7 +74,9 @@ def payload(source: Path, commit: str) -> tuple[dict, dict[str, str]]:
         content = git(source, "cat-file", "blob", entries[name])
         if digest(content) != record.get("sha256"):
             raise ValueError(f"Pinned source digest mismatch: {name}")
-        if name.startswith(("scripts/ai/", "templates/ai/", "docs/ai/")):
+        if name.startswith(("scripts/ai/", "templates/ai/", "docs/ai/")) and name not in (
+            "scripts/ai/generate_core.py", "scripts/ai/install_core.py"
+        ):
             files[name] = content
     config = json.loads(git(source, "cat-file", "blob", entries["core.json"]))
     if config.get("schema_version") != 1:
