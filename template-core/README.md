@@ -13,6 +13,9 @@ or claim operational evidence. Shared [launchers](docs/ai/launchers.md) now prov
 explicit environment initialization and PowerShell/Bash wrappers; existing stack
 entry-point migration remains pending. The [runtime compatibility matrix](docs/ai/runtime-compatibility.md)
 records measured support, optional MCP mappings and unverified capabilities.
+The [shared adapter generator](docs/ai/adapter-generation.md) preserves full source
+rules and checks ownership before updating outputs, including explicit legacy
+pilot migration. Stack installer integration remains a separate acceptance step.
 
 Python 3.13+ is required; only its standard library is used. This adds no runtime
 dependency to a React, Django or contract application.

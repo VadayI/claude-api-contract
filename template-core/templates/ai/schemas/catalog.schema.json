@@ -114,6 +114,9 @@
           "reason": {
             "type": "string",
             "minLength": 1
+          },
+          "read_only": {
+            "type": "boolean"
           }
         },
         "required": [

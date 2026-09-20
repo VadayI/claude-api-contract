@@ -3,11 +3,15 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "9e4ce6b6592bd551b1ed42782be2e986660834b05e4e57ca280dbd37c72de6eb"
+      "sha256": "54a1f5681737415a0d1611a542bf10e1c421e14102fae424a24b14135ee01ad2"
     },
     "core.json": {
       "ownership": "template",
       "sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf"
+    },
+    "docs/ai/adapter-generation.md": {
+      "ownership": "template",
+      "sha256": "3d6f0b37c2ba5dc2829fb379a39ef67856e90736fb0b82fa45e7d5c114fd5db1"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "ownership": "template",
@@ -37,6 +41,10 @@
       "ownership": "template",
       "sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47"
     },
+    "scripts/ai/adapters.py": {
+      "ownership": "template",
+      "sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9"
+    },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
       "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
@@ -44,6 +52,10 @@
     "scripts/ai/core_sync.py": {
       "ownership": "template",
       "sha256": "1b307ecbad6c84217ba40cd6bc55dce56ee68e96bf3f249ce7b68d274da573c3"
+    },
+    "scripts/ai/generate_adapters.py": {
+      "ownership": "template",
+      "sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13"
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
@@ -83,11 +95,15 @@
     },
     "templates/ai/schemas/catalog.schema.json": {
       "ownership": "template",
-      "sha256": "e93913fbf1059b8b9e95c1c9c541a385f652d2329afa5ceb5817544bf7ad5b28"
+      "sha256": "bb8aaabbea242c0d4b1713e5a5a4a45154ed977a4a252b9885b25a1bb1e9b719"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
       "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
+    },
+    "tests/test_adapters.py": {
+      "ownership": "template",
+      "sha256": "7e4cce06cb154cd71f899ca4531d6fbc419c22cba7d806fd590247f9dc8a52fd"
     },
     "tests/test_core_sync.py": {
       "ownership": "template",
