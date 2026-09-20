@@ -89,6 +89,18 @@ def matches(predicate: dict, profile: dict) -> bool:
     Returns: True if every field matches. Raises ValueError for unknown fields.
     Side effects: None; no database, subprocess or network operations.
     """
+    if not isinstance(predicate, dict):
+        raise ValueError("Predicate must be an object")
+    allowed = {"stage": STAGES, "target": TARGETS,
+               "kind": ("react", "django", "contract", "adopted"),
+               "exposure": ("local", "private", "public"),
+               "data": ("synthetic", "real", "sensitive"),
+               "phase": ("pre_deploy", "post_deploy"), "features": FEATURES,
+               "contract_mode": ("artifact", "mock"),
+               "legacy_requirement": {f"legacy_{kind}_{value.lower()}" for kind in ("django", "contract") for value in LEGACY}}
+    for field, values in predicate.items():
+        if field not in allowed or not isinstance(values, list) or not values or any(not isinstance(value, str) or value not in allowed[field] for value in values):
+            raise ValueError(f"Invalid predicate values: {field}")
     for field, values in predicate.items():
         if field == "legacy_requirement":
             actual = profile.get("legacy", {}).get("required_checks", [])
@@ -126,8 +138,12 @@ def checklist(profile: dict, catalog_path: Path = CATALOG) -> list[dict]:
     for row in catalog["rules"]:
         if not isinstance(row.get("mandatory"), bool) or row.get("severity") not in ("blocker", "advisory"):
             raise ValueError("Invalid requirement severity")
-        if not isinstance(row.get("ttl_seconds"), int) or row["ttl_seconds"] <= 0:
+        if type(row.get("ttl_seconds")) is not int or row["ttl_seconds"] <= 0:
             raise ValueError("Invalid evidence TTL")
+        if not isinstance(row.get("when"), list) or not row["when"] or not isinstance(row.get("unless"), list):
+            raise ValueError("Invalid requirement applicability")
+        for predicate in row["when"] + row["unless"]:
+            matches(predicate, profile)
         for candidate in profiles:
             if any(matches(condition, candidate) for condition in row["when"]) and not any(matches(condition, candidate) for condition in row["unless"]):
                 result.append(dict(row))

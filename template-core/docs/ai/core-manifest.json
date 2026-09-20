@@ -2,7 +2,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "29605e3a4d45b44dd9bf0a637ad0138cc063bc7a8daf3d79b1d5e4ea73c022ae"
+      "sha256": "907ec28959b6931ef0bae823eba4aec8e05cfba3118145b41df84eabcd846135"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -14,7 +14,7 @@
     },
     "docs/ai/maturity-migration.md": {
       "ownership": "template",
-      "sha256": "ace73b5eeeae044ca679b70a69b6d333f45b3c51bcbe844e460e14bd16d4a1bd"
+      "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
@@ -26,7 +26,7 @@
     },
     "scripts/ai/readiness.py": {
       "ownership": "template",
-      "sha256": "bc516ef160679410d34350e2bc5845b99b60ec14e982e0ffa02a8bd2440ff21a"
+      "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
     },
     "templates/ai/readiness-catalog.json": {
       "ownership": "template",
@@ -34,7 +34,7 @@
     },
     "tests/test_readiness.py": {
       "ownership": "template",
-      "sha256": "f134d92252c33f31a383fe13cea0a0ebf35db0f2ffea69c61c25bb97369d6584"
+      "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
     }
   },
   "phase": "P09-draft",

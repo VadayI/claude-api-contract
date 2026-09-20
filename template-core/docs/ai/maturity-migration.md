@@ -27,7 +27,7 @@ README, file size, pytest and endpoint permissions; contract TypeSpec drift,
 Spectral, examples, breaking-change, Prism smoke and documentation annotations.
 `full_profile` and `contract_integrity` are never dropped for an early maturity.
 
-This draft has 12 unit fixtures, including all 24 stage/target combinations.
+This draft has 13 unit fixtures, including all 24 stage/target combinations.
 One regression was observed and fixed: evidence with an old catalog digest had
 incorrectly yielded READY; it now yields NOT_VERIFIED. Artifact/config/phase and
 entire-profile digests, TTL, mandatory N/A, duplicate records and secret paths

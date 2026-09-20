@@ -84,5 +84,5 @@ customized files are preserved through explicit conflicts. This standalone draft
 includes its own README/tests; production project integration and downstream pins
 remain pending P04. No stale file deletion or overwrite-on-conflict is performed.
 
-Validation: Windows Python 3.14 and Linux Python 3.13 passed all 12 fixtures,
+Validation: Windows Python 3.14 and Linux Python 3.13 passed all 13 fixtures,
 including the 24-profile matrix. Fresh/repeat Unicode-path delivery also passed.

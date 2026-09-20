@@ -2,9 +2,11 @@
 
 import copy
 import hashlib
+import json
 import sys
 from pathlib import Path
 import unittest
+import tempfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts/ai"))
 from readiness import CATALOG, checklist, migrate_stage, profile_digest, verdict
@@ -139,6 +141,17 @@ class ReadinessTests(unittest.TestCase):
         for path in ("../escape", "C:/secret", ".env", "reports/.env.production", "secrets/key"):
             with self.subTest(path=path), self.assertRaises(ValueError):
                 verdict(profile, [records[0] | {"evidence": path}], now=1000)
+
+    def test_malformed_catalog_cannot_silently_remove_a_requirement(self):
+        """Reject empty predicates and invalid TTLs; temporary file writes, no DB."""
+        for mutation in ({"when": []}, {"ttl_seconds": True}, {"when": [{"stage": []}]}):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+                catalog["rules"][0].update(mutation)
+                path = Path(directory) / "catalog.json"
+                path.write_text(json.dumps(catalog), encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    checklist(self.profile(), path)
 
 
 if __name__ == "__main__":
