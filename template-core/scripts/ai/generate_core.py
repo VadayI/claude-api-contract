@@ -25,7 +25,7 @@ def manifest(root: Path) -> str:
         name = path.relative_to(root).as_posix()
         if not path.is_file() or "__pycache__" in path.parts or name == "docs/ai/core-manifest.json":
             continue
-        if path.suffix not in (".md", ".py", ".json"):
+        if path.suffix not in (".md", ".py", ".json", ".sh", ".ps1", ".toml"):
             raise ValueError(f"Unclassified core file: {name}")
         text = path.read_text(encoding="utf-8")
         if name.startswith("templates/ai/schemas/") and name.endswith(".schema.json"):

@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "d3ca6816d4a8a85022f4f2b40683d1842c2cb53a76df5801948540aad385f377"
+      "sha256": "9e4ce6b6592bd551b1ed42782be2e986660834b05e4e57ca280dbd37c72de6eb"
     },
     "core.json": {
       "ownership": "template",
@@ -12,6 +12,10 @@
     "docs/ai/decisions/0001-portable-family-core.md": {
       "ownership": "template",
       "sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9"
+    },
+    "docs/ai/launchers.md": {
+      "ownership": "template",
+      "sha256": "3a169997806df29f52d7523e92ce59f32eb756f043a6c7665936657e51fdb51f"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -24,6 +28,10 @@
     "docs/ai/maturity-migration.md": {
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
+    },
+    "docs/ai/runtime-compatibility.md": {
+      "ownership": "template",
+      "sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07"
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
@@ -39,11 +47,23 @@
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "e7adbb2abf5c20e8a97f8729747c6222a9b32a4b499cb02044f6f5453bf1135e"
+      "sha256": "6a5e069d7b59d1e2b56e3e116c68efa71217c3108536d51068baffbb12a81d49"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
       "sha256": "434c080fe02c24f1dbbf7cf9bb97f9c9cd696c903864f12ae7bef8db17225374"
+    },
+    "scripts/ai/launch.ps1": {
+      "ownership": "template",
+      "sha256": "e7164d6a9c89d1caf284735cc0c5f97bb898f20384d2a75b119b5124215be0ae"
+    },
+    "scripts/ai/launch.py": {
+      "ownership": "template",
+      "sha256": "3f47f508a2b544435f0523bb346530310a1ef516d8d1d799f0c956ea3701300a"
+    },
+    "scripts/ai/launch.sh": {
+      "ownership": "template",
+      "sha256": "76a237581761312e881819e441d613f21a687998cc72615e4d62a69275311a9b"
     },
     "scripts/ai/readiness.py": {
       "ownership": "template",
@@ -52,6 +72,10 @@
     "scripts/ai/schema.py": {
       "ownership": "template",
       "sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487"
+    },
+    "templates/ai/mcp/codex.optional.toml": {
+      "ownership": "template",
+      "sha256": "d6f5dd929b92542861b465aeb4e9d8fac061651056b92645b87cbd5ef7a63a5c"
     },
     "templates/ai/readiness-catalog.json": {
       "ownership": "template",
@@ -68,6 +92,10 @@
     "tests/test_core_sync.py": {
       "ownership": "template",
       "sha256": "6e84943b9b5d103bafacb070254f379af90a45de0fa62189865e1bf32a81a3b2"
+    },
+    "tests/test_launch.py": {
+      "ownership": "template",
+      "sha256": "3f8d67e6e31eb8d0577fc2e5c0d7ec40c64845f8bd88d1b7d048af0575f5cd21"
     },
     "tests/test_readiness.py": {
       "ownership": "template",

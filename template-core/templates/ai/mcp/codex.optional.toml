@@ -1,0 +1,15 @@
+# Inert examples only: merge deliberately after reviewing/pinning server versions.
+# Never replace an existing user/project config or duplicate a plugin provider.
+[mcp_servers.github]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
+env_vars = ["GITHUB_PERSONAL_ACCESS_TOKEN"]
+enabled = false
+required = false
+
+# Unauthenticated optional example; authenticated transport needs separate review.
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+enabled = false
+required = false
