@@ -1,9 +1,10 @@
-# Family core — independent readiness draft
+# Family core — development source
 
 This directory is the planned shared-core source in the API-contract repository.
-The P09 resolver can be developed independently of runtime pilot P03. Production
-generation, downstream version pins, install/update delivery and the ADR remain
-P04/P12 work. Nothing here claims those integrations have happened.
+The P09 resolver was developed independently of runtime pilot P03. The measured
+pilot is now accepted with documented runtime limitations. The delivery decision
+is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 is in progress;
+production launchers/schemas and full downstream integration remain pending.
 
 Python 3.13+ is required; only its standard library is used. This adds no runtime
 dependency to a React, Django or contract application.
@@ -86,3 +87,32 @@ remain pending P04. No stale file deletion or overwrite-on-conflict is performed
 
 Validation: Windows Python 3.14 and Linux Python 3.13 passed all 13 fixtures,
 including the 24-profile matrix. Fresh/repeat Unicode-path delivery also passed.
+
+## Exact-commit development delivery
+
+`core_sync.py` reads committed Git blobs, verifies the source manifest, and
+previews the complete update before writing. Dirty source files do not affect
+the selected revision. It delivers only `scripts/ai`, `templates/ai` and `docs/ai`
+payloads; it never replaces the project's README, tests, notes or settings.
+
+```text
+python template-core/scripts/ai/core_sync.py --source . --commit FULL_SOURCE_SHA --target "../derived project" --development-pin
+python template-core/scripts/ai/core_sync.py --source . --commit FULL_SOURCE_SHA --target "../derived project" --development-pin --apply
+python ../derived-project/scripts/ai/core_sync.py --target ../derived-project --check
+```
+
+The source commit must already contain the generated manifest and `core.json`.
+Preview/apply requires an explicit development or integrated label. Installed checks need no
+source checkout or network. A check with `--source` also compares the installed
+payload and pin to that exact source. Customized files cause conflicts and zero
+writes; removed source files remain in the project and require reconciliation.
+Interrupted writes can be retried. There is no automatic deletion or rollback.
+
+Use `--integrated-pin` after the source PR is merged: it reads remote `main`
+with `git ls-remote` and requires the selected commit to be its ancestor using
+locally available Git objects. A missing remote/object or unintegrated commit
+fails; it never falls back to a development pin, fetches, or merges. After a
+squash merge, select the actual integrated commit and verify its content digest.
+This check uses normal Git authentication and does not change trust/config.
+No actual downstream integrated pin has been installed yet. Per-file hashes
+establish drift, not authenticity or successful stack validation.

@@ -1,8 +1,17 @@
 {
+  "core_version": "0.1.0-dev",
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "907ec28959b6931ef0bae823eba4aec8e05cfba3118145b41df84eabcd846135"
+      "sha256": "1714db558a21df5ae3edf37b352d819d15f9b34723c3d5e2a8f713ce8b80f91b"
+    },
+    "core.json": {
+      "ownership": "template",
+      "sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf"
+    },
+    "docs/ai/decisions/0001-portable-family-core.md": {
+      "ownership": "template",
+      "sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -16,9 +25,13 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "scripts/ai/core_sync.py": {
+      "ownership": "template",
+      "sha256": "80975e743811b354f01c6ab97b7f34409cf04326ae07d89d603f1d571d801200"
+    },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "bbff283b4c3224e82c33fb16251eead3d5973c41f11c6781f647a0e7a888a02e"
+      "sha256": "b244e718cbbf1ba42debab95d854649d314c85f6ac5a359c613f8d610c64c596"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -32,11 +45,15 @@
       "ownership": "template",
       "sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5"
     },
+    "tests/test_core_sync.py": {
+      "ownership": "template",
+      "sha256": "bb80b65c81f92648369cfb7fcf3cc7f34fb60b7fac256beab6aa588e641f53cd"
+    },
     "tests/test_readiness.py": {
       "ownership": "template",
       "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
     }
   },
-  "phase": "P09-draft",
+  "phase": "P04-in-progress",
   "schema_version": 1
 }

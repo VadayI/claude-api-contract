@@ -26,7 +26,8 @@ def manifest(root: Path) -> str:
             raise ValueError(f"Unclassified core file: {name}")
         text = path.read_text(encoding="utf-8")
         files[name] = {"sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(), "ownership": "template"}
-    return json.dumps({"schema_version": 1, "phase": "P09-draft", "files": files}, sort_keys=True, indent=2) + "\n"
+    version = json.loads((root / "core.json").read_text(encoding="utf-8"))["version"]
+    return json.dumps({"schema_version": 1, "phase": "P04-in-progress", "core_version": version, "files": files}, sort_keys=True, indent=2) + "\n"
 
 
 def main() -> int:
