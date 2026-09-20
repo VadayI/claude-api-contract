@@ -2,6 +2,22 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-20 — local core delivery continuation
+
+Verified base: `b6d1b3d3582c4a18545050be6f475d270f53bc48` (merged core PR #56).
+Task branch: `feat/local-core-delivery`, isolated checkout. This change delivers
+the owner's `template-core` runtime using manifest digests, with no future commit
+SHA. Canonical source and installed payload checks are read-only; ownership
+conflicts preserve custom files. Installer, npm entry points and hosted checks
+include delivery. No contract schema, application models or migrations changed.
+
+Windows Python 3.14: 40 tests passed, one host symlink test skipped. Local delivery
+and repeat/source checks passed. Hosted verification and Linux results must be
+read from the candidate PR; this paragraph does not assert their success.
+P04 remains in progress: Django delivery and legacy bootstrap migration follow;
+full role migration, runner, CI choice and family acceptance are not complete.
+Merge requires a new explicit user command. Earlier snapshot below is history.
+
 ## Where we are (2026-07-07, session 15 end — family-core v0.1.0 pilot, via Cowork)
 - Branch: `main` == `origin/main` (PR #52 merged) + **uncommitted pilot changes**: `settings.json` (+`extraKnownMarketplaces`, +`family-core@claude-family-marketplace`), 6 local duplicates DELETED (agents auditor/template-sync, commands audit/handoff/wrap-up/set-language), 5 mention-files updated, ADR 0011 -> accepted, docs. Awaiting branch/PR on the host.
 - **family-core v0.1.0 live:** github.com/VadayI/claude-family-marketplace (main `462d160`, tag `v0.1.0`).
@@ -25,3 +41,17 @@
 - Bare-name dispatch of plugin agents — pilot exit criterion; scoped-name fallback documented in `/update-from-template`.
 - Plugin-hook parity Cowork vs CLI — v0.1.0 ships no hooks (log-cmd is command-invoked); the parity check moves to Phase 2 (session-start hook).
 - Derived projects keep their local copies until they enable the plugin — degradation by design (ADR 0011 §5); `/update-from-template` will surface the 6 deletions as template deltas.
+
+## 2026-09-20 — safe legacy launcher checkpoint
+
+Shared compatibility source: contract commit 269eeadbda4b6309b14ce289d61ecbf7f0ce03ae.
+Contract core tests: Windows 43 PASS + 1 symlink SKIP; Linux all 44 PASS.
+Django/React development pins deliberately depend on unmerged contract PR #57;
+replace them with the actual integrated commit before downstream merge.
+Legacy .env is parsed as selected literal data, never executed; credentials affect
+only the child, preserving blank fallback and PAT precedence. Known legacy wrappers
+migrate by exact hash; custom wrappers conflict before writes. Windows PowerShell
+and Git Bash version probes passed. These are not model-session acceptance.
+React actual main-to-candidate upgrade/generator check passed; Django old-seed
+component upgrade/repeat passed. Full bootstrap, CI-choice and P05+ remain pending.
+All PRs remain unmerged; a new explicit user command is required for merge.

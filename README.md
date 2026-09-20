@@ -17,6 +17,24 @@ In the old flow the contract was born in the backend (`drf-spectacular` generate
 
 ## Requirements
 
+- **Python 3.13+** — standard-library family tooling; no application dependency.
+
+The contract repository delivers its shared runtime from its own `template-core/`
+using a content digest, without recording a future commit SHA. Run
+`npm run ai:core:check` for a read-only source/delivery comparison and
+`npm run ai:core:sync` to preview ownership conflicts and apply safe updates.
+`scripts/install.sh` performs this delivery before dependency installation.
+Committed runtime files are also included by fresh seed. Local customizations
+conflict rather than being overwritten; project notes and settings are untouched.
+After editing canonical source, run `python template-core/scripts/ai/generate_core.py`
+before syncing. Never hand-edit delivered `scripts/ai` files.
+
+`npm run ai:claude -- --probe` and `npm run ai:codex -- --probe` use the
+portable launchers. PowerShell can invoke `scripts/ai/launch.ps1`; Git Bash can
+invoke `scripts/ai/launch.sh`. See [launcher configuration](docs/ai/launchers.md).
+These entry points do not establish that every legacy contract role/procedure
+has been migrated to Codex; that migration remains in progress.
+
 - **Node.js 20.19+** (22 LTS recommended) — runs the hook, TypeSpec, Spectral, Prism
 - **git** — version control
 - **GitHub CLI (`gh`)** — PR/release automation

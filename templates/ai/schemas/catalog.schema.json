@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Family instruction catalog v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "rules",
+    "roles",
+    "workflows"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "legacy_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "coordinator-only",
+              "role-or-capability",
+              "role",
+              "procedure",
+              "capability",
+              "coordinator"
+            ]
+          },
+          "explicit_consumers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "declared_consumers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "review": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "scope",
+          "explicit_consumers",
+          "declared_consumers",
+          "dependencies"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "delivery": {
+            "type": "string",
+            "enum": [
+              "file-list",
+              "role-pack"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "read_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path",
+          "rules",
+          "delivery"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "workflows": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "legacy_inventory": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "hidden_rules": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

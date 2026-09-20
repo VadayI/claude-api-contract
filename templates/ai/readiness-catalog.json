@@ -1,0 +1,930 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "full_profile",
+      "description": "All applicable existing full-profile gates pass for the candidate and base.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "contract_integrity",
+      "description": "Pinned contract/schema integrity and generated drift checks pass; no maturity bypass.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "build",
+      "description": "Reproducible build produces the exact artifact.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "secrets_config",
+      "description": "Secret-safe configuration, permissions and artifact inspection.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "runtime_prerequisites",
+      "description": "Required target/runtime capabilities are available.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "review",
+      "description": "Applicable design/implementation/test work has an independent review.",
+      "when": [
+        {}
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "startup_health",
+      "description": "Reproducible startup and health probe of the artifact.",
+      "when": [
+        {}
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "run_stop",
+      "description": "Documented and demonstrated run/stop and controlled cleanup.",
+      "when": [
+        {}
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_experiment",
+      "description": "Repeatable idea smoke with relevant auth/error cases and synthetic data limitations.",
+      "when": [
+        {
+          "stage": [
+            "experiment"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_poc",
+      "description": "Measured technical hypothesis, key integration, typical errors and repeatable outcome.",
+      "when": [
+        {
+          "stage": [
+            "poc"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_prototype",
+      "description": "Working demonstration, demo-data reset, UX/API/design review and visible limitations.",
+      "when": [
+        {
+          "stage": [
+            "prototype"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_mvp",
+      "description": "Completed core user flows, all declared responses, security and compatibility review.",
+      "when": [
+        {
+          "stage": [
+            "mvp"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_beta",
+      "description": "Controlled audience/limits, negative and load cases, rollout and incident response.",
+      "when": [
+        {
+          "stage": [
+            "beta"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "goal_production",
+      "description": "Reliability objectives, adversarial review, regression and critical failures.",
+      "when": [
+        {
+          "stage": [
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "smoke_cleanup",
+      "description": "Controlled ports, network, synthetic data and cleanup.",
+      "when": [
+        {
+          "target": [
+            "vps_smoke"
+          ]
+        }
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "demo_reset",
+      "description": "Audience access, safe demo accounts/data and repeatable reset.",
+      "when": [
+        {
+          "target": [
+            "demo"
+          ]
+        }
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "integration_regression",
+      "description": "Target-like config, integration/regression and migration smoke.",
+      "when": [
+        {
+          "target": [
+            "staging"
+          ]
+        },
+        {
+          "stage": [
+            "mvp",
+            "beta",
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "rollback_observability",
+      "description": "Demonstrated previous-artifact rollback and useful monitoring.",
+      "when": [
+        {
+          "target": [
+            "live"
+          ]
+        },
+        {
+          "stage": [
+            "mvp",
+            "beta",
+            "production"
+          ]
+        }
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "access_control",
+      "description": "Authentication/authorization, least privilege and target access controls.",
+      "when": [
+        {
+          "exposure": [
+            "public"
+          ]
+        },
+        {
+          "data": [
+            "real",
+            "sensitive"
+          ]
+        },
+        {
+          "features": [
+            "auth"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "tls_ingress",
+      "description": "TLS/ingress and public network exposure verified.",
+      "when": [
+        {
+          "exposure": [
+            "public"
+          ]
+        }
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "target",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "data_handling",
+      "description": "Real/sensitive data handling and secret access reviewed.",
+      "when": [
+        {
+          "data": [
+            "real",
+            "sensitive"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "backup_restore",
+      "description": "Recoverable persistent data and demonstrated restore.",
+      "when": [
+        {
+          "features": [
+            "persistence"
+          ],
+          "data": [
+            "real",
+            "sensitive"
+          ]
+        },
+        {
+          "features": [
+            "persistence"
+          ],
+          "stage": [
+            "mvp",
+            "beta",
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "target",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "migration_plan",
+      "description": "Migration sequence, rollback limitations and data compatibility.",
+      "when": [
+        {
+          "features": [
+            "persistence"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "workers_broker",
+      "description": "Worker/broker lifecycle, retry and failure behavior.",
+      "when": [
+        {
+          "features": [
+            "workers"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "target",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "external_integrations",
+      "description": "External integration failures, credentials and timeouts.",
+      "when": [
+        {
+          "features": [
+            "integrations"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "security_review",
+      "description": "Independent applicable security review.",
+      "when": [
+        {
+          "stage": [
+            "mvp",
+            "beta",
+            "production"
+          ]
+        },
+        {
+          "exposure": [
+            "public"
+          ]
+        },
+        {
+          "data": [
+            "real",
+            "sensitive"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "load_failures",
+      "description": "Critical load/negative/failure paths demonstrated.",
+      "when": [
+        {
+          "stage": [
+            "beta",
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "risk_review",
+      "description": "Release risk review and explicit residual risk.",
+      "when": [
+        {
+          "stage": [
+            "mvp"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": false,
+      "severity": "advisory",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "release_risk_review",
+      "description": "Mandatory release risk review.",
+      "when": [
+        {
+          "stage": [
+            "beta",
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "adversarial_review",
+      "description": "Adversarial review, strict compatibility and ADR for breaking changes.",
+      "when": [
+        {
+          "stage": [
+            "production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "react_ui",
+      "description": "Critical UI/accessibility/E2E, API target, auth/CORS, SPA routing and cache/assets.",
+      "when": [
+        {
+          "kind": [
+            "react"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "django_deploy",
+      "description": "Target Django settings/check --deploy, app server, DB, static/media and permission evidence.",
+      "when": [
+        {
+          "kind": [
+            "django"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "contract_examples",
+      "description": "TypeSpec/OpenAPI, examples/registry, breaking version and consumer pin compatibility.",
+      "when": [
+        {
+          "kind": [
+            "contract"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "consumer_artifact",
+      "description": "Published artifact is available to consumers; does not establish backend readiness.",
+      "when": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "target",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "mock_safety",
+      "description": "Mock image/start/health/smoke and safe examples; mock is not backend proof.",
+      "when": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "mock"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "adopted_stack",
+      "description": "Explicit adopted-stack requirements and inherited gates are mapped and verified.",
+      "when": [
+        {
+          "kind": [
+            "adopted"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "target_smoke",
+      "description": "Actual deployed artifact/config health and critical smoke at the target host.",
+      "when": [
+        {
+          "phase": [
+            "post_deploy"
+          ]
+        }
+      ],
+      "unless": [
+        {
+          "kind": [
+            "contract"
+          ],
+          "contract_mode": [
+            "artifact"
+          ]
+        }
+      ],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "target",
+      "ttl_seconds": 3600
+    },
+    {
+      "id": "legacy_django_demo",
+      "description": "Preserve django legacy demo pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_demo"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_django_prototype",
+      "description": "Preserve django legacy prototype pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_prototype"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_django_poc",
+      "description": "Preserve django legacy PoC pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_poc"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_django_mvp",
+      "description": "Preserve django legacy MVP pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_mvp"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_django_production",
+      "description": "Preserve django legacy production pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_django_other",
+      "description": "Preserve django legacy other pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_django_other"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_demo",
+      "description": "Preserve contract legacy demo pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_demo"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_prototype",
+      "description": "Preserve contract legacy prototype pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_prototype"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_poc",
+      "description": "Preserve contract legacy PoC pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_poc"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_mvp",
+      "description": "Preserve contract legacy MVP pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_mvp"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_production",
+      "description": "Preserve contract legacy production pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_production"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    },
+    {
+      "id": "legacy_contract_other",
+      "description": "Preserve contract legacy other pipeline/test/example/compatibility floor from migration report.",
+      "when": [
+        {
+          "legacy_requirement": [
+            "legacy_contract_other"
+          ]
+        }
+      ],
+      "unless": [],
+      "mandatory": true,
+      "severity": "blocker",
+      "proof": "manual_or_runner_artifact",
+      "environment": "local",
+      "ttl_seconds": 86400
+    }
+  ]
+}

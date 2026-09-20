@@ -66,6 +66,57 @@ class CoreSyncTests(unittest.TestCase):
         self.assertEqual(core_sync.preview(self.target, metadata, files), ({}, []))
         self.assertEqual(core_sync.verify(self.target), [])
 
+    def test_local_delivery_has_no_future_commit_and_repeats(self):
+        """Verify content-only local provenance and idempotence in temporary files.
+
+        Takes no arguments; returns None. Writes fixture targets only, with no
+        network or database. Assertion failures identify delivery regressions.
+        """
+        metadata, files = core_sync.local_payload(self.source)
+        self.assertNotIn("source_commit", metadata)
+        self.assertEqual(metadata["pin_status"], "local")
+        self.assertEqual(files, {"scripts/ai/example.py": "print('first')\n"})
+        self.install(metadata, files)
+        self.assertEqual(core_sync.verify(self.target), [])
+        self.assertEqual(core_sync.preview(self.target, metadata, files), ({}, []))
+
+    def test_local_source_rejects_stale_manifest(self):
+        """Reject edited source before preparing delivery; target remains empty.
+
+        Takes no arguments; returns None. Mutates only a temporary source file;
+        no network/DB. Assertion failures report missing integrity enforcement.
+        """
+        (self.core / "scripts/ai/example.py").write_text("changed", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "digest/ownership"):
+            core_sync.local_payload(self.source)
+        self.assertEqual(list(self.target.iterdir()), [])
+
+    def test_local_source_preserves_project_customization(self):
+        """Keep customized installed files and report an ownership conflict.
+
+        Takes no arguments; returns None. Writes temporary fixture files only;
+        no network/DB. Assertions fail if a customization can be overwritten.
+        """
+        metadata, files = core_sync.local_payload(self.source)
+        self.install(metadata, files)
+        path = self.target / "scripts/ai/example.py"
+        path.write_text("custom project code", encoding="utf-8")
+        self.assertEqual(core_sync.preview(self.target, metadata, files)[1],
+                         ["scripts/ai/example.py"])
+        self.assertEqual(path.read_text(encoding="utf-8"), "custom project code")
+
+    def test_local_receipt_cannot_claim_commit(self):
+        """Reject ambiguous local provenance with an invented commit assertion.
+
+        Takes no arguments; returns None. Writes a temporary receipt only;
+        no network/DB. Assertion failures indicate accepted false provenance.
+        """
+        metadata, files = core_sync.local_payload(self.source)
+        metadata["source_commit"] = self.commit
+        self.install(metadata, files)
+        with self.assertRaisesRegex(ValueError, "Invalid installed source pin"):
+            core_sync.verify(self.target)
+
     def test_custom_file_conflicts_without_writes(self):
         """An unowned existing file prevents delivery without altering any target bytes."""
         metadata, files = core_sync.payload(self.source, self.commit)
