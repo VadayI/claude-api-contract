@@ -908,7 +908,7 @@ def execute_check(
     )
     if "ephemeral_outputs" in check:
         ephemeral_specs = [ephemeral_output_spec(name) for name in check["ephemeral_outputs"]]
-        allowed_files = set(check["generated_comparisons"]) | {
+        allowed_files = set(check.get("generated_comparisons", [])) | {
             path.as_posix() for path, is_prefix in ephemeral_specs if not is_prefix
         }
         allowed_prefixes = {

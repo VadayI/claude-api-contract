@@ -99,7 +99,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "c6ba1431f2fdd43c1dc3fb12ba25a6a5bb0c56c1fe92cdc796ca0f3a218f4efc"
+      "sha256": "bc37ee1f09d723a47dae63ca04f5c8f1c2f6aa00fa7ffcec7bd171da93c9925e"
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
