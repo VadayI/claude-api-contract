@@ -35,7 +35,7 @@
     },
     "docs/ai/runner.md": {
       "ownership": "template",
-      "sha256": "bdfa11450d6b577641eb1d6b472a4b990ed1292bcf84bf5c6daa7a1878f38856"
+      "sha256": "7f2a813027d1752a47c8bec620ae341d9ec9ccc5c7797ad25bea0b3ac5d274b7"
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
@@ -59,7 +59,7 @@
     },
     "scripts/ai/detector.py": {
       "ownership": "template",
-      "sha256": "a92a1dcc0c1a73e9fdb0548cb82ab8f9bb3c4f5f79be251e6ea280ef763c8096"
+      "sha256": "c62a0c431e75d6c3b6e0aa81cde9f4ae39ea5c0b960cd0d35f8fe469d6ee1975"
     },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
@@ -95,7 +95,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "d2388afecd0e914dc12d63267aa00031bce95fa0f48f7cd057ba753981be1d84"
+      "sha256": "6f56d1293777a0b9a3664fcc9e27a59a4e6812fe23fb9b64f7cc6df611987599"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
@@ -119,11 +119,11 @@
     },
     "templates/ai/schemas/check-catalog.schema.json": {
       "ownership": "template",
-      "sha256": "68977ef497a4804662f10a96870fa80192b9075c22ccfd757d356ac35ef41777"
+      "sha256": "9f2a98878251a486d0f9e9253272b491755c9857968421c894d62284cef77250"
     },
     "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template",
-      "sha256": "8cb2dbe07eedf201f61a2844c7f97b2d097a807bba427084c02b32341b0426e3"
+      "sha256": "691f018fef10c3cc33cfcbae4abdec080f8d9072c09810c4221404d47bcedbce"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
@@ -151,7 +151,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "02b3a05fef163eec905a2f58787a5a7235d2838c0dc27272805a25113a237be4"
+      "sha256": "460749bf2ffd3e7bc533cfc54f7d6a3dba70f1d31e0bad9efffa22dfc690403e"
     },
     "tests/test_schema.py": {
       "ownership": "template",

@@ -11,6 +11,8 @@ the base to be an ancestor. It uses `git archive` to create a separate pristine
 export for every check, rejecting links and unsafe archive paths. Dirty, staged,
 untracked, or earlier-check mutations cannot enter a later check. Each command is
 an argv array and runs with `shell=False` and an allowlisted child environment.
+Archive extraction preserves only Git's regular-file executable bit; snapshots
+bind both file content and executable state, so chmod-only mutation is visible.
 
 ```text
 python scripts/ai/detector.py --repository . --output .ai-runtime/environment.json
@@ -23,7 +25,9 @@ python scripts/ai/runner.py --repository . \
 Results must be new files below the repository's `.ai-runtime`; linked ancestors,
 existing output paths and escaping locations are rejected before checks run.
 Evidence directories are run-unique and created beside the reserved no-follow
-result file.
+staging file. Complete JSON is flushed and synced before an exclusive atomic
+same-filesystem link claims the final path. Any failure after reservation removes
+that run's matching staging/final inode and evidence so the same output can retry.
 
 The result binds candidate/base commits and trees, catalog, runner, detector and
 schema digests, declared configuration/lockfile digests, environment facts,
@@ -34,6 +38,13 @@ and marks truncation explicitly. Expected artifacts must be newly created or
 changed contained regular files; their content digests are recorded, while stale
 files, links and missing artifacts fail. Candidate mutations are compared with a
 before/after snapshot and must be explicitly allowed.
+
+The closed schema enumerates every emitted result field and exact SHA/digest
+syntax. Runtime semantic validation additionally requires complete execution
+metadata for PASS/FAIL, mutually exclusive nonzero-exit versus timeout evidence,
+complete identities for available tools/repositories, exact effective runner
+inputs, and presence-aware invalidation digests. Empty effective digest maps and
+partial executed results cannot be finalized.
 
 `FAIL` returns 1. A missing mandatory prerequisite/evidence returns 2 and
 `NOT_VERIFIED`; it never becomes PASS. Mandatory `NOT_APPLICABLE` also prevents

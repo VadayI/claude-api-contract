@@ -1,6 +1,7 @@
 """Behavioral tests for the environment detector and exact-candidate runner."""
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -488,6 +489,79 @@ class RunnerTests(unittest.TestCase):
         malformed["candidate"]["commit"] = "a" * 41
         with self.assertRaises(ValueError):
             validate(malformed, schema)
+
+        incomplete_execution = json.loads(json.dumps(document))
+        del incomplete_execution["checks"][0]["stdout_sha256"]
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(incomplete_execution, False)
+        missing_present_digest = json.loads(json.dumps(document))
+        del missing_present_digest["digests"]["invalidation_files"]["tracked.txt"]["sha256"]
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(missing_present_digest, False)
+        available_without_version = json.loads(json.dumps(document))
+        del available_without_version["environment"]["tools"]["python"]["version"]
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(available_without_version, False)
+        empty_runner_digests = json.loads(json.dumps(document))
+        empty_runner_digests["digests"]["runner_files"] = {}
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(empty_runner_digests, False)
+        available_repository_without_tree = json.loads(json.dumps(document))
+        del available_repository_without_tree["environment"]["repository"]["tree"]
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(available_repository_without_tree, False)
+        invalid_exit_relation = json.loads(json.dumps(document))
+        invalid_exit_relation["checks"][0].update({"status": "FAIL", "timed_out": True})
+        with self.assertRaises(ValueError):
+            runner.validate_result_semantics(invalid_exit_relation, False)
+
+    def test_post_check_failure_cleans_runtime_and_same_output_retries(self):
+        """Roll back staging/evidence after a post-check failure, then retry safely.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        partial result/evidence survives or exclusive retry cannot use the same
+        final path; child/filesystem errors otherwise propagate.
+        Side effects: Executes two isolated checks and injects one detector error;
+        writes/removes only fixture runtime files, with no DB or network access.
+        """
+        catalog = self.catalog([self.check("fixture.retry", ["{python}", "check.py"])])
+        with mock.patch.object(runner, "environment_report", side_effect=RuntimeError("post-check fixture")):
+            with self.assertRaises(RuntimeError):
+                runner.run(self.repo, self.candidate, self.candidate, catalog, self.output)
+        self.assertFalse(self.output.exists())
+        self.assertEqual(list(self.output.parent.glob("full.pending-*")), [])
+        self.assertEqual(list(self.output.parent.glob("full-evidence-*")), [])
+        document, code = runner.run(self.repo, self.candidate, self.candidate, catalog, self.output)
+        self.assertEqual((code, document["outcome"], self.output.is_file()), (0, "PASS", True))
+
+    @unittest.skipUnless(os.name == "posix", "Executable-bit behavior requires a POSIX filesystem")
+    def test_export_preserves_executable_bit_and_detects_chmod_only_mutation(self):
+        """Execute a Git-marked script and detect a content-identical mode change.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when
+        archive export loses Git's executable bit or snapshots ignore chmod-only
+        mutation; fixture Git/process errors may propagate.
+        Side effects: Commits one script in the disposable repository and mutates
+        only an isolated export; no database, network, or user checkout changes.
+        """
+        script = self.repo / "direct-check.sh"
+        script.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8", newline="\n")
+        script.chmod(0o755)
+        self.git("add", "direct-check.sh")
+        self.git("commit", "-m", "executable fixture")
+        candidate = self.git("rev-parse", "HEAD").stdout.strip()
+        direct = self.check(
+            "fixture.direct-executable", ["./direct-check.sh"], prerequisites=[],
+            applicability={"path_exists": "direct-check.sh", "missing_status": "NOT_VERIFIED"},
+        )
+        chmod_only = self.check(
+            "fixture.chmod", ["{python}", "-c", "import os; os.chmod('tracked.txt', 0o755)"],
+            dependencies=["fixture.direct-executable"], allowed_side_effects=["candidate_export", "evidence"],
+        )
+        document, code = runner.run(self.repo, candidate, self.candidate, self.catalog([direct, chmod_only]), self.output)
+        self.assertEqual((code, [item["status"] for item in document["checks"]]), (0, ["PASS", "PASS"]))
+        self.assertFalse(document["checks"][0]["candidate_export_mutated"])
+        self.assertTrue(document["checks"][1]["candidate_export_mutated"])
 
 
 if __name__ == "__main__":

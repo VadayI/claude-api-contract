@@ -70,7 +70,7 @@ def tool_report() -> dict[str, dict[str, str]]:
         except (OSError, subprocess.TimeoutExpired):
             report[name] = {"status": "NOT_VERIFIED"}
             continue
-        report[name] = {"status": "AVAILABLE" if code == 0 else "NOT_VERIFIED"}
+        report[name] = {"status": "AVAILABLE" if code == 0 and version else "NOT_VERIFIED"}
         if version:
             report[name]["version"] = version
     report["python"] = {"status": "AVAILABLE", "version": platform.python_version()}

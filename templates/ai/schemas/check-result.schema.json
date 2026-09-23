@@ -15,7 +15,17 @@
       "type": "object", "required": ["catalog_sha256", "runner_files", "invalidation_files"], "additionalProperties": false,
       "properties": {
         "catalog_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "runner_files": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "runner_files": {
+          "type": "object",
+          "required": ["scripts/ai/runner.py", "scripts/ai/detector.py", "templates/ai/schemas/check-catalog.schema.json", "templates/ai/schemas/check-result.schema.json"],
+          "additionalProperties": false,
+          "properties": {
+            "scripts/ai/runner.py": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "scripts/ai/detector.py": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "templates/ai/schemas/check-catalog.schema.json": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "templates/ai/schemas/check-result.schema.json": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
         "invalidation_files": {"type": "object", "additionalProperties": {"type": "object", "required": ["present"], "additionalProperties": false, "properties": {"present": {"type": "boolean"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}}
       }
     },
