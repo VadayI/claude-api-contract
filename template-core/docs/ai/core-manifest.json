@@ -35,7 +35,7 @@
     },
     "docs/ai/runner.md": {
       "ownership": "template",
-      "sha256": "53cf052ada154a5eb88d10eee89816577c53e24b85dbd33b6d4a2e02b94d6092"
+      "sha256": "3786b47a4a0f66df249c2a1315bec893815de4b3842fe3bbea1fef6913a4b42d"
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
@@ -99,7 +99,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "a6b55a747a846432609b6fa8221a1481a3770919dda74b6f942d3592f4b2d7a2"
+      "sha256": "c6ba1431f2fdd43c1dc3fb12ba25a6a5bb0c56c1fe92cdc796ca0f3a218f4efc"
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
@@ -135,7 +135,7 @@
     },
     "templates/ai/schemas/check-catalog.schema.json": {
       "ownership": "template",
-      "sha256": "9e09614beffe660d4e5018077ba61208b4cf94010cacd879bfb9231c42c45863"
+      "sha256": "c721c7ba041665c8a45410388ed46ff40ef224d8cc82a42e3e70dc7da927d045"
     },
     "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template",
@@ -175,7 +175,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "2399b24cfa45c2505c59532513ccf9772dea89f188d0c6cb9ea92a88b45887bd"
+      "sha256": "f31a304f18bf8d115c65e134eccc646fd64ae00291626504eb03f6739319d31b"
     },
     "tests/test_schema.py": {
       "ownership": "template",

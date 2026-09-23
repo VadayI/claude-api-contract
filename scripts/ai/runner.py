@@ -266,7 +266,7 @@ def validate_catalog(document: object) -> dict[str, object]:
         if not isinstance(ephemeral, list) or len(ephemeral) != len(set(ephemeral)):
             raise ValueError("Invalid ephemeral outputs")
         for name in ephemeral:
-            safe_relative(name)
+            ephemeral_output_spec(name)
         seen.add(identifier)
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("Duplicate check identifier")
@@ -309,6 +309,39 @@ def safe_relative(
     ):
         raise ValueError(f"Unsafe catalog path: {name}")
     return path
+
+
+def ephemeral_output_spec(name: object) -> tuple[PurePosixPath, bool]:
+    """Validate an exact ephemeral file or reviewed directory-prefix entry.
+
+    Technical details:
+    - A trailing POSIX slash declares a directory subtree; without it, the
+      catalog entry authorizes only one exact file.
+    - The normalized prefix is passed through the same candidate-relative path
+      validation as every other catalog path. Repository root, absolute paths,
+      traversal, backslashes, secret/runtime components and non-normal forms are
+      rejected before any check runs.
+
+    Args:
+        name: Catalog value representing an exact file or a trailing-slash
+            directory prefix.
+
+    Returns:
+        A tuple of the normalized path and whether it is a directory prefix.
+
+    Raises:
+        ValueError: If ``name`` is not a safe, non-root candidate-relative path.
+
+    Side effects:
+        None; no filesystem, subprocess, database, environment or network access.
+    """
+    if not isinstance(name, str):
+        raise ValueError("Ephemeral output must be a string")
+    is_directory_prefix = name.endswith("/")
+    normalized = name[:-1] if is_directory_prefix else name
+    if normalized in ("", "."):
+        raise ValueError("Ephemeral output cannot authorize repository root")
+    return safe_relative(normalized), is_directory_prefix
 
 
 def export_candidate(repository: Path, candidate: str, target: Path) -> None:
@@ -874,13 +907,26 @@ def execute_check(
         if snapshot_before.get(name) != snapshot_after.get(name)
     )
     if "ephemeral_outputs" in check:
-        allowed_files = set(check["generated_comparisons"]) | set(check["ephemeral_outputs"])
+        ephemeral_specs = [ephemeral_output_spec(name) for name in check["ephemeral_outputs"]]
+        allowed_files = set(check["generated_comparisons"]) | {
+            path.as_posix() for path, is_prefix in ephemeral_specs if not is_prefix
+        }
+        allowed_prefixes = {
+            path.as_posix() + "/" for path, is_prefix in ephemeral_specs if is_prefix
+        }
         allowed_directories = {
             "/".join(parts[:index]) + "/"
-            for name in allowed_files for parts in [safe_relative(name).parts]
+            for name in allowed_files | allowed_prefixes
+            for parts in [safe_relative(name[:-1] if name.endswith("/") else name).parts]
             for index in range(1, len(parts))
         }
-        unexpected_mutations = set(mutations) - allowed_files - allowed_directories
+        allowed_directories.update(allowed_prefixes)
+        unexpected_mutations = {
+            name for name in mutations
+            if name not in allowed_files
+            and name not in allowed_directories
+            and not any(name.startswith(prefix) for prefix in allowed_prefixes)
+        }
         if unexpected_mutations:
             invalid_artifacts.append("candidate_export")
     elif mutated and "candidate_export" not in check["allowed_side_effects"]:
@@ -925,6 +971,9 @@ def execute_check(
         result["invalid_artifacts"] = invalid_artifacts
     ephemeral_outputs = {}
     for name in check.get("ephemeral_outputs", []):
+        _, is_directory_prefix = ephemeral_output_spec(name)
+        if is_directory_prefix:
+            continue
         try:
             digest = artifact_digest(root, name)
         except ValueError:

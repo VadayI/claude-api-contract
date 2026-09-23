@@ -709,7 +709,7 @@ class RunnerTests(unittest.TestCase):
         self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
 
     def test_ephemeral_output_allowlist_rejects_unrelated_mutation(self):
-        """Permit only exact reviewed ephemeral paths in a v2-style check record.
+        """Permit an exact file/subtree but reject a prefix-confused sibling.
 
         Args: self owns the fixture. Returns: None. Raises: AssertionError when an
         undeclared mutation passes or a declared transient output is rejected.
@@ -720,16 +720,25 @@ class RunnerTests(unittest.TestCase):
             "allowed_side_effects": ["candidate_export", "evidence"],
             "provisioning": [],
             "generated_comparisons": [],
-            "ephemeral_outputs": ["allowed.tmp"],
+            "ephemeral_outputs": ["allowed.tmp", "coverage/"],
         }
         allowed = self.check(
             "fixture.ephemeral-allowed",
-            ["{python}", "-c", "from pathlib import Path; Path('allowed.tmp').write_text('ok')"],
+            [
+                "{python}", "-c",
+                "from pathlib import Path; Path('allowed.tmp').write_text('ok'); "
+                "Path('coverage/nested').mkdir(parents=True); "
+                "Path('coverage/nested/index.html').write_text('ok')",
+            ],
             **common,
         )
         unexpected = self.check(
             "fixture.ephemeral-unexpected",
-            ["{python}", "-c", "from pathlib import Path; Path('unexpected.tmp').write_text('bad')"],
+            [
+                "{python}", "-c",
+                "from pathlib import Path; Path('coverage-copy').mkdir(); "
+                "Path('coverage-copy/index.html').write_text('bad')",
+            ],
             dependencies=["fixture.ephemeral-allowed"],
             **common,
         )
@@ -738,8 +747,51 @@ class RunnerTests(unittest.TestCase):
         )
         self.assertEqual(code, 1)
         self.assertEqual([item["status"] for item in document["checks"]], ["PASS", "FAIL"])
-        self.assertEqual(document["checks"][0]["candidate_export_mutations"], ["allowed.tmp"])
+        self.assertEqual(
+            document["checks"][0]["candidate_export_mutations"],
+            ["allowed.tmp", "coverage/", "coverage/nested/", "coverage/nested/index.html"],
+        )
         self.assertIn("candidate_export", document["checks"][1]["invalid_artifacts"])
+
+    def test_ephemeral_directory_prefix_rejects_unsafe_catalog_paths(self):
+        """Reject broad-root, traversal and non-normal directory authorizations.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError if an
+        unsafe directory prefix reaches execution. Side effects: Writes temporary
+        catalog JSON only; no subprocess, database, network or user-file access.
+        """
+        for unsafe in ("/", "./", "../", "coverage/../", "coverage//", "C:/temp/"):
+            check = self.check(
+                "fixture.unsafe-ephemeral",
+                ["{python}", "check.py"],
+                ephemeral_outputs=[unsafe],
+            )
+            with self.subTest(path=unsafe), self.assertRaises(ValueError):
+                runner.validate_catalog(self.catalog([check]))
+
+    @unittest.skipUnless(os.name == "posix", "Directory-link behavior requires POSIX symlinks")
+    def test_ephemeral_directory_prefix_rejects_linked_descendant(self):
+        """Reject a linked child even below an authorized ephemeral subtree.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        link can hide beneath an allowed prefix. Side effects: Creates one link
+        inside a disposable candidate export; no external write, DB or network.
+        """
+        command = (
+            "from pathlib import Path; Path('coverage').mkdir(); "
+            "Path('coverage/outside').symlink_to('../tracked.txt')"
+        )
+        check = self.check(
+            "fixture.ephemeral-linked",
+            ["{python}", "-c", command],
+            allowed_side_effects=["candidate_export", "evidence"],
+            ephemeral_outputs=["coverage/"],
+        )
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate, self.catalog([check]), self.output
+        )
+        self.assertEqual((code, document["checks"][0]["status"]), (1, "FAIL"))
+        self.assertIn("candidate_export", document["checks"][0]["invalid_artifacts"])
 
     def test_npm_cache_rejects_future_and_expired_metadata(self):
         """Require cache age to stay between zero and the reviewed TTL.

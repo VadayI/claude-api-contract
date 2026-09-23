@@ -71,7 +71,16 @@
           "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "allowed_side_effects": {"type": "array", "uniqueItems": true, "items": {"type": "string", "enum": ["candidate_export", "evidence"]}},
           "generated_comparisons": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-          "ephemeral_outputs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "ephemeral_outputs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*\\\\)(?!.*:)(?!\\.?/?$)(?!.*//)(?!.*(?:^|/)\\.\\.(?:/|$)).+$",
+              "description": "Exact candidate-relative file, or a candidate-relative directory subtree when ending in /."
+            }
+          },
           "provisioning": {
             "type": "array", "uniqueItems": true,
             "items": {

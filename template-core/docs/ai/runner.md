@@ -38,7 +38,11 @@ credential-bearing URLs and host paths; each stored stream is bounded to 64 KiB
 and marks truncation explicitly. Expected artifacts must be newly created or
 changed contained regular files; their content digests are recorded, while stale
 files, links and missing artifacts fail. Candidate mutations are compared with a
-before/after snapshot and must be explicitly allowed.
+before/after snapshot and must be explicitly allowed. An `ephemeral_outputs`
+entry without a trailing slash permits one exact file; a reviewed entry ending
+in `/` permits that directory and its descendants only. Directory prefixes stay
+normalized and candidate-relative, cannot name repository root, and never permit
+a sibling with a similar prefix. Linked or escaping output trees still fail.
 
 The closed standalone schema enumerates every emitted result field and exact
 SHA/digest syntax. Its versioned `oneOf`/`not`/`if`/`then` contracts independently reject
