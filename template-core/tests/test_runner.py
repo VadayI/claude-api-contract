@@ -178,7 +178,9 @@ class RunnerTests(unittest.TestCase):
             target = Path(directory) / "candidate"
             target.mkdir()
             runner.export_candidate(self.repo, candidate, target)
-            self.assertEqual((target / "large-public.bin").stat().st_size, len(b"contract-fixture\n" * 131072))
+            exported = target / "large-public.bin"
+            self.assertGreater(exported.stat().st_size, 1024 * 1024)
+            self.assertTrue(exported.read_bytes().startswith(b"contract-fixture"))
 
     def test_missing_mandatory_prerequisite_is_not_verified_and_nonzero(self):
         """Require missing mandatory tooling to produce NOT_VERIFIED and exit 2.

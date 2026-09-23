@@ -132,7 +132,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "e68253659b5655073f58d11817bddd4592bf5d0b7822a30229af2cc156aee3e2",
+  "source_manifest_digest": "9a44d0d5b3d849609ee2415386b0355d17555fb1700d9ff089829a2b7f59f7e8",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"
