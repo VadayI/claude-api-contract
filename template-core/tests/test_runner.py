@@ -267,6 +267,21 @@ class RunnerTests(unittest.TestCase):
         self.assertIn("<redacted>", text)
         self.assertIn("<external-path>", text)
 
+    def test_archive_allows_only_the_public_env_example(self):
+        """Permit public env documentation without allowing private env paths.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when
+        path policy accepts a secret env path or rejects the literal public file.
+        Side effects: None; no file, subprocess, database or network operation.
+        """
+        self.assertEqual(
+            runner.safe_relative(".env.example", allow_env_example=True).as_posix(),
+            ".env.example",
+        )
+        for name in (".env", ".env.local", "nested/.env.example"):
+            with self.assertRaises(ValueError):
+                runner.safe_relative(name, allow_env_example=True)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -168,12 +168,16 @@ def validate_catalog(document: object) -> dict[str, object]:
     return document
 
 
-def safe_relative(name: object, allow_dot: bool = False) -> PurePosixPath:
+def safe_relative(
+    name: object, allow_dot: bool = False, allow_env_example: bool = False
+) -> PurePosixPath:
     """Validate a portable candidate-relative path without resolving host links.
 
     Args:
         name: Catalog value expected to be a normalized POSIX path.
         allow_dot: Permit the repository-root marker ``.`` for command cwd.
+        allow_env_example: Permit only the literal public ``.env.example`` while
+            retaining rejection of every other env path.
 
     Returns:
         Validated PurePosixPath.
@@ -191,7 +195,9 @@ def safe_relative(name: object, allow_dot: bool = False) -> PurePosixPath:
         raise ValueError("Path must be a string")
     path = PurePosixPath(name)
     if not name or path.is_absolute() or "\\" in name or ":" in name or path.as_posix() != name or any(
-        part in ("..", ".git", ".ai-runtime", "secrets", "credentials") or part.startswith(".env") for part in path.parts
+        part in ("..", ".git", ".ai-runtime", "secrets", "credentials")
+        or part.startswith(".env") and not (allow_env_example and name == ".env.example")
+        for part in path.parts
     ):
         raise ValueError(f"Unsafe catalog path: {name}")
     return path
@@ -226,7 +232,7 @@ def export_candidate(repository: Path, candidate: str, target: Path) -> None:
         with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
             for member in archive:
                 archive_name = member.name[:-1] if member.isdir() and member.name.endswith("/") else member.name
-                name = safe_relative(archive_name).as_posix()
+                name = safe_relative(archive_name, allow_env_example=True).as_posix()
                 if name in seen:
                     raise ValueError("Duplicate archive path")
                 seen.add(name)
