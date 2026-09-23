@@ -21,20 +21,25 @@ def records(document: dict, hashed: bool) -> dict:
 
     Args: document is decoded JSON; hashed selects a generated digest requirement.
     Returns: The validated path-to-record mapping. Raises: ValueError on malformed
-        versions, hashes, fields or ownership. No I/O, side effects, DB/network.
+        versions, portable paths, hashes, fields or ownership. No I/O, side
+        effects, database or network access.
     """
     if not isinstance(document, dict) or set(document) != {"schema_version", "files"} or document["schema_version"] != 1 or not isinstance(document["files"], dict):
         raise ValueError("Invalid production ownership document")
     for name, record in document["files"].items():
+        if not isinstance(name, str):
+            raise ValueError("Invalid production ownership path")
+        if name != ".env.example":
+            safe_name(name)
         required = {"ownership", "sha256"} if hashed else {"ownership"}
         allowed = required | {"legacy_sha256"}
-        if not isinstance(name, str) or not isinstance(record, dict) or not required.issubset(record) or set(record) - allowed or record["ownership"] not in ("template", "mixed", "project"):
+        if not isinstance(record, dict) or not required.issubset(record) or set(record) - allowed or record["ownership"] not in ("template", "mixed", "project"):
             raise ValueError("Invalid production ownership record")
         for key in ("sha256", "legacy_sha256"):
             if key in record and (not isinstance(record[key], str) or not re.fullmatch(r"[0-9a-f]{64}", record[key])):
                 raise ValueError("Invalid production ownership digest")
     names = document["files"]
-    if len({name.casefold() for name in names}) != len(names):
+    if len({Path(name).as_posix().casefold() for name in names}) != len(names):
         raise ValueError("Case-insensitive production path collision")
     return names
 
@@ -121,7 +126,8 @@ def delivery(source: Path, target: Path) -> tuple[dict[str, str], list[str]]:
     incoming_text = read_source(source, MANIFEST)
     incoming = records(load_json(contained(source, MANIFEST)), True)
     receipt = contained(target, MANIFEST)
-    previous = load_json(receipt) if receipt.exists() else {"schema_version": 1, "files": {}}
+    previously_installed = receipt.exists()
+    previous = load_json(receipt) if previously_installed else {"schema_version": 1, "files": {}}
     previous = records(previous, True)
     pending, conflicts = {}, []
     for name, metadata in incoming.items():
@@ -129,6 +135,8 @@ def delivery(source: Path, target: Path) -> tuple[dict[str, str], list[str]]:
         if digest(content) != metadata["sha256"]:
             raise ValueError(f"Source digest mismatch: {name}")
         path = contained(target, name)
+        if metadata["ownership"] == "project" and previously_installed:
+            continue
         if path.exists():
             if metadata["ownership"] == "project":
                 continue

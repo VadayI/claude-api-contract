@@ -46,10 +46,12 @@ npm, does not seed private env, and does not clear runtime/project memory.
 The temporary clone is retained with its exact path for review, not blindly
 removed. All supplied files operate without a sibling clone or network plugin.
 
-Repeated install is empty. The receipt is written last, so already-written
-identical files can be retried after interruption. Full transactional backup and
-rollback remain P13; no reset/clean/stash is used. Removed files are retained
-rather than deleted. Existing custom AGENTS/CLAUDE/MCP/settings are not replaced.
+Repeated install is empty. Once a receipt exists, project-owned files are never
+reseeded, including after intentional deletion. The receipt is written last, so
+already-written identical files can be retried after interruption. Full
+transactional backup and rollback remain P13; no reset/clean/stash is used.
+Removed files are retained rather than deleted. Existing custom
+AGENTS/CLAUDE/MCP/settings are not replaced.
 Project overrides, language, registry and Class B derived artifacts remain owned
 by the project. Personalization must target reviewed project identity fields;
 legacy broad personalization/reset-to-clone scripts are not update mechanisms.

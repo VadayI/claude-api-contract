@@ -64,7 +64,8 @@ python scripts/ai/production.py --target "../my contract"
 python scripts/ai/production.py --target "../my contract" --apply
 ```
 
-Source drift/customized template files stop all writes. Project notes are seed-once;
+Source drift/customized template files stop all writes. Project notes are seed-once
+and are not recreated after intentional deletion once a receipt exists;
 custom instructions/MCP/settings require a reviewable reconciliation. Active
 workflows are omitted from fresh seed until the user's CI choice is resolved and
 workflows are reviewed/materialized (P06 pending). Existing workflows are retained.

@@ -84,6 +84,22 @@ class ProductionTests(unittest.TestCase):
         for name, content in fixture.items():
             self.assertEqual((self.target / name).read_bytes(), content)
 
+    def test_deleted_project_owned_file_is_not_reseeded_on_update(self):
+        """Keep intentional deletion of a project-owned file after first install.
+
+        Args: self owns the fixture target. Returns: None. Side effects: Creates
+        and removes one disposable project note; no DB/network. Assertions enforce
+        that later template updates do not recreate project-owned data.
+        """
+        self.install()
+        path = self.target / "docs/HANDOFF.md"
+        path.unlink()
+        pending, conflicts = production.delivery(ROOT, self.target)
+        self.assertEqual(conflicts, [])
+        self.assertNotIn("docs/HANDOFF.md", pending)
+        production.apply(self.target, pending)
+        self.assertFalse(path.exists())
+
     def test_interrupted_delivery_can_retry(self):
         """Simulate interruption before receipt and require a convergent retry.
 
@@ -105,6 +121,8 @@ class ProductionTests(unittest.TestCase):
         """
         with self.assertRaises(ValueError):
             production.records({"schema_version": 1, "files": {"AGENTS.md": {"ownership": "custom", "sha256": "0" * 64}}}, True)
+        with self.assertRaises(ValueError):
+            production.records({"schema_version": 1, "files": {"docs/./rules.md": {"ownership": "template"}}}, False)
         for name in (".env", "secrets/test", ".claude/settings.local.json", "key.pem", "../outside"):
             with self.assertRaises(ValueError):
                 production.payload_text(self.target, name)
