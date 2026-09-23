@@ -6,6 +6,14 @@ Local mode creates manual-only workflows; GitHub mode activates the same exact
 runner catalog on automatic events. See `docs/ai/workflows/bootstrap.md` for
 the ownership-safe switch and repository setup order.
 
+If a repository was copied with GitHub “Use this template”, the CI selector
+detects copied `contract-ci.yml`, `contract-policy.yml`, and
+`scheduled-audit.yml` automatic workflows and stops without writes. Review
+and remove those copied workflow files before using the selector. The GitHub copy can
+trigger Actions before this local check runs; changing the source repository's
+template setting or workflow architecture is needed to close that initial
+bypass.
+
 Git hooks use `AI_PYTHON` when set, otherwise `python`, and require Python 3.13+.
 `pre-commit` examines staged bytes; `pre-push` checks each branch ref against an
 exact base. New branches require a current local tracking ref matching remote

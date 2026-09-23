@@ -10,6 +10,7 @@ from core_paths import contained
 from core_sync import target_root
 
 WORKFLOWS = ("contract-checks.yml", "contract-audit.yml")
+LEGACY_AUTO = ("contract-ci.yml", "contract-policy.yml", "scheduled-audit.yml")
 PROJECT = "docs/project-state/project.json"
 RECEIPT = "docs/ai/ci-workflow-receipt.json"
 EVENTS = {
@@ -94,8 +95,10 @@ def plan(source: Path, target: Path, mode: str) -> tuple[dict[str, str], list[st
     Returns: Pending path/text writes and sorted conflict paths.
     Raises: ValueError for invalid links, receipt, source or mode.
     Side effects: File reads only; no writes, database, Git, or network.
-    Business rule: Unknown/custom active workflows block all writes; unrelated
-        workflows and project-owned preferences are preserved.
+    Business rule: Unknown/custom active workflows and copied upstream auto
+        workflows block all writes; unrelated workflows and project-owned
+        preferences are preserved. A GitHub template copy cannot be certified
+        local while its old automatic workflow files remain active.
     """
     source, target = target_root(source), target_root(target)
     receipt_path = contained(target, RECEIPT)
@@ -103,6 +106,10 @@ def plan(source: Path, target: Path, mode: str) -> tuple[dict[str, str], list[st
     if previous and (previous.get("schema_version") != 1 or not isinstance(previous.get("files"), dict)):
         raise ValueError("Invalid contract CI ownership receipt")
     pending, conflicts, files = {}, [], {}
+    for filename in LEGACY_AUTO:
+        name = f".github/workflows/{filename}"
+        if contained(target, name).exists():
+            conflicts.append(name)
     for filename in WORKFLOWS:
         name = f".github/workflows/{filename}"
         incoming = render(source, filename, mode)

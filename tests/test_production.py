@@ -18,6 +18,31 @@ import ci_mode
 class ProductionTests(unittest.TestCase):
     """Exercise observable delivery without any network or application execution."""
 
+    def test_copied_upstream_auto_workflows_block_local_choice_without_writes(self):
+        """Reject a GitHub template copy that still has automatic workflows.
+
+        Args: self owns a disposable target containing copied upstream YAML.
+        Returns: None after conflicts and whole-target byte preservation checks.
+        Raises: AssertionError if local mode claims readiness or writes files.
+        Side effects: Temporary fixture files and one CLI subprocess only;
+            no database, network, GitHub workflow run, or source checkout edit.
+        """
+        self.target.mkdir()
+        copied = self.target / ".github/workflows/contract-ci.yml"
+        copied.parent.mkdir(parents=True)
+        copied.write_bytes((ROOT / ".github/workflows/contract-ci.yml").read_bytes())
+        snapshot = {path.relative_to(self.target).as_posix(): path.read_bytes()
+                    for path in self.target.rglob("*") if path.is_file()}
+        pending, conflicts = ci_mode.plan(ROOT, self.target, "local")
+        self.assertIn(".github/workflows/contract-ci.yml", conflicts)
+        self.assertTrue(pending)
+        result = subprocess.run([sys.executable, str(ROOT / "scripts/ai/ci_mode.py"),
+                                 "--target", str(self.target), "--mode", "local", "--apply"],
+                                capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertEqual(snapshot, {path.relative_to(self.target).as_posix(): path.read_bytes()
+                                    for path in self.target.rglob("*") if path.is_file()})
+
     def test_explicit_ci_choice_switch_and_custom_workflow(self):
         """Materialize reviewed contract runner jobs with safe trigger choices.
 

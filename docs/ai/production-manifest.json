@@ -433,7 +433,7 @@
     },
     "README.md": {
       "ownership": "project",
-      "sha256": "148fdc5bbde3211e9c9571008a18d250a6078b633acbda9489c516fe991d595d"
+      "sha256": "7a31dd954ecd2a74214ecaba7e40ab053995442b2b3cf7c64510e47243d7cb76"
     },
     "commitlint.config.mjs": {
       "legacy_sha256": "9d49c285742196f12ad0e43490041281e05ae12c8958ea61606a4b254cc7bb2f",
@@ -734,7 +734,7 @@
     },
     "scripts/ai/ci_mode.py": {
       "ownership": "template",
-      "sha256": "a3a2ffddc8ff57d2b13e876366269b2f6cef564419a3c658984bbc2e0e147073"
+      "sha256": "6097d5584cd0f4b5375ae1f77edbf1c9d9c114a665ae308633a8d724b397f285"
     },
     "scripts/ai/contract_policy.py": {
       "ownership": "template",
@@ -1216,7 +1216,7 @@
     },
     "tests/test_production.py": {
       "ownership": "template",
-      "sha256": "311fa68c12f6be71c4f8825302c33fcd72372a84c8dfd4faa7eaeaf42463ba09"
+      "sha256": "4b46dedd9cf1cb87b129d4b141f7bc87672af351719e2c95b7c9aacf5c8bc07b"
     },
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",
