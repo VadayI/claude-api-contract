@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "c8265f020bb2e6efca619d6124e143c79ade869b670ef99d86f60d007feb9ea6"
+      "sha256": "fdde4d12b9c58f157ebf22caccc7f9932151ce36708e2851beb73c329c8bf382"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -778,7 +778,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "6f56d1293777a0b9a3664fcc9e27a59a4e6812fe23fb9b64f7cc6df611987599"
+      "sha256": "04f3cc4c6cae6dedfce1a6bb94380839127c9b77e6eb177cecf1bd47b3b2ced6"
     },
     "scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
@@ -908,7 +908,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "7b326ca7304278bad59e5ba04702f9032d8f214a593aac16c908ed4bfc3eb4f5"
+      "sha256": "af4e15741141b089b5372aa1af7a424ec332140ab1b2ac5fb33f6f7c76a29ccd"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1010,7 +1010,7 @@
     },
     "template-core/scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "6f56d1293777a0b9a3664fcc9e27a59a4e6812fe23fb9b64f7cc6df611987599"
+      "sha256": "04f3cc4c6cae6dedfce1a6bb94380839127c9b77e6eb177cecf1bd47b3b2ced6"
     },
     "template-core/scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
@@ -1076,7 +1076,7 @@
     },
     "template-core/tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "729e3334ca548488cd4d007543087d53fe2c74014d94a5cceac15ed767443a6e"
+      "sha256": "f6053aa6eb5df2c972db2eeb3aed7542b4ce84be524bcc2b1ced11509238bb7f"
     },
     "template-core/tests/test_schema.py": {
       "legacy_sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b",

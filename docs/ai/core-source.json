@@ -78,7 +78,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "6f56d1293777a0b9a3664fcc9e27a59a4e6812fe23fb9b64f7cc6df611987599"
+      "sha256": "04f3cc4c6cae6dedfce1a6bb94380839127c9b77e6eb177cecf1bd47b3b2ced6"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
@@ -116,7 +116,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "7b326ca7304278bad59e5ba04702f9032d8f214a593aac16c908ed4bfc3eb4f5",
+  "source_manifest_digest": "af4e15741141b089b5372aa1af7a424ec332140ab1b2ac5fb33f6f7c76a29ccd",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"

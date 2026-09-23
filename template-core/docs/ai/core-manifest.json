@@ -95,7 +95,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "6f56d1293777a0b9a3664fcc9e27a59a4e6812fe23fb9b64f7cc6df611987599"
+      "sha256": "04f3cc4c6cae6dedfce1a6bb94380839127c9b77e6eb177cecf1bd47b3b2ced6"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
@@ -151,7 +151,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "729e3334ca548488cd4d007543087d53fe2c74014d94a5cceac15ed767443a6e"
+      "sha256": "f6053aa6eb5df2c972db2eeb3aed7542b4ce84be524bcc2b1ced11509238bb7f"
     },
     "tests/test_schema.py": {
       "ownership": "template",

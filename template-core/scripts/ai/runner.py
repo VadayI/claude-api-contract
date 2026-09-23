@@ -182,8 +182,9 @@ def safe_relative(
     Args:
         name: Catalog value expected to be a normalized POSIX path.
         allow_dot: Permit the repository-root marker ``.`` for command cwd.
-        allow_env_example: Permit only the literal public ``.env.example`` while
-            retaining rejection of every other env path.
+        allow_env_example: Permit only a final public ``.env.example`` basename,
+            including below normal directories, while rejecting every other env
+            basename and any directory named ``.env.example``.
 
     Returns:
         Validated PurePosixPath.
@@ -202,7 +203,9 @@ def safe_relative(
     path = PurePosixPath(name)
     if not name or path.is_absolute() or "\\" in name or ":" in name or path.as_posix() != name or any(
         part in ("..", ".git", ".ai-runtime", "secrets", "credentials")
-        or part.startswith(".env") and not (allow_env_example and name == ".env.example")
+        or part.startswith(".env") and not (
+            allow_env_example and part == ".env.example" and part == path.name
+        )
         for part in path.parts
     ):
         raise ValueError(f"Unsafe catalog path: {name}")

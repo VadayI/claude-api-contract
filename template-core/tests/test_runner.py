@@ -286,7 +286,15 @@ class RunnerTests(unittest.TestCase):
             runner.safe_relative(".env.example", allow_env_example=True).as_posix(),
             ".env.example",
         )
-        for name in (".env", ".env.local", "nested/.env.example"):
+        self.assertEqual(
+            runner.safe_relative("templates/.env.example", allow_env_example=True).as_posix(),
+            "templates/.env.example",
+        )
+        for name in (
+            ".env", ".env.local", ".env.production", ".env.example.backup",
+            "nested/.env", "nested/.env.local", "nested/.env.production",
+            "nested/.env.example.backup", "nested/.env.example/secret.txt",
+        ):
             with self.assertRaises(ValueError):
                 runner.safe_relative(name, allow_env_example=True)
 
