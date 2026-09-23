@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "fe34c644218acdd508e8283c8fe3c2ebb593981700847ddd9e51b9824f136e4c"
+      "sha256": "9658c02aea46f1182cb09b58e771821a6b5f381b4dd7bb3f15104e0e06de356c"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -912,7 +912,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "e982047f5557890cf97675bc063dbdef5e7c5c6f25628a5d33d55532b34904f8"
+      "sha256": "db864884531e82ae97538c30feede1c140382731b559034f59bd5d069e2677fa"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1027,7 +1027,7 @@
     },
     "template-core/templates/ai/checks/contract.json": {
       "ownership": "template",
-      "sha256": "c42b3284be35e35f479c7981e1050afa541fea905eb81cfd2c75fed49d54a736"
+      "sha256": "34de2079ddcbc97ca209e4c1d02edbb12987058b82c62841215713100b4b897b"
     },
     "template-core/templates/ai/checks/react.json": {
       "ownership": "template",
@@ -1110,7 +1110,7 @@
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
-      "sha256": "c42b3284be35e35f479c7981e1050afa541fea905eb81cfd2c75fed49d54a736"
+      "sha256": "34de2079ddcbc97ca209e4c1d02edbb12987058b82c62841215713100b4b897b"
     },
     "templates/ai/checks/react.json": {
       "ownership": "template",

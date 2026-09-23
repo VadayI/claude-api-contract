@@ -107,7 +107,7 @@
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
-      "sha256": "c42b3284be35e35f479c7981e1050afa541fea905eb81cfd2c75fed49d54a736"
+      "sha256": "34de2079ddcbc97ca209e4c1d02edbb12987058b82c62841215713100b4b897b"
     },
     "templates/ai/checks/react.json": {
       "ownership": "template",
