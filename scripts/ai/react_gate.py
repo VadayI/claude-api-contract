@@ -60,6 +60,29 @@ def executable(name: str) -> str:
     return resolved
 
 
+def local_node_cli(root: Path, relative: str) -> list[str]:
+    """Resolve a provisioned local Node CLI as a directly supervised argv.
+
+    Args:
+        root: Exact candidate export containing its private ``node_modules``.
+        relative: Reviewed package-relative CLI path below ``node_modules``.
+
+    Returns:
+        Absolute Node executable and absolute local CLI path.
+
+    Raises:
+        NotVerified: If the provisioned CLI is absent, linked, or escapes the export.
+
+    Side effects:
+        Reads path metadata and PATH only; no subprocess, write, Git, DB, or network.
+    """
+    candidate = root / "node_modules" / relative
+    resolved = candidate.resolve()
+    if candidate.is_symlink() or not candidate.is_file() or not resolved.is_relative_to(root.resolve()):
+        raise NotVerified(f"provisioned local Node CLI is unavailable: {relative}")
+    return [executable("node"), str(resolved)]
+
+
 def canonical_digest(value: object) -> str:
     """Return the SHA-256 of canonical compact JSON.
 
@@ -511,12 +534,15 @@ def e2e(root: Path) -> int:
     else:
         options["start_new_session"] = True
     server = subprocess.Popen(
-        [executable("npm"), "run", "dev", "--", "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
+        [*local_node_cli(root, "vite/bin/vite.js"), "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
         **options,
     )
     try:
         wait_for_server(server, "http://127.0.0.1:5173/")
-        result = run_process([executable("npx"), "playwright", "test", "--workers=1"], cwd=root, env=env, timeout=900)
+        result = run_process(
+            [*local_node_cli(root, "@playwright/test/cli.js"), "test", "--workers=1"],
+            cwd=root, env=env, timeout=900,
+        )
         emit_process(result)
         diagnostic = f"{result.stdout}\n{result.stderr}".lower()
         if result.returncode and any(token in diagnostic for token in PLAYWRIGHT_MISSING):

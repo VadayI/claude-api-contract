@@ -200,6 +200,22 @@ class ReactGateTests(unittest.TestCase):
         self.assertIn("process.env.PLAYWRIGHT_BASE_URL ??", config)
         self.assertIn("process.env.PLAYWRIGHT_EXTERNAL_SERVER === 'true' ? undefined", config)
 
+    def test_local_node_cli_is_candidate_bound(self):
+        """Resolve only a real provisioned CLI below the exact candidate export.
+
+        No arguments/return. Writes one disposable CLI fixture; no subprocess, Git,
+        DB, environment mutation, or network access.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cli = root / "node_modules/tool/cli.js"
+            cli.parent.mkdir(parents=True)
+            cli.write_text("", encoding="utf-8")
+            argv = react_gate.local_node_cli(root, "tool/cli.js")
+            self.assertEqual(Path(argv[1]), cli.resolve())
+            with self.assertRaises(react_gate.NotVerified):
+                react_gate.local_node_cli(root, "missing/cli.js")
+
 
 if __name__ == "__main__":
     unittest.main()

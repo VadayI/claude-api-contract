@@ -781,7 +781,7 @@
     },
     "scripts/ai/react_gate.py": {
       "ownership": "template",
-      "sha256": "a01e8de75446ab23e9a87520f9d5baf6e051ecfc4104f97525fa225940f9683f"
+      "sha256": "84e0ca543d22375f5982d32b6c70e5aac50c35cc20f14f1c42cb8aea830eec73"
     },
     "scripts/ai/readiness.py": {
       "legacy_sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381",
@@ -803,7 +803,7 @@
     },
     "scripts/ai/test_react_gate.py": {
       "ownership": "template",
-      "sha256": "34b9b934001d942919644d07d13553f4455cc2b245b0f3df9e39c37711665bf7"
+      "sha256": "eaa2aeaef59a48077c3b6a124521c5d60563a6be0a35b471a0b1bb541aee07fe"
     },
     "scripts/bundle-openapi.mjs": {
       "legacy_sha256": "b6d49063380e99a1409802f9862c3323a9983ae6c1cd58246461a54ba2a19396",
