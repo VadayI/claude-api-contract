@@ -1,55 +1,232 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "catalog_id": "contract.current-core",
   "profile": "full",
-  "policy": {"allow_mandatory_not_applicable": false},
+  "policy": {
+    "allow_mandatory_not_applicable": true
+  },
   "invalidation_paths": [
     "package-lock.json",
     "package.json",
     "docs/ai/production-manifest.json",
     "docs/ai/generated/adapters-manifest.json",
     "docs/ai/core-source.json",
-    "template-core/docs/ai/core-manifest.json"
+    "template-core/docs/ai/core-manifest.json",
+    "templates/ai/checks/workflow-inventory.json"
   ],
+  "run_context": {
+    "events": [
+      "pull_request",
+      "push",
+      "manual",
+      "schedule"
+    ],
+    "network": "allowed",
+    "network_ttl_seconds": 86400
+  },
+  "inventory": {
+    "manifest": "templates/ai/checks/workflow-inventory.json",
+    "expected_steps": 55
+  },
   "checks": [
     {
       "id": "contract.production-drift",
       "description": "Verify canonical contract production payload generation.",
-      "argv": ["{python}", "scripts/ai/production.py", "--check"],
+      "argv": [
+        "{python}",
+        "scripts/ai/production.py",
+        "--check"
+      ],
       "cwd": ".",
       "mandatory": true,
       "timeout_seconds": 120,
-      "prerequisites": ["python"],
-      "applicability": {"path_exists": "scripts/ai/production.py", "missing_status": "NOT_VERIFIED"},
+      "prerequisites": [
+        "python"
+      ],
+      "applicability": {
+        "path_exists": "scripts/ai/production.py",
+        "missing_status": "NOT_VERIFIED"
+      },
       "expected_artifacts": [],
       "dependencies": [],
-      "allowed_side_effects": ["evidence"]
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [],
+      "generated_comparisons": []
     },
     {
       "id": "contract.adapter-drift",
       "description": "Verify generated runtime adapters against canonical sources.",
-      "argv": ["{python}", "scripts/ai/generate_adapters.py", "--check"],
+      "argv": [
+        "{python}",
+        "scripts/ai/generate_adapters.py",
+        "--check"
+      ],
       "cwd": ".",
       "mandatory": true,
       "timeout_seconds": 120,
-      "prerequisites": ["python"],
-      "applicability": {"path_exists": "scripts/ai/generate_adapters.py", "missing_status": "NOT_VERIFIED"},
+      "prerequisites": [
+        "python"
+      ],
+      "applicability": {
+        "path_exists": "scripts/ai/generate_adapters.py",
+        "missing_status": "NOT_VERIFIED"
+      },
       "expected_artifacts": [],
-      "dependencies": ["contract.production-drift"],
-      "allowed_side_effects": ["evidence"]
+      "dependencies": [
+        "contract.production-drift"
+      ],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [],
+      "generated_comparisons": []
     },
     {
       "id": "contract.local-core-drift",
       "description": "Verify owner-local shared-core delivery and receipt drift.",
-      "argv": ["{python}", "template-core/scripts/ai/core_sync.py", "--local-source", "--check"],
+      "argv": [
+        "{python}",
+        "template-core/scripts/ai/core_sync.py",
+        "--local-source",
+        "--check"
+      ],
       "cwd": ".",
       "mandatory": true,
       "timeout_seconds": 120,
-      "prerequisites": ["python", "git"],
-      "applicability": {"path_exists": "template-core/scripts/ai/core_sync.py", "missing_status": "NOT_VERIFIED"},
+      "prerequisites": [
+        "python",
+        "git"
+      ],
+      "applicability": {
+        "path_exists": "template-core/scripts/ai/core_sync.py",
+        "missing_status": "NOT_VERIFIED"
+      },
       "expected_artifacts": [],
-      "dependencies": ["contract.production-drift", "contract.adapter-drift"],
-      "allowed_side_effects": ["evidence"]
+      "dependencies": [
+        "contract.production-drift",
+        "contract.adapter-drift"
+      ],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [],
+      "generated_comparisons": []
+    },
+    {
+      "id": "contract.typespec-drift",
+      "description": "Compile TypeSpec in a private Node capsule and compare generated OpenAPI bytes to the exact candidate.",
+      "argv": [
+        "npm",
+        "run",
+        "api:compile"
+      ],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 300,
+      "prerequisites": [
+        "node",
+        "npm"
+      ],
+      "applicability": {
+        "kind": "contract_spec",
+        "scaffold_package": "claude-api-contract"
+      },
+      "expected_artifacts": [],
+      "dependencies": [
+        "contract.local-core-drift"
+      ],
+      "allowed_side_effects": [
+        "candidate_export",
+        "evidence"
+      ],
+      "provisioning": [
+        {
+          "id": "npm-ci",
+          "kind": "npm-ci",
+          "dependencies": [],
+          "network": "allowed",
+          "ttl_seconds": 86400
+        }
+      ],
+      "generated_comparisons": [
+        "openapi.yml"
+      ]
+    },
+    {
+      "id": "contract.spectral",
+      "description": "Lint the exact candidate OpenAPI contract with the repository Spectral ruleset.",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 300,
+      "prerequisites": [
+        "node",
+        "npm"
+      ],
+      "applicability": {
+        "kind": "contract_spec",
+        "scaffold_package": "claude-api-contract"
+      },
+      "expected_artifacts": [],
+      "dependencies": [
+        "contract.local-core-drift"
+      ],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [
+        {
+          "id": "npm-ci",
+          "kind": "npm-ci",
+          "dependencies": [],
+          "network": "allowed",
+          "ttl_seconds": 86400
+        }
+      ],
+      "generated_comparisons": []
+    },
+    {
+      "id": "contract.examples",
+      "description": "Validate contract examples using the reviewed Git Bash helper and private Node capsule.",
+      "argv": [
+        "{git_bash}",
+        "scripts/check_examples.sh"
+      ],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 300,
+      "prerequisites": [
+        "node",
+        "npm",
+        "git-bash"
+      ],
+      "applicability": {
+        "kind": "contract_spec",
+        "scaffold_package": "claude-api-contract"
+      },
+      "expected_artifacts": [],
+      "dependencies": [
+        "contract.spectral"
+      ],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [
+        {
+          "id": "npm-ci",
+          "kind": "npm-ci",
+          "dependencies": [],
+          "network": "allowed",
+          "ttl_seconds": 86400
+        }
+      ],
+      "generated_comparisons": []
     }
   ]
 }

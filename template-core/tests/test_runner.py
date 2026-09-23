@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts/ai"))
 import detector
 import runner
+import runner_caps
 from schema import check_schema, load_json, validate
 
 
@@ -235,15 +236,18 @@ class RunnerTests(unittest.TestCase):
         """
         catalog_schema = load_json(ROOT / "templates/ai/schemas/check-catalog.schema.json")
         result_schema = load_json(ROOT / "templates/ai/schemas/check-result.schema.json")
-        for schema in (catalog_schema, result_schema):
+        context_schema = load_json(ROOT / "templates/ai/schemas/run-context.schema.json")
+        for schema in (catalog_schema, result_schema, context_schema):
             check_schema(schema)
-        shipped = load_json(ROOT / "templates/ai/checks/contract.json")
-        validate(shipped, catalog_schema)
-        runner.validate_catalog(shipped)
+        for name in ("contract.json", "react.json"):
+            shipped = load_json(ROOT / "templates/ai/checks" / name)
+            validate(shipped, catalog_schema)
+            runner.validate_catalog(shipped)
         catalog = self.catalog([self.check("fixture.pass", ["{python}", "check.py"])])
         document, code = runner.run(self.repo, self.candidate, self.candidate, catalog, self.output)
         self.assertEqual(code, 0)
         validate(document, result_schema)
+        validate(document["run_context"], context_schema)
 
     def test_dependencies_and_evidence_redaction_are_fail_closed(self):
         """Reject forward dependencies and redact secrets/host paths in evidence.
@@ -575,6 +579,94 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(list(self.output.parent.glob("full-evidence-*")), [])
         document, code = runner.run(self.repo, self.candidate, self.candidate, catalog, self.output)
         self.assertEqual((code, document["outcome"], self.output.is_file()), (0, "PASS", True))
+
+    def test_run_context_binds_event_exact_diff_and_base(self):
+        """Bind event, exact commits/trees, changed files and base into one digest.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        context is ambiguous or a base/candidate change does not alter identity;
+        fixture Git errors propagate.
+        Side effects: Creates two fixture commits and runs read-only local Git
+        diffs; no checkout of user code, database, network, or global config.
+        """
+        (self.repo / "changed file.txt").write_text("one\n", encoding="utf-8")
+        self.git("add", "changed file.txt")
+        self.git("commit", "-m", "context fixture")
+        later = self.git("rev-parse", "HEAD").stdout.strip()
+        later_tree = self.git("rev-parse", "HEAD^{tree}").stdout.strip()
+        base_tree = self.git("rev-parse", self.candidate + "^{tree}").stdout.strip()
+        first = runner_caps.build_run_context(
+            self.repo, later, later_tree, self.candidate, base_tree, "pull_request", "disabled"
+        )
+        second = runner_caps.build_run_context(
+            self.repo, later, later_tree, later, later_tree, "push", "disabled"
+        )
+        self.assertEqual(first["changed_files"], ["changed file.txt"])
+        self.assertNotEqual(first["context_sha256"], second["context_sha256"])
+        self.assertEqual(first["base"]["commit"], self.candidate)
+
+    def test_contract_spec_applicability_is_typed_and_fail_closed(self):
+        """Skip only the identified upstream scaffold and reject broken derived repos.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError for a
+        fail-open applicability regression or malformed package fixture.
+        Side effects: Writes public package/spec fixtures below a temporary export;
+        no subprocess, database, environment, or network interaction occurs.
+        """
+        root = Path(self.temp.name) / "applicability"
+        root.mkdir()
+        rule = {"kind": "contract_spec", "scaffold_package": "claude-api-contract"}
+        (root / "package.json").write_text('{"name":"claude-api-contract"}', encoding="utf-8")
+        self.assertEqual(runner_caps.evaluate_applicability(rule, root, {})[0], "NOT_APPLICABLE")
+        (root / "package.json").write_text('{"name":"derived-contract"}', encoding="utf-8")
+        self.assertEqual(runner_caps.evaluate_applicability(rule, root, {})[0], "NOT_VERIFIED")
+        (root / "spec").mkdir()
+        self.assertEqual(runner_caps.evaluate_applicability(rule, root, {})[0], "APPLICABLE")
+
+    def test_private_node_provisioning_and_generated_comparison(self):
+        """Record private content-bound npm provisioning and exact artifact drift.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when npm
+        arguments/network/cache semantics or generated comparison become ambiguous.
+        Side effects: Creates disposable lock/artifact/cache paths and mocks the
+        child execution; no real package installation, database, or network access.
+        """
+        root = Path(self.temp.name) / "node capsule"
+        root.mkdir()
+        (root / "package-lock.json").write_text('{"lockfileVersion":3}', encoding="utf-8")
+        artifact = root / "generated.json"
+        artifact.write_bytes(b"exact\n")
+        with mock.patch.object(runner_caps.shutil, "which", return_value="npm"), mock.patch.object(
+            runner_caps, "run_argv", return_value=(0, b"ok", b"", False, 7)
+        ) as invocation:
+            provision = runner_caps.provision_node(
+                root, {"network": "disabled", "ttl_seconds": 60}, {"PATH": "fixture"}, 10
+            )
+        self.assertEqual(provision["status"], "PASS")
+        self.assertIn("--ignore-scripts", invocation.call_args.args[0])
+        self.assertIn("--offline", invocation.call_args.args[0])
+        self.assertEqual(provision["cache"], {"scope": "per-check", "reused": False, "content_only": True})
+        self.assertTrue(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
+        artifact.write_bytes(b"drift\n")
+        self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
+
+    def test_workflow_inventory_maps_all_steps_and_five_source_gates(self):
+        """Require complete 55-step routing and exactly five requested real gates.
+
+        Args: self reads canonical public catalogs. Returns: None. Raises:
+        AssertionError when inventory entries vanish, duplicate, or claim success
+        without a runnable mapping.
+        Side effects: Reads checked-in JSON only; no writes, subprocess, DB/network.
+        """
+        inventory = json.loads((ROOT / "templates/ai/checks/workflow-inventory.json").read_text(encoding="utf-8"))
+        self.assertEqual((inventory["expected_steps"], len(inventory["steps"])), (55, 55))
+        self.assertEqual(len({item["id"] for item in inventory["steps"]}), 55)
+        mapped = {gate for item in inventory["steps"] for gate in item["runner_check_ids"]}
+        requested = {"contract.typespec-drift", "contract.spectral", "contract.examples", "react.typecheck", "react.lint"}
+        self.assertTrue(requested.issubset(mapped))
+        pending = [item for item in inventory["steps"] if item["disposition"] == "NOT_VERIFIED_PENDING"]
+        self.assertTrue(pending)
+        self.assertTrue(all(item["reason"] and not item["runner_check_ids"] for item in pending))
 
     @unittest.skipUnless(os.name == "posix", "Executable-bit behavior requires a POSIX filesystem")
     def test_export_preserves_executable_bit_and_detects_chmod_only_mutation(self):

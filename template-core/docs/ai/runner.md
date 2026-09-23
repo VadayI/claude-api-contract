@@ -18,6 +18,7 @@ bind both file content and executable state, so chmod-only mutation is visible.
 python scripts/ai/detector.py --repository . --output .ai-runtime/environment.json
 python scripts/ai/runner.py --repository . \
   --candidate FULL_COMMIT_SHA --base FULL_BASE_SHA \
+  --event pull_request --network disabled \
   --catalog templates/ai/checks/contract.json \
   --output .ai-runtime/results/full.json
 ```
@@ -55,11 +56,36 @@ PASS unless the catalog explicitly enables that policy. Current implementation
 paths use `NOT_VERIFIED` when absent. Dependencies must name preceding checks;
 failed, unverified, or skipped dependencies cannot yield PASS.
 
-The initial contract catalog intentionally invokes only current production,
-adapter and owner-local core drift gates. TypeSpec, Spectral, examples, breaking,
-Prism, policy, scheduled audit, React and Django commands still require the full
-workflow-step inventory and environment provisioning in later P05 slices. This
-slice does not yet provide network TTL policy, derived/scaffold applicability,
-cross-repository generated-artifact comparison, streaming capture limits before
-sanitization, or cross-platform descendant-process-tree cleanup after timeout.
-It does not claim one-source local/GitHub execution or P05 completion.
+The versioned run context binds the explicit event, candidate/base commits and
+trees, a sorted exact Git diff, its digest, and the network policy. An absent or
+unavailable base remains an input error; push/manual execution never invents
+`HEAD~1`. Typed predicates are fail closed. In particular, missing `spec/` is
+`NOT_APPLICABLE` only for the identified upstream `claude-api-contract` scaffold;
+it is `NOT_VERIFIED` for a derived package.
+
+Node gates provision with `npm ci --ignore-scripts` in each check's own pristine
+candidate export. `node_modules` and the npm cache are never shared between
+checks; the result records the exact lock digest, offline/allowed policy, TTL,
+argv, duration and outcome. Offline is the CLI default. Network use requires both
+catalog permission and `--network allowed`; a registry or tool failure is
+`NOT_VERIFIED`, never PASS. The TTL is result/cache evidence and does not turn an
+expired or absent install into reusable proof.
+
+`contract.json` executes the existing three source drift checks and adds TypeSpec
+generated-byte drift, Spectral, and examples. `react.json` adds typecheck and lint.
+TypeSpec output is compared to candidate `openapi.yml`; missing, linked, or
+different output fails. Every command runs without shell concatenation, and an
+owned process group is terminated and reaped on timeout on Windows and POSIX.
+
+`workflow-inventory.json` machine-maps all 55 observed workflow steps. Runnable
+source gates point to stable catalog IDs. Provisioning, trigger and reporting
+steps retain their orchestration classification. Every remaining check is
+`NOT_VERIFIED_PENDING` with its exact prerequisite reason; it is never omitted or
+represented as PASS.
+
+Concrete remaining P05 blockers are the executable shared implementations for
+the mapped breaking/oasdiff, Prism, endpoint/policy/scheduled, Django, remaining
+React quality/build/E2E checks, plus GitHub workflow invocation of these exact
+catalogs and hosted machine-result publication. Streaming capture is still
+bounded only after child completion. Browser/service-specific health and report
+lifecycle is not implemented. Therefore this slice does not claim P05 complete.

@@ -4,9 +4,11 @@ This directory is the planned shared-core source in the API-contract repository.
 The P09 resolver was developed independently of runtime pilot P03. The measured
 pilot is now accepted with documented runtime limitations. The delivery decision
 is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 contract
-structure is reviewable, while the first P05 detector/runner slice is documented
-in [runner.md](docs/ai/runner.md). Full gate inventories, downstream integration
-and the remaining P05 scope are still pending.
+structure is reviewable, while the P05 exact runner and source-capability capsule
+are documented in [runner.md](docs/ai/runner.md). The complete 55-step inventory
+is machine-mapped; entries without reviewed shared implementations remain
+explicitly `NOT_VERIFIED_PENDING`, so P05 and downstream integration are not yet
+claimed complete.
 
 Project configuration and instruction catalog schemas now have an offline
 standard-library validator; see [machine contracts](docs/ai/schemas.md) for its

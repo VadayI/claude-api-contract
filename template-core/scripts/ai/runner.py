@@ -15,6 +15,13 @@ import tempfile
 import time
 
 from detector import report as environment_report
+from runner_caps import (
+    build_run_context,
+    compare_generated,
+    evaluate_applicability,
+    provision_node,
+    run_argv,
+)
 
 SHA = re.compile(r"[0-9a-f]{40}")
 IDENTIFIER = re.compile(r"[a-z][a-z0-9.-]*")
@@ -109,10 +116,25 @@ def validate_catalog(document: object) -> dict[str, object]:
     Side effects:
         None; no filesystem, subprocess, database, network, or environment access.
     """
-    if not isinstance(document, dict) or set(document) != {"schema_version", "catalog_id", "profile", "policy", "invalidation_paths", "checks"}:
+    if not isinstance(document, dict) or set(document) not in (
+        {"schema_version", "catalog_id", "profile", "policy", "invalidation_paths", "checks"},
+        {"schema_version", "catalog_id", "profile", "policy", "invalidation_paths", "run_context", "inventory", "checks"},
+    ):
         raise ValueError("Invalid check catalog fields")
-    if document["schema_version"] != 1 or not isinstance(document["catalog_id"], str) or not IDENTIFIER.fullmatch(document["catalog_id"]):
+    if document["schema_version"] not in (1, 2) or not isinstance(document["catalog_id"], str) or not IDENTIFIER.fullmatch(document["catalog_id"]):
         raise ValueError("Invalid check catalog identity")
+    if document["schema_version"] == 2:
+        context = document["run_context"]
+        if not isinstance(context, dict) or set(context) != {"events", "network", "network_ttl_seconds"}:
+            raise ValueError("Invalid run-context policy")
+        if not isinstance(context["events"], list) or not context["events"] or set(context["events"]) - {"pull_request", "push", "manual", "schedule"}:
+            raise ValueError("Invalid run-context events")
+        if context["network"] not in ("disabled", "allowed") or type(context["network_ttl_seconds"]) is not int or context["network_ttl_seconds"] < 1:
+            raise ValueError("Invalid network policy")
+        inventory = document["inventory"]
+        if not isinstance(inventory, dict) or set(inventory) != {"manifest", "expected_steps"} or inventory["expected_steps"] != 55:
+            raise ValueError("Invalid workflow inventory binding")
+        safe_relative(inventory["manifest"])
     if not isinstance(document["profile"], str) or not IDENTIFIER.fullmatch(document["profile"]):
         raise ValueError("Invalid check profile")
     policy = document["policy"]
@@ -130,11 +152,12 @@ def validate_catalog(document: object) -> dict[str, object]:
     allowed = {
         "id", "description", "argv", "cwd", "mandatory", "timeout_seconds",
         "prerequisites", "applicability", "expected_artifacts", "dependencies",
-        "allowed_side_effects",
+        "allowed_side_effects", "provisioning", "generated_comparisons",
     }
     seen: set[str] = set()
     for item in checks:
-        if not isinstance(item, dict) or set(item) != allowed:
+        legacy_allowed = allowed - {"provisioning", "generated_comparisons"}
+        if not isinstance(item, dict) or set(item) not in (allowed, legacy_allowed):
             raise ValueError("Invalid check fields")
         identifier = item["id"]
         if not isinstance(identifier, str) or not IDENTIFIER.fullmatch(identifier):
@@ -144,7 +167,7 @@ def validate_catalog(document: object) -> dict[str, object]:
             raise ValueError("Invalid check description")
         if not isinstance(item["argv"], list) or not item["argv"] or any(not isinstance(arg, str) or not arg or "\x00" in arg for arg in item["argv"]):
             raise ValueError("Invalid check argv")
-        if any("{" in arg or "}" in arg for arg in item["argv"] if arg != "{python}"):
+        if any("{" in arg or "}" in arg for arg in item["argv"] if arg not in ("{python}", "{git_bash}")):
             raise ValueError("Unsupported argv placeholder")
         safe_relative(item["cwd"], allow_dot=True)
         if type(item["mandatory"]) is not bool or type(item["timeout_seconds"]) is not int or not 1 <= item["timeout_seconds"] <= 3600:
@@ -163,11 +186,50 @@ def validate_catalog(document: object) -> dict[str, object]:
         if not isinstance(side_effects, list) or len(side_effects) != len(set(side_effects)) or set(side_effects) - {"candidate_export", "evidence"}:
             raise ValueError("Invalid allowed side effects")
         applicability = item["applicability"]
-        if not isinstance(applicability, dict) or set(applicability) != {"path_exists", "missing_status"}:
+        if not isinstance(applicability, dict):
             raise ValueError("Invalid applicability")
-        safe_relative(applicability["path_exists"])
-        if applicability["missing_status"] not in ("NOT_APPLICABLE", "NOT_VERIFIED"):
-            raise ValueError("Invalid applicability missing status")
+        if set(applicability) == {"path_exists", "missing_status"}:
+            safe_relative(applicability["path_exists"])
+            if applicability["missing_status"] not in ("NOT_APPLICABLE", "NOT_VERIFIED"):
+                raise ValueError("Invalid applicability missing status")
+        else:
+            kind = applicability.get("kind")
+            fields = {
+                "always": {"kind"},
+                "path_exists": {"kind", "path", "missing_status"},
+                "changed_any": {"kind", "prefixes"},
+                "event_in": {"kind", "events"},
+                "contract_spec": {"kind", "scaffold_package"},
+            }
+            if kind not in fields or set(applicability) != fields[kind]:
+                raise ValueError("Invalid typed applicability")
+            for value in applicability.get("prefixes", []):
+                safe_relative(value)
+            if "path" in applicability:
+                safe_relative(applicability["path"])
+            if applicability.get("missing_status") not in (None, "NOT_APPLICABLE", "NOT_VERIFIED"):
+                raise ValueError("Invalid typed applicability status")
+            if kind == "contract_spec" and applicability.get("scaffold_package") != "claude-api-contract":
+                raise ValueError("Invalid scaffold identity")
+            if set(applicability.get("events", [])) - {"pull_request", "push", "manual", "schedule"}:
+                raise ValueError("Invalid applicability events")
+        provisioning = item.get("provisioning", [])
+        if not isinstance(provisioning, list) or len(provisioning) != len({step.get("id") for step in provisioning if isinstance(step, dict)}):
+            raise ValueError("Invalid provisioning DAG")
+        previous_provisions: set[str] = set()
+        for provision in provisioning:
+            if not isinstance(provision, dict) or set(provision) != {"id", "kind", "dependencies", "network", "ttl_seconds"}:
+                raise ValueError("Invalid provisioning record")
+            if provision["id"] != "npm-ci" or provision["kind"] != "npm-ci" or set(provision["dependencies"]) - previous_provisions:
+                raise ValueError("Unsupported provisioning DAG")
+            if provision["network"] not in ("disabled", "allowed") or type(provision["ttl_seconds"]) is not int or provision["ttl_seconds"] < 1:
+                raise ValueError("Invalid provisioning network policy")
+            previous_provisions.add(provision["id"])
+        generated = item.get("generated_comparisons", [])
+        if not isinstance(generated, list) or len(generated) != len(set(generated)):
+            raise ValueError("Invalid generated comparisons")
+        for name in generated:
+            safe_relative(name)
         seen.add(identifier)
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("Duplicate check identifier")
@@ -318,8 +380,10 @@ def runner_digests() -> dict[str, str]:
     names = (
         "scripts/ai/runner.py",
         "scripts/ai/detector.py",
+        "scripts/ai/runner_caps.py",
         "templates/ai/schemas/check-catalog.schema.json",
         "templates/ai/schemas/check-result.schema.json",
+        "templates/ai/schemas/run-context.schema.json",
     )
     result = {}
     for name in names:
@@ -352,6 +416,8 @@ def candidate_snapshot(root: Path) -> dict[str, str]:
         directory = pending.pop()
         for entry in sorted(directory.iterdir(), key=lambda item: item.name):
             relative = entry.relative_to(root).as_posix()
+            if entry.name in {"node_modules", ".ai-node-cache"}:
+                continue
             mode = entry.lstat().st_mode
             if stat.S_ISLNK(mode) or not entry.resolve().is_relative_to(root.resolve()):
                 raise ValueError(f"Linked or escaping candidate output: {relative}")
@@ -574,7 +640,11 @@ def finalize_runtime_output(staging: Path, output: Path, descriptor: int, payloa
 
 
 def execute_check(
-    check: dict[str, object], root: Path, evidence: Path, completed: dict[str, dict[str, object]]
+    check: dict[str, object],
+    root: Path,
+    evidence: Path,
+    completed: dict[str, dict[str, object]],
+    context: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Execute one applicable catalog check and persist bounded raw evidence.
 
@@ -583,6 +653,8 @@ def execute_check(
         root: Isolated candidate export.
         evidence: Run-specific evidence directory outside the export.
         completed: Earlier dependency results keyed by stable check ID.
+        context: Versioned exact event/base/candidate context. Legacy direct tests
+            may omit it and receive an explicit local manual context substitute.
 
     Returns:
         Machine result with exactly one of the four allowed statuses.
@@ -597,7 +669,8 @@ def execute_check(
         implicit network operation; command behavior is declared by the catalog.
     """
     identifier = str(check["id"])
-    argv = [sys.executable if arg == "{python}" else arg for arg in check["argv"]]
+    git_bash = "C:/Program Files/Git/bin/bash.exe" if os.name == "nt" else "bash"
+    argv = [sys.executable if arg == "{python}" else git_bash if arg == "{git_bash}" else arg for arg in check["argv"]]
     result: dict[str, object] = {
         "id": identifier,
         "mandatory": check["mandatory"],
@@ -611,14 +684,27 @@ def execute_check(
     if any(status == "NOT_APPLICABLE" for status in dependency_states.values()):
         result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
         return result
-    applicability = root.joinpath(*safe_relative(check["applicability"]["path_exists"]).parts)
-    if not applicability.exists():
-        result.update({"status": check["applicability"]["missing_status"], "applicability": {"path_exists": False}})
+    applicability_spec = check["applicability"]
+    if "path_exists" in applicability_spec:
+        applicability_spec = {
+            "kind": "path_exists",
+            "path": applicability_spec["path_exists"],
+            "missing_status": applicability_spec["missing_status"],
+        }
+    applicability_state, applicability_evidence = evaluate_applicability(
+        applicability_spec,
+        root,
+        context or {"event": "manual", "changed_files": []},
+    )
+    result["applicability"] = applicability_evidence
+    if applicability_state != "APPLICABLE":
+        result["status"] = applicability_state
         return result
-    result["applicability"] = {"path_exists": True}
     missing = [
         name for name in check["prerequisites"]
-        if not (name == "python" and Path(sys.executable).is_file()) and shutil.which(name) is None
+        if not (name == "python" and Path(sys.executable).is_file())
+        and not (name == "git-bash" and (Path(git_bash).is_file() or shutil.which(git_bash)))
+        and shutil.which(name) is None
     ]
     if missing:
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": missing})
@@ -627,20 +713,36 @@ def execute_check(
     if not cwd.is_dir() or not cwd.resolve().is_relative_to(root.resolve()):
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["working_directory"]})
         return result
-    artifact_before = {name: artifact_digest(root, name) for name in check["expected_artifacts"]}
-    snapshot_before = candidate_snapshot(root)
-    started = time.time()
     env = {key: os.environ[key] for key in ("PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL") if key in os.environ}
     env["PYTHONDONTWRITEBYTECODE"] = "1"
-    try:
-        process = subprocess.run(
-            argv, cwd=cwd, env=env, capture_output=True, timeout=check["timeout_seconds"], shell=False,
+    provisions = []
+    for provision in check.get("provisioning", []):
+        effective_provision = dict(provision)
+        requested_network = (context or {}).get("network", {}).get("mode", "disabled")
+        effective_provision["network"] = (
+            "allowed" if requested_network == "allowed" and provision["network"] == "allowed" else "disabled"
         )
-        status = "PASS" if process.returncode == 0 else "FAIL"
-        stdout, stderr, exit_code = process.stdout, process.stderr, process.returncode
-    except subprocess.TimeoutExpired as error:
-        status, exit_code = "FAIL", None
-        stdout, stderr = error.stdout or b"", error.stderr or b""
+        provision_result = provision_node(root, effective_provision, env, check["timeout_seconds"])
+        provisions.append(provision_result)
+        if provision_result["status"] != "PASS":
+            result.update({"status": "NOT_VERIFIED", "provisioning": provisions})
+            return result
+    if provisions:
+        result["provisioning"] = provisions
+    artifact_before = {name: artifact_digest(root, name) for name in check["expected_artifacts"]}
+    generated_before = {
+        name: (root.joinpath(*safe_relative(name).parts).read_bytes() if root.joinpath(*safe_relative(name).parts).is_file() else None)
+        for name in check.get("generated_comparisons", [])
+    }
+    snapshot_before = candidate_snapshot(root)
+    try:
+        exit_code, stdout, stderr, timed_out, duration_ms = run_argv(
+            argv, cwd, env, check["timeout_seconds"]
+        )
+        status = "PASS" if exit_code == 0 else "FAIL"
+    except OSError:
+        result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["command_executable"]})
+        return result
     stdout_path = evidence / f"{identifier}.stdout.txt"
     stderr_path = evidence / f"{identifier}.stderr.txt"
     stdout, stdout_truncated = sanitized_evidence(stdout, root)
@@ -669,13 +771,21 @@ def execute_check(
         invalid_artifacts.extend(name for name in check["expected_artifacts"] if name not in invalid_artifacts)
     if mutated and "candidate_export" not in check["allowed_side_effects"]:
         invalid_artifacts.append("candidate_export")
+    if check.get("generated_comparisons"):
+        try:
+            comparison = compare_generated(root, generated_before, check["generated_comparisons"])
+        except ValueError:
+            comparison = {"matched": False, "files": []}
+        result["generated_comparison"] = comparison
+        if not comparison["matched"]:
+            invalid_artifacts.append("generated_comparison")
     invalid_artifacts = sorted(set(invalid_artifacts))
     if status == "PASS" and invalid_artifacts:
         status = "FAIL"
         exit_code = 1
     execution = {
         "status": status,
-        "duration_ms": round((time.time() - started) * 1000),
+        "duration_ms": duration_ms,
         "stdout_sha256": digest_bytes(stdout),
         "stderr_sha256": digest_bytes(stderr),
         "stdout_size": len(stdout),
@@ -687,7 +797,7 @@ def execute_check(
     }
     if exit_code is not None:
         execution["exit_code"] = exit_code
-    else:
+    elif timed_out:
         execution["timed_out"] = True
     result.update(execution)
     if artifacts:
@@ -721,9 +831,10 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
         raise ValueError("Catalog digest is incomplete")
     runner_files = digests.get("runner_files")
     required_runner_files = {
-        "scripts/ai/runner.py", "scripts/ai/detector.py",
+        "scripts/ai/runner.py", "scripts/ai/detector.py", "scripts/ai/runner_caps.py",
         "templates/ai/schemas/check-catalog.schema.json",
         "templates/ai/schemas/check-result.schema.json",
+        "templates/ai/schemas/run-context.schema.json",
     }
     if not isinstance(runner_files, dict) or set(runner_files) != required_runner_files or any(
         not isinstance(value, str) or not digest_pattern.fullmatch(value) for value in runner_files.values()
@@ -741,6 +852,17 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
     repository = document.get("repository")
     if not isinstance(repository, dict) or not repository.get("name") or not digest_pattern.fullmatch(str(repository.get("identity_sha256", ""))):
         raise ValueError("Repository identity is incomplete")
+    context = document.get("run_context")
+    if not isinstance(context, dict) or context.get("schema_version") != 1:
+        raise ValueError("Run context is incomplete")
+    canonical_context = dict(context)
+    recorded_context_digest = canonical_context.pop("context_sha256", None)
+    if not digest_pattern.fullmatch(str(recorded_context_digest)) or digest_bytes(
+        json.dumps(canonical_context, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ) != recorded_context_digest:
+        raise ValueError("Run context digest is inconsistent")
+    if context.get("candidate") != document.get("candidate") or context.get("base") != document.get("base"):
+        raise ValueError("Run context Git identity differs from result")
     environment = document.get("environment")
     if not isinstance(environment, dict) or not isinstance(environment.get("tools"), dict) or not environment["tools"]:
         raise ValueError("Tool environment is incomplete")
@@ -793,6 +915,47 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
                 raise ValueError("FAIL requires exactly timeout or exit code")
             if has_exit and (type(item["exit_code"]) is not int or item["exit_code"] == 0):
                 raise ValueError("FAIL requires a nonzero exit code")
+        for provision in item.get("provisioning", []):
+            if not isinstance(provision, dict) or provision.get("id") != "npm-ci" or provision.get("status") not in ("PASS", "NOT_VERIFIED"):
+                raise ValueError("Invalid provisioning result")
+            started_provision = "argv" in provision
+            if started_provision:
+                required = {"duration_ms", "timed_out", "lock_sha256", "cache", "network", "stdout_sha256", "stderr_sha256"}
+                if not required.issubset(provision) or any(
+                    not digest_pattern.fullmatch(str(provision[name]))
+                    for name in ("lock_sha256", "stdout_sha256", "stderr_sha256")
+                ):
+                    raise ValueError("Started provisioning evidence is incomplete")
+                successful = provision.get("exit_code") == 0 and provision.get("timed_out") is False
+                if (provision["status"] == "PASS") != successful:
+                    raise ValueError("Provisioning status differs from execution")
+            elif provision["status"] != "NOT_VERIFIED" or not provision.get("reason"):
+                raise ValueError("Unstarted provisioning requires an explicit reason")
+        comparison = item.get("generated_comparison")
+        if comparison is not None:
+            if not isinstance(comparison, dict) or not isinstance(comparison.get("files"), list) or not comparison["files"]:
+                raise ValueError("Generated comparison is incomplete")
+            matches = []
+            for artifact in comparison["files"]:
+                if not isinstance(artifact, dict):
+                    raise ValueError("Generated artifact evidence is invalid")
+                for prefix in ("expected", "actual"):
+                    present = artifact.get(prefix + "_present")
+                    has_digest = prefix + "_sha256" in artifact
+                    if type(present) is not bool or present != has_digest:
+                        raise ValueError("Generated artifact presence/digest mismatch")
+                    if has_digest and not digest_pattern.fullmatch(str(artifact[prefix + "_sha256"])):
+                        raise ValueError("Generated artifact digest is invalid")
+                matches.append(
+                    artifact.get("expected_present") is True
+                    and artifact.get("actual_present") is True
+                    and artifact.get("expected_sha256") == artifact.get("actual_sha256")
+                    and artifact.get("matched") is True
+                )
+            if comparison.get("matched") != all(matches):
+                raise ValueError("Generated comparison aggregate is inconsistent")
+            if status == "PASS" and comparison["matched"] is not True:
+                raise ValueError("PASS requires matching generated artifacts")
     mandatory = [item for item in checks if item["mandatory"]]
     if any(item["status"] == "FAIL" for item in mandatory):
         expected = "FAIL"
@@ -806,7 +969,15 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
         raise ValueError("Result outcome or timestamps are inconsistent")
 
 
-def run(repository: Path, candidate: str, base: str, catalog_path: Path, output: Path) -> tuple[dict[str, object], int]:
+def run(
+    repository: Path,
+    candidate: str,
+    base: str,
+    catalog_path: Path,
+    output: Path,
+    event: str = "manual",
+    network: str = "disabled",
+) -> tuple[dict[str, object], int]:
     """Verify one exact candidate in isolation and write a bound machine result.
 
     Args:
@@ -815,6 +986,8 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
         base: Exact full base commit SHA required to be candidate ancestry.
         catalog_path: Reviewed versioned check catalog outside candidate execution.
         output: Explicit result JSON path; evidence is written beside it.
+        event: Explicit trigger kind used by typed applicability predicates.
+        network: Explicit provisioning policy; disabled is the safe default.
 
     Returns:
         Tuple of result document and process code: 0 success, 1 failed mandatory
@@ -835,6 +1008,15 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
         raise ValueError("base must be an ancestor of candidate")
     catalog_bytes = catalog_path.read_bytes()
     catalog = validate_catalog(json.loads(catalog_bytes))
+    if catalog["schema_version"] == 2:
+        if event not in catalog["run_context"]["events"]:
+            raise ValueError("Event is not permitted by catalog")
+        if network == "allowed" and catalog["run_context"]["network"] != "allowed":
+            raise ValueError("Catalog forbids network provisioning")
+    context = build_run_context(
+        repository, candidate, candidate_tree, base, base_tree, event, network,
+        catalog.get("run_context", {}).get("network_ttl_seconds", 86400),
+    )
     started = int(time.time())
     output, staging, descriptor, identity, evidence = reserve_runtime_output(repository, output)
     final_created = False
@@ -856,7 +1038,7 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
                 check_export = Path(directory) / "candidate"
                 check_export.mkdir()
                 export_candidate(repository, candidate, check_export)
-                result = execute_check(item, check_export, evidence, completed)
+                result = execute_check(item, check_export, evidence, completed, context)
                 checks.append(result)
                 completed[str(item["id"])] = result
         failed = any(item["mandatory"] and item["status"] == "FAIL" for item in checks)
@@ -875,6 +1057,7 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
             "base": {"commit": base, "tree": base_tree},
             "profile": catalog["profile"],
             "catalog_id": catalog["catalog_id"],
+            "run_context": context,
             "digests": digests,
             "environment": environment_report(repository),
             "started_at": started,
@@ -911,11 +1094,16 @@ def main() -> int:
     parser.add_argument("--base", required=True)
     parser.add_argument("--catalog", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--event", choices=("pull_request", "push", "manual", "schedule"), default="manual")
+    parser.add_argument("--network", choices=("disabled", "allowed"), default="disabled")
     args = parser.parse_args()
     if sys.version_info < (3, 13):
         parser.error("Python 3.13+ is required")
     try:
-        document, code = run(args.repository, args.candidate, args.base, args.catalog, args.output)
+        document, code = run(
+            args.repository, args.candidate, args.base, args.catalog, args.output,
+            event=args.event, network=args.network,
+        )
         print(json.dumps({"outcome": document["outcome"], "result": str(args.output)}))
         return code
     except (ValueError, OSError, json.JSONDecodeError, subprocess.SubprocessError, tarfile.TarError) as error:

@@ -551,6 +551,9 @@
     "scripts/ai/runner.py": {
       "ownership": "template"
     },
+    "scripts/ai/runner_caps.py": {
+      "ownership": "template"
+    },
     "scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
       "ownership": "template"
@@ -736,6 +739,9 @@
     "template-core/scripts/ai/runner.py": {
       "ownership": "template"
     },
+    "template-core/scripts/ai/runner_caps.py": {
+      "ownership": "template"
+    },
     "template-core/scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
       "ownership": "template"
@@ -745,6 +751,12 @@
       "ownership": "template"
     },
     "template-core/templates/ai/checks/contract.json": {
+      "ownership": "template"
+    },
+    "template-core/templates/ai/checks/react.json": {
+      "ownership": "template"
+    },
+    "template-core/templates/ai/checks/workflow-inventory.json": {
       "ownership": "template"
     },
     "template-core/templates/ai/readiness-catalog.json": {
@@ -759,6 +771,9 @@
       "ownership": "template"
     },
     "template-core/templates/ai/schemas/check-result.schema.json": {
+      "ownership": "template"
+    },
+    "template-core/templates/ai/schemas/run-context.schema.json": {
       "ownership": "template"
     },
     "template-core/templates/ai/schemas/project.schema.json": {
@@ -803,6 +818,12 @@
     "templates/ai/checks/contract.json": {
       "ownership": "template"
     },
+    "templates/ai/checks/react.json": {
+      "ownership": "template"
+    },
+    "templates/ai/checks/workflow-inventory.json": {
+      "ownership": "template"
+    },
     "templates/ai/production-inputs.json": {
       "ownership": "template"
     },
@@ -818,6 +839,9 @@
       "ownership": "template"
     },
     "templates/ai/schemas/check-result.schema.json": {
+      "ownership": "template"
+    },
+    "templates/ai/schemas/run-context.schema.json": {
       "ownership": "template"
     },
     "templates/ai/schemas/project.schema.json": {

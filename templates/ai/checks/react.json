@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "catalog_id": "react.source-quality",
+  "profile": "full",
+  "policy": {
+    "allow_mandatory_not_applicable": false
+  },
+  "invalidation_paths": [
+    "package-lock.json",
+    "package.json",
+    "tsconfig.json",
+    "eslint.config.js",
+    "vite.config.ts",
+    "templates/ai/checks/workflow-inventory.json"
+  ],
+  "run_context": {
+    "events": [
+      "pull_request",
+      "push",
+      "manual",
+      "schedule"
+    ],
+    "network": "allowed",
+    "network_ttl_seconds": 86400
+  },
+  "inventory": {
+    "manifest": "templates/ai/checks/workflow-inventory.json",
+    "expected_steps": 55
+  },
+  "checks": [
+    {
+      "id": "react.typecheck",
+      "description": "Run the React TypeScript check in a private exact-candidate Node capsule.",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 600,
+      "prerequisites": [
+        "node",
+        "npm"
+      ],
+      "applicability": {
+        "kind": "always"
+      },
+      "expected_artifacts": [],
+      "dependencies": [],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [
+        {
+          "id": "npm-ci",
+          "kind": "npm-ci",
+          "dependencies": [],
+          "network": "allowed",
+          "ttl_seconds": 86400
+        }
+      ],
+      "generated_comparisons": []
+    },
+    {
+      "id": "react.lint",
+      "description": "Run the React lint gate in a separate private exact-candidate Node capsule.",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 600,
+      "prerequisites": [
+        "node",
+        "npm"
+      ],
+      "applicability": {
+        "kind": "always"
+      },
+      "expected_artifacts": [],
+      "dependencies": [
+        "react.typecheck"
+      ],
+      "allowed_side_effects": [
+        "evidence"
+      ],
+      "provisioning": [
+        {
+          "id": "npm-ci",
+          "kind": "npm-ci",
+          "dependencies": [],
+          "network": "allowed",
+          "ttl_seconds": 86400
+        }
+      ],
+      "generated_comparisons": []
+    }
+  ]
+}
