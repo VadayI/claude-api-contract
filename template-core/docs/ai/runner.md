@@ -64,12 +64,13 @@ unavailable base remains an input error; push/manual execution never invents
 it is `NOT_VERIFIED` for a derived package.
 
 Node gates provision with `npm ci --ignore-scripts` in each check's own pristine
-candidate export. `node_modules` and the npm cache are never shared between
-checks; the result records the exact lock digest, offline/allowed policy, TTL,
-argv, duration and outcome. Offline is the CLI default. Network use requires both
-catalog permission and `--network allowed`; a registry or tool failure is
-`NOT_VERIFIED`, never PASS. The TTL is result/cache evidence and does not turn an
-expired or absent install into reusable proof.
+candidate export. `node_modules` is never reused. A runtime npm content cache may
+seed a private per-check cache only when its key binds the exact lock digest and
+npm version and its recorded TTL is current; linked/expired/malformed entries are
+ignored. The result records that key, reuse decision, offline/allowed policy,
+TTL, argv, duration and outcome. Offline is the CLI default. Network use requires
+both catalog permission and `--network allowed`; a registry/tool/cache miss is
+`NOT_VERIFIED`, never PASS.
 
 `contract.json` executes the existing three source drift checks and adds TypeSpec
 generated-byte drift, Spectral, and examples. `react.json` adds typecheck and lint.

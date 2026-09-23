@@ -658,6 +658,9 @@ class RunnerTests(unittest.TestCase):
         artifact = root / "generated.json"
         artifact.write_bytes(b"exact\n")
         with mock.patch.object(runner_caps.shutil, "which", return_value="npm"), mock.patch.object(
+            runner_caps.subprocess, "run",
+            return_value=subprocess.CompletedProcess(["npm", "--version"], 0, b"11.0.0\n", b""),
+        ), mock.patch.object(
             runner_caps, "run_argv", return_value=(0, b"ok", b"", False, 7)
         ) as invocation:
             provision = runner_caps.provision_node(
@@ -666,7 +669,11 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(provision["status"], "PASS")
         self.assertIn("--ignore-scripts", invocation.call_args.args[0])
         self.assertIn("--offline", invocation.call_args.args[0])
-        self.assertEqual(provision["cache"], {"scope": "per-check", "reused": False, "content_only": True})
+        self.assertEqual(
+            {name: provision["cache"][name] for name in ("scope", "reused", "content_only")},
+            {"scope": "per-check", "reused": False, "content_only": True},
+        )
+        self.assertRegex(provision["cache"]["key_sha256"], r"^[0-9a-f]{64}$")
         self.assertTrue(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
         artifact.write_bytes(b"drift\n")
         self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])

@@ -735,7 +735,9 @@ def execute_check(
         effective_provision["network"] = (
             "allowed" if requested_network == "allowed" and provision["network"] == "allowed" else "disabled"
         )
-        provision_result = provision_node(root, effective_provision, env, check["timeout_seconds"])
+        provision_result = provision_node(
+            root, effective_provision, env, check["timeout_seconds"], evidence.parent / ".npm-content-cache"
+        )
         provisions.append(provision_result)
         if provision_result["status"] != "PASS":
             result.update({"status": "NOT_VERIFIED", "provisioning": provisions})

@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import signal
 import subprocess
+import tempfile
 import time
 
 
@@ -253,6 +254,7 @@ def provision_node(
     policy: dict[str, object],
     env: dict[str, str],
     timeout_seconds: int,
+    cache_root: Path | None = None,
 ) -> dict[str, object]:
     """Install exact npm dependencies privately inside one candidate export.
 
@@ -261,6 +263,8 @@ def provision_node(
         policy: Validated npm-ci policy containing network mode and TTL.
         env: Explicit environment copied for structural npm configuration.
         timeout_seconds: Bounded install deadline.
+        cache_root: Optional secured runtime directory for a lock/toolchain-keyed
+            npm content cache. Every check still receives a private copied cache.
 
     Returns:
         Provisioning evidence with status, argv, lock digest, cache semantics,
@@ -271,8 +275,10 @@ def provision_node(
 
     Side effects:
         Runs ``npm ci --ignore-scripts`` only inside the disposable export. The npm
-        cache and ``node_modules`` are private to this check and are never reused;
-        network is disabled via npm offline mode unless explicitly allowed.
+        cache and ``node_modules`` are private to this check. A validated,
+        unexpired content-addressed npm cache may seed the private cache; the
+        installed dependency tree is never reused. Network is disabled via npm
+        offline mode unless explicitly allowed.
     """
     lock = root / "package-lock.json"
     if not lock.is_file() or lock.is_symlink():
@@ -280,8 +286,45 @@ def provision_node(
     npm = shutil.which("npm")
     if npm is None:
         return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "npm missing"}
+    version_probe = subprocess.run(
+        [npm, "--version"], capture_output=True, timeout=20, check=False, shell=False
+    )
+    if version_probe.returncode != 0:
+        return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "npm version unavailable"}
+    npm_version = version_probe.stdout.decode("utf-8", errors="replace").strip()
+    lock_digest = sha256_bytes(lock.read_bytes())
+    cache_key = sha256_bytes(f"{lock_digest}\0{npm_version}".encode("utf-8"))
     cache = root / ".ai-node-cache"
     cache.mkdir()
+    reused = False
+    stable_cache = cache_root / cache_key if cache_root is not None else None
+    if stable_cache is not None:
+        if cache_root.is_symlink() or cache_root.exists() and not cache_root.is_dir():
+            return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "unsafe npm cache root"}
+        cache_root.mkdir(exist_ok=True)
+        if stable_cache.is_dir() and not stable_cache.is_symlink():
+            try:
+                metadata = json.loads((stable_cache / "metadata.json").read_text(encoding="utf-8"))
+                fresh = (
+                    metadata == {
+                        "schema_version": 1,
+                        "key_sha256": cache_key,
+                        "lock_sha256": lock_digest,
+                        "npm_version": npm_version,
+                        "created_at": metadata.get("created_at"),
+                    }
+                    and type(metadata["created_at"]) is int
+                    and int(time.time()) - metadata["created_at"] <= int(policy.get("ttl_seconds", 86400))
+                )
+                content = stable_cache / "content"
+                safe_entries = content.is_dir() and not content.is_symlink() and all(
+                    not path.is_symlink() for path in content.rglob("*")
+                )
+                if fresh and safe_entries:
+                    shutil.copytree(content, cache, dirs_exist_ok=True)
+                    reused = True
+            except (OSError, ValueError, KeyError, TypeError):
+                reused = False
     child_env = dict(env)
     child_env["npm_config_cache"] = str(cache)
     child_env["npm_config_ignore_scripts"] = "true"
@@ -296,13 +339,37 @@ def provision_node(
     result: dict[str, object] = {
         "id": "npm-ci", "status": status, "argv": ["npm", *argv[1:]],
         "duration_ms": duration, "timed_out": timed_out,
-        "lock_sha256": sha256_bytes(lock.read_bytes()),
-        "cache": {"scope": "per-check", "reused": False, "content_only": True},
+        "lock_sha256": lock_digest,
+        "cache": {"scope": "per-check", "reused": reused, "content_only": True, "key_sha256": cache_key},
         "network": {"mode": network, "ttl_seconds": int(policy.get("ttl_seconds", 86400))},
         "stdout_sha256": sha256_bytes(stdout), "stderr_sha256": sha256_bytes(stderr),
     }
     if exit_code is not None:
         result["exit_code"] = exit_code
+    if status == "NOT_VERIFIED":
+        result["reason"] = "offline_cache_miss_or_install_error" if network == "disabled" else "network_install_error"
+    if status == "PASS" and stable_cache is not None and not stable_cache.exists():
+        staging = Path(tempfile.mkdtemp(prefix=cache_key + ".pending-", dir=cache_root))
+        try:
+            shutil.rmtree(cache / "_logs", ignore_errors=True)
+            shutil.copytree(cache, staging / "content")
+            metadata = {
+                "schema_version": 1,
+                "key_sha256": cache_key,
+                "lock_sha256": lock_digest,
+                "npm_version": npm_version,
+                "created_at": int(time.time()),
+            }
+            (staging / "metadata.json").write_text(
+                json.dumps(metadata, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+            )
+            try:
+                staging.rename(stable_cache)
+            except FileExistsError:
+                pass
+        finally:
+            if staging.exists():
+                shutil.rmtree(staging)
     return result
 
 
