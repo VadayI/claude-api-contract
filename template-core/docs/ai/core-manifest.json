@@ -103,7 +103,7 @@
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
-      "sha256": "f446d3dbcdfaedd52cecfe8268ad92aedde8e5fb114cd84dbfc16cef2bf97b0a"
+      "sha256": "e97904ac7063c43a95ecea585df03404c34bc3d79fb1722e4136f6d18febd6a0"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
@@ -139,7 +139,7 @@
     },
     "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template",
-      "sha256": "1ccb87f4c128ee217f12b1c01b67778dace35d72f03f49e8f8c6118138832ce9"
+      "sha256": "2944e623b6133ce1bf55b07bee2ecb9a5ca2479a0f533242a2793fcd8cae6f11"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
@@ -175,7 +175,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "97094c023bef049169af51640aa487111093686b424d715c631d4e4a60ab00e4"
+      "sha256": "f79df675ad79ce018e3edd8e2dff11fb90c3958501bd033da1f53c24c90d0ba0"
     },
     "tests/test_schema.py": {
       "ownership": "template",

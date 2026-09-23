@@ -681,11 +681,14 @@ class RunnerTests(unittest.TestCase):
         )
         self.assertRegex(provision["cache"]["key_sha256"], r"^[0-9a-f]{64}$")
         child_env = invocation.call_args.args[2]
-        self.assertEqual(child_env["npm_config_userconfig"], child_env["npm_config_globalconfig"])
+        self.assertNotEqual(child_env["npm_config_userconfig"], child_env["npm_config_globalconfig"])
         self.assertEqual(child_env["npm_config_registry"], "https://registry.npmjs.org/")
         self.assertEqual(
             set(provision["cache"]["identity"]),
-            {"lock_sha256", "node_version", "npm_version", "registry", "os", "arch", "config_sha256"},
+            {
+                "lock_sha256", "node_version", "npm_version", "registry", "os", "arch",
+                "user_config_sha256", "global_config_sha256",
+            },
         )
         self.assertTrue(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
         artifact.write_bytes(b"drift\n")

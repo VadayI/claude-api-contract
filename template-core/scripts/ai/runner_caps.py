@@ -370,8 +370,10 @@ def provision_node(
     registry = str(policy.get("registry", "https://registry.npmjs.org/"))
     system = platform.system().lower()
     architecture = platform.machine().lower()
-    empty_config = root / ".ai-empty-npmrc"
-    empty_config.write_bytes(b"")
+    user_config = root / ".ai-empty-user-npmrc"
+    global_config = root / ".ai-empty-global-npmrc"
+    user_config.write_bytes(b"")
+    global_config.write_bytes(b"")
     config_digest = sha256_bytes(b"")
     cache_identity = {
         "lock_sha256": lock_digest,
@@ -380,7 +382,8 @@ def provision_node(
         "registry": registry,
         "os": system,
         "arch": architecture,
-        "config_sha256": config_digest,
+        "user_config_sha256": config_digest,
+        "global_config_sha256": config_digest,
     }
     cache_key = sha256_bytes(json.dumps(cache_identity, sort_keys=True, separators=(",", ":")).encode("utf-8"))
     cache = root / ".ai-node-cache"
@@ -418,8 +421,8 @@ def provision_node(
     child_env["npm_config_ignore_scripts"] = "true"
     child_env["npm_config_audit"] = "false"
     child_env["npm_config_fund"] = "false"
-    child_env["npm_config_userconfig"] = str(empty_config)
-    child_env["npm_config_globalconfig"] = str(empty_config)
+    child_env["npm_config_userconfig"] = str(user_config)
+    child_env["npm_config_globalconfig"] = str(global_config)
     child_env["npm_config_registry"] = registry
     network = str(policy.get("network", "disabled"))
     argv = [npm, "ci", "--ignore-scripts", "--no-audit", "--no-fund"]
