@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "9560d002b2006da8356a4ae80ffa1ad70c92653568fd4ee81d716ff64dfea317"
+      "sha256": "d8e3f988be1fb7f590a9e259aa67c430cc16011a4e7260247588596cecd99aa9"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -778,11 +778,11 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "96209d4c063d3d1a22f8cf0ceb30cf9e68b37593b469d22352fdb13a2be8e4ef"
+      "sha256": "ead58816525f7f31dca95d93d92addf8d3f5ff4052760e05843082f07937d3b0"
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
-      "sha256": "9e1fefb538b180e46534df401f123f647983b075865e8c3cdd8d0a78d4607e05"
+      "sha256": "6ddd316723e4e0bafacd123aeb311b9a02ecd6721ebad1e757c09977a1386469"
     },
     "scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
@@ -912,7 +912,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "6c90aa86bff24b082b9f566aed0d8ea805e3e06a550290d85d83548c78bd7fe9"
+      "sha256": "869a87dd1e6dab99dfdba9f7b112f4f16026fea1b5c6e82d191e19987b5a7ec7"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1014,11 +1014,11 @@
     },
     "template-core/scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "96209d4c063d3d1a22f8cf0ceb30cf9e68b37593b469d22352fdb13a2be8e4ef"
+      "sha256": "ead58816525f7f31dca95d93d92addf8d3f5ff4052760e05843082f07937d3b0"
     },
     "template-core/scripts/ai/runner_caps.py": {
       "ownership": "template",
-      "sha256": "9e1fefb538b180e46534df401f123f647983b075865e8c3cdd8d0a78d4607e05"
+      "sha256": "6ddd316723e4e0bafacd123aeb311b9a02ecd6721ebad1e757c09977a1386469"
     },
     "template-core/scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
@@ -1096,7 +1096,7 @@
     },
     "template-core/tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "3f988791bd7a309979588142eb37666a953798257b2747d3623c3203c020a0e0"
+      "sha256": "51d4806803ba6d24e3772dc3007a73a9a035138ba1a32e5aec99f1bf23832f4a"
     },
     "template-core/tests/test_schema.py": {
       "legacy_sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b",

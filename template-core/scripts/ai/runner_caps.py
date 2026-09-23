@@ -244,8 +244,7 @@ def run_argv(
         return process.returncode, stdout, stderr, False, round((time.monotonic() - started) * 1000)
     except subprocess.TimeoutExpired as error:
         terminate_process_tree(process)
-        stdout = error.stdout or b""
-        stderr = error.stderr or b""
+        stdout, stderr = process.communicate()
         return None, stdout, stderr, True, round((time.monotonic() - started) * 1000)
 
 

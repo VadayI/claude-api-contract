@@ -716,16 +716,33 @@ def execute_check(
     if missing:
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": missing})
         return result
-    if not Path(argv[0]).is_absolute():
-        executable = shutil.which(argv[0])
-        if executable is None:
-            result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["command_executable"]})
-            return result
-        argv[0] = executable
     cwd = root if check["cwd"] == "." else root.joinpath(*safe_relative(check["cwd"]).parts)
     if not cwd.is_dir() or not cwd.resolve().is_relative_to(root.resolve()):
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["working_directory"]})
         return result
+    if not Path(argv[0]).is_absolute():
+        if "/" in argv[0]:
+            try:
+                command_name = argv[0][2:] if argv[0].startswith("./") else argv[0]
+                executable_path = cwd.joinpath(*safe_relative(command_name).parts)
+                executable = executable_path.resolve(strict=True)
+            except (OSError, ValueError):
+                executable = None
+            if (
+                executable is None
+                or executable_path.is_symlink()
+                or not executable.is_file()
+                or not executable.is_relative_to(root.resolve())
+            ):
+                result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["command_executable"]})
+                return result
+            argv[0] = str(executable)
+        else:
+            executable = shutil.which(argv[0])
+            if executable is None:
+                result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["command_executable"]})
+                return result
+            argv[0] = executable
     env = {key: os.environ[key] for key in ("PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL") if key in os.environ}
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     provisions = []

@@ -758,6 +758,21 @@ class RunnerTests(unittest.TestCase):
         self.assertFalse(document["checks"][0]["candidate_export_mutated"])
         self.assertTrue(document["checks"][1]["candidate_export_mutated"])
 
+    def test_relative_executable_cannot_escape_candidate_export(self):
+        """Reject a relative command whose normalized target leaves the export.
+
+        Args: self owns the disposable repository. Returns: None. Raises:
+        AssertionError when traversal reaches a host executable or is not reported
+        as invalid catalog input. Side effects: Writes only run-scoped fixture
+        catalog/output files; no database, network, or user checkout mutation.
+        """
+        escaped = self.check("fixture.escape", ["../outside.sh"])
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate, self.catalog([escaped]), self.output
+        )
+        self.assertEqual((code, document["checks"][0]["status"]), (2, "NOT_VERIFIED"))
+        self.assertEqual(document["checks"][0]["missing_prerequisites"], ["command_executable"])
+
 
 if __name__ == "__main__":
     unittest.main()
