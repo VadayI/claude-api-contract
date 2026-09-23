@@ -431,6 +431,9 @@
       "legacy_sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07",
       "ownership": "template"
     },
+    "docs/ai/runner.md": {
+      "ownership": "template"
+    },
     "docs/ai/schemas.md": {
       "legacy_sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47",
       "ownership": "template"
@@ -515,6 +518,9 @@
       "legacy_sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d",
       "ownership": "template"
     },
+    "scripts/ai/detector.py": {
+      "ownership": "template"
+    },
     "scripts/ai/generate_adapters.py": {
       "legacy_sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13",
       "ownership": "template"
@@ -540,6 +546,9 @@
     },
     "scripts/ai/readiness.py": {
       "legacy_sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381",
+      "ownership": "template"
+    },
+    "scripts/ai/runner.py": {
       "ownership": "template"
     },
     "scripts/ai/schema.py": {
@@ -670,6 +679,9 @@
       "legacy_sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07",
       "ownership": "template"
     },
+    "template-core/docs/ai/runner.md": {
+      "ownership": "template"
+    },
     "template-core/docs/ai/schemas.md": {
       "legacy_sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47",
       "ownership": "template"
@@ -684,6 +696,9 @@
     },
     "template-core/scripts/ai/core_sync.py": {
       "legacy_sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d",
+      "ownership": "template"
+    },
+    "template-core/scripts/ai/detector.py": {
       "ownership": "template"
     },
     "template-core/scripts/ai/generate_adapters.py": {
@@ -718,6 +733,9 @@
       "legacy_sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381",
       "ownership": "template"
     },
+    "template-core/scripts/ai/runner.py": {
+      "ownership": "template"
+    },
     "template-core/scripts/ai/schema.py": {
       "legacy_sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487",
       "ownership": "template"
@@ -726,12 +744,21 @@
       "legacy_sha256": "d6f5dd929b92542861b465aeb4e9d8fac061651056b92645b87cbd5ef7a63a5c",
       "ownership": "template"
     },
+    "template-core/templates/ai/checks/contract.json": {
+      "ownership": "template"
+    },
     "template-core/templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",
       "ownership": "template"
     },
     "template-core/templates/ai/schemas/catalog.schema.json": {
       "legacy_sha256": "bb8aaabbea242c0d4b1713e5a5a4a45154ed977a4a252b9885b25a1bb1e9b719",
+      "ownership": "template"
+    },
+    "template-core/templates/ai/schemas/check-catalog.schema.json": {
+      "ownership": "template"
+    },
+    "template-core/templates/ai/schemas/check-result.schema.json": {
       "ownership": "template"
     },
     "template-core/templates/ai/schemas/project.schema.json": {
@@ -758,6 +785,9 @@
       "legacy_sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65",
       "ownership": "template"
     },
+    "template-core/tests/test_runner.py": {
+      "ownership": "template"
+    },
     "template-core/tests/test_schema.py": {
       "legacy_sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b",
       "ownership": "template"
@@ -770,6 +800,9 @@
       "legacy_sha256": "d6f5dd929b92542861b465aeb4e9d8fac061651056b92645b87cbd5ef7a63a5c",
       "ownership": "template"
     },
+    "templates/ai/checks/contract.json": {
+      "ownership": "template"
+    },
     "templates/ai/production-inputs.json": {
       "ownership": "template"
     },
@@ -779,6 +812,12 @@
     },
     "templates/ai/schemas/catalog.schema.json": {
       "legacy_sha256": "bb8aaabbea242c0d4b1713e5a5a4a45154ed977a4a252b9885b25a1bb1e9b719",
+      "ownership": "template"
+    },
+    "templates/ai/schemas/check-catalog.schema.json": {
+      "ownership": "template"
+    },
+    "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template"
     },
     "templates/ai/schemas/project.schema.json": {

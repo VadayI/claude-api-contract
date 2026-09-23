@@ -1,13 +1,13 @@
 {
-  "core_version": "0.1.0-dev",
+  "core_version": "0.2.0-dev",
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "b951623a3665d695795a76706605fd96dd8e256efbc02be4a22221e1ef0bd853"
+      "sha256": "067195d225d62c14631ba873e26c831b448abf554890782d65a38c34e50cdf6e"
     },
     "core.json": {
       "ownership": "template",
-      "sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf"
+      "sha256": "67847322bb2b41514ec65be7f93d8482bdb9297f0acdd9f2568a5e2b351ebaec"
     },
     "docs/ai/adapter-generation.md": {
       "ownership": "template",
@@ -33,6 +33,10 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "docs/ai/runner.md": {
+      "ownership": "template",
+      "sha256": "e9fa6466c7911ab9798d109d759ef1190f1cae8369c4435560741aee2e50a46b"
+    },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
       "sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07"
@@ -53,13 +57,17 @@
       "ownership": "template",
       "sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d"
     },
+    "scripts/ai/detector.py": {
+      "ownership": "template",
+      "sha256": "4e6df7fc0c731c7db0a52380af33bf3f85e81454a2e2d235cb7a662fdf18019f"
+    },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
       "sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13"
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "6a5e069d7b59d1e2b56e3e116c68efa71217c3108536d51068baffbb12a81d49"
+      "sha256": "4d3397bff5b73570dff5db208a1362bbf10e06a5179016a78888330252681d5e"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -85,9 +93,17 @@
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
     },
+    "scripts/ai/runner.py": {
+      "ownership": "template",
+      "sha256": "cd750e11b934ab3fdd403ed95d643a203040d5f8652604ad0e29ee5e2cd984e2"
+    },
     "scripts/ai/schema.py": {
       "ownership": "template",
       "sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487"
+    },
+    "templates/ai/checks/contract.json": {
+      "ownership": "template",
+      "sha256": "58f898baafe66ee0f5e6bef4cb20f05d396276efa3525e0d0e7231234f465959"
     },
     "templates/ai/mcp/codex.optional.toml": {
       "ownership": "template",
@@ -100,6 +116,14 @@
     "templates/ai/schemas/catalog.schema.json": {
       "ownership": "template",
       "sha256": "bb8aaabbea242c0d4b1713e5a5a4a45154ed977a4a252b9885b25a1bb1e9b719"
+    },
+    "templates/ai/schemas/check-catalog.schema.json": {
+      "ownership": "template",
+      "sha256": "892cd8d541c50df65e7a5c9f8fed4ecc4ecd235dfed06c94f69d42e3c031e81d"
+    },
+    "templates/ai/schemas/check-result.schema.json": {
+      "ownership": "template",
+      "sha256": "dc05036a669b07a068c7fdc3700e62134ad1eef6ca8a982d3dbb3e81cbbb8021"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
@@ -125,11 +149,15 @@
       "ownership": "template",
       "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
     },
+    "tests/test_runner.py": {
+      "ownership": "template",
+      "sha256": "6d3b07bc8824733937bf25c530b44a8049d43ceca5353eeb48ea135242f4eaff"
+    },
     "tests/test_schema.py": {
       "ownership": "template",
       "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     }
   },
-  "phase": "P04-in-progress",
+  "phase": "P05-in-progress",
   "schema_version": 1
 }
