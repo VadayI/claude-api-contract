@@ -32,7 +32,7 @@ def manifest(root: Path) -> str:
             check_schema(load_json(path))
         files[name] = {"sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(), "ownership": "template"}
     version = json.loads((root / "core.json").read_text(encoding="utf-8"))["version"]
-    return json.dumps({"schema_version": 1, "phase": "P04-in-progress", "core_version": version, "files": files}, sort_keys=True, indent=2) + "\n"
+    return json.dumps({"schema_version": 1, "phase": "P05-in-progress", "core_version": version, "files": files}, sort_keys=True, indent=2) + "\n"
 
 
 def main() -> int:

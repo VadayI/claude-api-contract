@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "source_directory": "template-core",
   "python_minimum": "3.13",

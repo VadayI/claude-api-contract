@@ -3,8 +3,12 @@
 This directory is the planned shared-core source in the API-contract repository.
 The P09 resolver was developed independently of runtime pilot P03. The measured
 pilot is now accepted with documented runtime limitations. The delivery decision
-is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 is in progress;
-remaining machine contracts and full downstream integration remain pending.
+is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 contract
+structure is reviewable, while the P05 exact runner and source-capability capsule
+are documented in [runner.md](docs/ai/runner.md). The complete 55-step inventory
+is machine-mapped; entries without reviewed shared implementations remain
+explicitly `NOT_VERIFIED_PENDING`, so P05 and downstream integration are not yet
+claimed complete.
 
 Project configuration and instruction catalog schemas now have an offline
 standard-library validator; see [machine contracts](docs/ai/schemas.md) for its
@@ -22,6 +26,8 @@ dependency to a React, Django or contract application.
 
 ```text
 python -m unittest discover -s template-core/tests -p "test_*.py"
+python template-core/scripts/ai/detector.py --repository .
+python template-core/scripts/ai/runner.py --repository . --candidate FULL_SHA --base FULL_SHA --catalog template-core/templates/ai/checks/contract.json --output .ai-runtime/results/full.json
 python template-core/scripts/ai/readiness.py profile.json
 python template-core/scripts/ai/readiness.py profile.json --evidence evidence.json
 ```

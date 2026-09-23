@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Exact runner context v1",
+  "type": "object",
+  "required": ["schema_version", "event", "candidate", "base", "changed_files", "changed_files_sha256", "network", "context_sha256"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "event": {"type": "string", "enum": ["pull_request", "push", "manual", "schedule"]},
+    "candidate": {"type": "object", "required": ["commit", "tree"], "additionalProperties": false, "properties": {"commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}},
+    "base": {"type": "object", "required": ["commit", "tree"], "additionalProperties": false, "properties": {"commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}},
+    "changed_files": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "changed_files_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "network": {"type": "object", "required": ["mode", "ttl_seconds"], "additionalProperties": false, "properties": {"mode": {"type": "string", "enum": ["disabled", "allowed"]}, "ttl_seconds": {"type": "integer", "minimum": 1}}},
+    "context_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
