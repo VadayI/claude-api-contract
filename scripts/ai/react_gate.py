@@ -28,6 +28,7 @@ VERSION = re.compile(r"^[A-Za-z0-9._-]+$")
 NETWORK_ERRORS = (
     "eai_again", "enetwork", "enetunreach", "econnrefused", "econnreset",
     "etimedout", "network request", "fetch failed", "socket hang up", "unable to get local issuer",
+    "unable to verify the first certificate",
 )
 PLAYWRIGHT_MISSING = (
     "executable doesn't exist", "please run the following command to download new browsers",
@@ -136,7 +137,7 @@ def load_run_context(path: Path) -> dict[str, object]:
         for name in changed
     ):
         raise ValueError("Invalid changed-file manifest")
-    changed_digest = hashlib.sha256(("\n".join(changed) + ("\n" if changed else "")).encode("utf-8")).hexdigest()
+    changed_digest = hashlib.sha256(("\0".join(changed) + "\0").encode("utf-8")).hexdigest()
     if document["changed_files_sha256"] != changed_digest:
         raise ValueError("Changed-file digest mismatch")
     canonical = dict(document)

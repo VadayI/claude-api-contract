@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "ee1a7f9c09c728e691b5529a24e9dcb3438d41b84de4250f24c2e2fc7aa0299c"
+      "sha256": "1c0c85b8bd72037bf18e841510c42b1ab1ff8bd56c3ff192b764e641679f4cf5"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -781,7 +781,7 @@
     },
     "scripts/ai/react_gate.py": {
       "ownership": "template",
-      "sha256": "84e0ca543d22375f5982d32b6c70e5aac50c35cc20f14f1c42cb8aea830eec73"
+      "sha256": "7b058285fee18119a0582da09d67d761aa7c7705e8889f26ced1d13a646bdccf"
     },
     "scripts/ai/readiness.py": {
       "legacy_sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381",
@@ -803,7 +803,7 @@
     },
     "scripts/ai/test_react_gate.py": {
       "ownership": "template",
-      "sha256": "eaa2aeaef59a48077c3b6a124521c5d60563a6be0a35b471a0b1bb541aee07fe"
+      "sha256": "744c55950defde0d4921d3d49a16c7431e649dad625dc08518a673a0dad91cc6"
     },
     "scripts/bundle-openapi.mjs": {
       "legacy_sha256": "b6d49063380e99a1409802f9862c3323a9983ae6c1cd58246461a54ba2a19396",
@@ -928,7 +928,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "30e2345e1d3730ba98b89aba2b2e04b4b5ff9cb627038e2df7cf833ffb4cf29b"
+      "sha256": "f968d13907bd09eacd8cd69c43280bea7e6a4ca4d91632f3c1263cd1c30c4fbf"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1051,7 +1051,7 @@
     },
     "template-core/templates/ai/checks/react.json": {
       "ownership": "template",
-      "sha256": "b1258f3eb598ac485bd68c26d5bcc301de136b1c0f209190e0f5e108cb23d49d"
+      "sha256": "2310a1675a1a66f79ef8b0564099c4da490c80f825ebaf120d360a7637162b4b"
     },
     "template-core/templates/ai/checks/workflow-inventory.json": {
       "ownership": "template",
@@ -1134,7 +1134,7 @@
     },
     "templates/ai/checks/react.json": {
       "ownership": "template",
-      "sha256": "b1258f3eb598ac485bd68c26d5bcc301de136b1c0f209190e0f5e108cb23d49d"
+      "sha256": "2310a1675a1a66f79ef8b0564099c4da490c80f825ebaf120d360a7637162b4b"
     },
     "templates/ai/checks/workflow-inventory.json": {
       "ownership": "template",

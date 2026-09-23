@@ -117,7 +117,7 @@
       "expected_artifacts": ["coverage/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
       "network_access": "none", "not_verified_exit_codes": [],
       "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
-      "generated_comparisons": [], "ephemeral_outputs": []
+      "generated_comparisons": [], "ephemeral_outputs": ["coverage/"]
     },
     {
       "id": "react.build", "description": "Build the production application and bind the emitted index artifact.",
@@ -126,7 +126,7 @@
       "expected_artifacts": ["dist/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
       "network_access": "none", "not_verified_exit_codes": [],
       "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
-      "generated_comparisons": [], "ephemeral_outputs": ["tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
+      "generated_comparisons": [], "ephemeral_outputs": ["dist/", "tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
     },
     {
       "id": "react.bundle-size", "description": "Build the exact candidate and enforce checked-in gzip bundle budgets in one capsule.",
@@ -137,7 +137,7 @@
       "expected_artifacts": ["dist/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
       "network_access": "none", "not_verified_exit_codes": [],
       "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
-      "generated_comparisons": [], "ephemeral_outputs": ["tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
+      "generated_comparisons": [], "ephemeral_outputs": ["dist/", "tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
     },
     {
       "id": "react.e2e", "description": "Supervise loopback Vite, Chromium Playwright journeys, axe assertions, and HTML reporting.",
@@ -148,7 +148,7 @@
       "allowed_side_effects": ["candidate_export", "evidence"],
       "network_access": "loopback", "not_verified_exit_codes": [75],
       "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
-      "generated_comparisons": [], "ephemeral_outputs": []
+      "generated_comparisons": [], "ephemeral_outputs": ["playwright-report/", "test-results/"]
     }
   ]
 }

@@ -40,7 +40,7 @@ def context(path: Path, changed: list[str], event: str = "pull_request") -> Path
         "base": {"commit": "c" * 40, "tree": "d" * 40},
         "changed_files": sorted(changed),
         "changed_files_sha256": __import__("hashlib").sha256(
-            ("\n".join(sorted(changed)) + ("\n" if changed else "")).encode("utf-8")
+            ("\0".join(sorted(changed)) + "\0").encode("utf-8")
         ).hexdigest(),
         "network": {"mode": "disabled", "ttl_seconds": 86400},
     }
@@ -72,6 +72,12 @@ class ReactGateTests(unittest.TestCase):
         by_id = {item["id"]: item for item in catalog["checks"]}
         for check_id in ("react.file-size", "react.stubs", "react.feature-readmes"):
             self.assertEqual(by_id[check_id]["argv"][1], "--login")
+        self.assertEqual(by_id["react.unit-coverage"]["ephemeral_outputs"], ["coverage/"])
+        self.assertIn("dist/", by_id["react.build"]["ephemeral_outputs"])
+        self.assertIn("dist/", by_id["react.bundle-size"]["ephemeral_outputs"])
+        self.assertEqual(
+            by_id["react.e2e"]["ephemeral_outputs"], ["playwright-report/", "test-results/"]
+        )
         self.assertEqual(catalog["inventory"]["expected_steps"], 55)
 
     def test_exact_policy_uses_only_context_changed_manifest(self):
@@ -128,6 +134,12 @@ class ReactGateTests(unittest.TestCase):
             self.assertEqual(react_gate.audit(ROOT), 1)
         outage = subprocess.CompletedProcess(["npm"], 1, json.dumps({"error": {"code": "ENETUNREACH"}}), "")
         with mock.patch.object(react_gate, "run_process", return_value=outage):
+            with self.assertRaises(react_gate.NotVerified):
+                react_gate.audit(ROOT)
+        certificate = subprocess.CompletedProcess(
+            ["npm"], 1, "", "unable to verify the first certificate"
+        )
+        with mock.patch.object(react_gate, "run_process", return_value=certificate):
             with self.assertRaises(react_gate.NotVerified):
                 react_gate.audit(ROOT)
 

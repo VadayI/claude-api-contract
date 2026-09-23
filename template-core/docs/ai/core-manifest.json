@@ -115,7 +115,7 @@
     },
     "templates/ai/checks/react.json": {
       "ownership": "template",
-      "sha256": "b1258f3eb598ac485bd68c26d5bcc301de136b1c0f209190e0f5e108cb23d49d"
+      "sha256": "2310a1675a1a66f79ef8b0564099c4da490c80f825ebaf120d360a7637162b4b"
     },
     "templates/ai/checks/workflow-inventory.json": {
       "ownership": "template",
