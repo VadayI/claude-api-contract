@@ -152,7 +152,7 @@
               "id": {"type": "string", "const": "npm-ci"}, "status": {"type": "string", "enum": ["PASS", "NOT_VERIFIED"]},
               "reason": {"type": "string", "minLength": 1}, "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
               "duration_ms": {"type": "integer", "minimum": 0}, "timed_out": {"type": "boolean"}, "exit_code": {"type": "integer"},
-              "lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_excerpt": {"type": "string", "minLength": 1},
               "cache": {
                 "type": "object", "required": ["scope", "reused", "content_only", "key_sha256", "identity"], "additionalProperties": false,
                 "properties": {
@@ -160,14 +160,15 @@
                   "content_only": {"type": "boolean", "const": true}, "key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                   "created_at": {"type": "integer", "minimum": 0}, "age_seconds": {"type": "integer", "minimum": 0},
                   "identity": {
-                    "type": "object", "required": ["lock_sha256", "node_version", "npm_version", "registry", "os", "arch", "user_config_sha256", "global_config_sha256"], "additionalProperties": false,
+                    "type": "object", "required": ["lock_sha256", "node_version", "npm_version", "registry", "os", "arch", "user_config_sha256", "global_config_sha256", "tls_ca_mode"], "additionalProperties": false,
                     "properties": {
                       "lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                       "node_version": {"type": "string", "minLength": 1}, "npm_version": {"type": "string", "minLength": 1},
                       "registry": {"type": "string", "const": "https://registry.npmjs.org/"},
                       "os": {"type": "string", "minLength": 1}, "arch": {"type": "string", "minLength": 1},
                       "user_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-                      "global_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                      "global_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                      "tls_ca_mode": {"type": "string", "enum": ["default", "system"]}
                     }
                   }
                 },
@@ -180,9 +181,9 @@
               "network": {"type": "object", "required": ["mode", "ttl_seconds"], "additionalProperties": false, "properties": {"mode": {"type": "string", "enum": ["disabled", "allowed"]}, "ttl_seconds": {"type": "integer", "minimum": 1}}}
             },
             "oneOf": [
-              {"type": "object", "required": ["argv", "duration_ms", "timed_out", "exit_code", "lock_sha256", "cache", "network", "stdout_sha256", "stderr_sha256"], "properties": {"status": {"type": "string", "const": "PASS"}, "timed_out": {"type": "boolean", "const": false}, "exit_code": {"type": "integer", "const": 0}}, "not": {"type": "object", "required": ["reason"]}},
+              {"type": "object", "required": ["argv", "duration_ms", "timed_out", "exit_code", "lock_sha256", "cache", "network", "stdout_sha256", "stderr_sha256", "stderr_excerpt"], "properties": {"status": {"type": "string", "const": "PASS"}, "timed_out": {"type": "boolean", "const": false}, "exit_code": {"type": "integer", "const": 0}}, "not": {"type": "object", "required": ["reason"]}},
               {"type": "object", "required": ["reason"], "properties": {"status": {"type": "string", "const": "NOT_VERIFIED"}}, "not": {"type": "object", "anyOf": [{"type": "object", "required": ["argv"]}, {"type": "object", "required": ["duration_ms"]}, {"type": "object", "required": ["exit_code"]}]}},
-              {"type": "object", "required": ["argv", "duration_ms", "timed_out", "lock_sha256", "cache", "network", "stdout_sha256", "stderr_sha256"], "properties": {"status": {"type": "string", "const": "NOT_VERIFIED"}}, "anyOf": [{"type": "object", "required": ["exit_code"], "properties": {"exit_code": {"type": "integer", "not": {"type": "integer", "const": 0}}}}, {"type": "object", "properties": {"timed_out": {"type": "boolean", "const": true}}, "not": {"type": "object", "required": ["exit_code"]}}]}
+              {"type": "object", "required": ["argv", "duration_ms", "timed_out", "lock_sha256", "cache", "network", "stdout_sha256", "stderr_sha256", "stderr_excerpt"], "properties": {"status": {"type": "string", "const": "NOT_VERIFIED"}}, "anyOf": [{"type": "object", "required": ["exit_code"], "properties": {"exit_code": {"type": "integer", "not": {"type": "integer", "const": 0}}}}, {"type": "object", "properties": {"timed_out": {"type": "boolean", "const": true}}, "not": {"type": "object", "required": ["exit_code"]}}]}
             ]
           }}
         },

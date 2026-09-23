@@ -71,6 +71,9 @@ operating system and architecture. Freshness requires `0 <= age <= TTL`; linked,
 future-dated, expired or malformed entries are
 ignored. The result records that key, reuse decision, offline/allowed policy,
 TTL/created-at/age, argv, duration and outcome. Offline is the CLI default.
+On Windows the literal Node `--use-system-ca` mode validates system and enterprise
+certificate chains without inheriting caller-controlled Node options; the selected
+CA mode is bound into the npm cache identity and result evidence.
 `--network` governs provisioning and commands declaring `external`; disabled
 external commands are not started. `none` and `loopback` are reviewed command
 declarations, not an operating-system packet sandbox, and results say so. A

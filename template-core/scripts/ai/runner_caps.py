@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import signal
 import subprocess
@@ -12,6 +13,41 @@ import tempfile
 import time
 
 CAPTURE_LIMIT = 65537
+
+
+def safe_process_excerpt(content: bytes, root: Path, limit: int = 2000) -> str:
+    """Return a bounded diagnostic excerpt without credentials or host paths.
+
+    Technical details:
+    - Decodes subprocess bytes with replacement and retains only the final
+      ``limit`` characters, where package-manager root causes normally appear.
+    - Redacts URL userinfo, bearer/basic authorization values, secret-like
+      assignments, the disposable export, the user profile and the system temp
+      directory before the text enters a machine result.
+    - Performs no filesystem, subprocess, database, or network access.
+
+    Args:
+        content: Raw bounded subprocess output.
+        root: Disposable candidate export whose absolute path must not leak.
+        limit: Maximum number of characters returned after redaction.
+
+    Returns:
+        A trimmed, redacted diagnostic string, or ``"no diagnostic output"``
+        when the subprocess emitted no usable text.
+    """
+    text = content.decode("utf-8", errors="replace")[-limit:]
+    text = re.sub(r"(?i)(https?://)[^/@\s:]+:[^/@\s]+@", r"\1[REDACTED]@", text)
+    text = re.sub(r"(?i)(authorization\s*:\s*(?:bearer|basic)\s+)\S+", r"\1[REDACTED]", text)
+    text = re.sub(
+        r"(?im)\b([A-Z0-9_]*(?:TOKEN|PASSWORD|SECRET|KEY))\s*=\s*[^\s]+",
+        r"\1=[REDACTED]",
+        text,
+    )
+    private_paths = [str(root), str(Path.home()), tempfile.gettempdir()]
+    for private_path in sorted(set(private_paths), key=len, reverse=True):
+        if private_path:
+            text = text.replace(private_path, "[RUNTIME]").replace(private_path.replace("\\", "/"), "[RUNTIME]")
+    return text.strip() or "no diagnostic output"
 
 
 def sha256_bytes(content: bytes) -> str:
@@ -384,6 +420,7 @@ def provision_node(
         "arch": architecture,
         "user_config_sha256": config_digest,
         "global_config_sha256": config_digest,
+        "tls_ca_mode": "system" if system == "windows" else "default",
     }
     cache_key = sha256_bytes(json.dumps(cache_identity, sort_keys=True, separators=(",", ":")).encode("utf-8"))
     cache = root / ".ai-node-cache"
@@ -424,6 +461,10 @@ def provision_node(
     child_env["npm_config_userconfig"] = str(user_config)
     child_env["npm_config_globalconfig"] = str(global_config)
     child_env["npm_config_registry"] = registry
+    if system == "windows":
+        # Node does not consult the Windows certificate store by default. Use the
+        # reviewed built-in mode without inheriting caller-controlled NODE_OPTIONS.
+        child_env["NODE_OPTIONS"] = "--use-system-ca"
     network = str(policy.get("network", "disabled"))
     argv = [npm, "ci", "--ignore-scripts", "--no-audit", "--no-fund"]
     if network == "disabled":
@@ -440,6 +481,7 @@ def provision_node(
         },
         "network": {"mode": network, "ttl_seconds": int(policy.get("ttl_seconds", 86400))},
         "stdout_sha256": sha256_bytes(stdout), "stderr_sha256": sha256_bytes(stderr),
+        "stderr_excerpt": safe_process_excerpt(stderr, root),
     }
     if exit_code is not None:
         result["exit_code"] = exit_code

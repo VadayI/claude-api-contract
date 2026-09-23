@@ -667,7 +667,15 @@ class RunnerTests(unittest.TestCase):
         ), mock.patch.object(
             runner_caps.platform, "machine", return_value="AMD64"
         ), mock.patch.object(
-            runner_caps, "run_argv", return_value=(0, b"ok", b"", False, 7)
+            runner_caps,
+            "run_argv",
+            return_value=(
+                0,
+                b"ok",
+                f"GH_TOKEN=fake https://user:pass@example.test {root}".encode(),
+                False,
+                7,
+            ),
         ) as invocation:
             provision = runner_caps.provision_node(
                 root, {"network": "disabled", "ttl_seconds": 60}, {"PATH": "fixture"}, 10
@@ -680,16 +688,22 @@ class RunnerTests(unittest.TestCase):
             {"scope": "per-check", "reused": False, "content_only": True},
         )
         self.assertRegex(provision["cache"]["key_sha256"], r"^[0-9a-f]{64}$")
+        self.assertNotIn("fake", provision["stderr_excerpt"])
+        self.assertNotIn("user:pass", provision["stderr_excerpt"])
+        self.assertNotIn(str(root), provision["stderr_excerpt"])
+        self.assertIn("[REDACTED]", provision["stderr_excerpt"])
         child_env = invocation.call_args.args[2]
         self.assertNotEqual(child_env["npm_config_userconfig"], child_env["npm_config_globalconfig"])
         self.assertEqual(child_env["npm_config_registry"], "https://registry.npmjs.org/")
+        self.assertEqual(child_env["NODE_OPTIONS"], "--use-system-ca")
         self.assertEqual(
             set(provision["cache"]["identity"]),
             {
                 "lock_sha256", "node_version", "npm_version", "registry", "os", "arch",
-                "user_config_sha256", "global_config_sha256",
+                "user_config_sha256", "global_config_sha256", "tls_ca_mode",
             },
         )
+        self.assertEqual(provision["cache"]["identity"]["tls_ca_mode"], "system")
         self.assertTrue(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
         artifact.write_bytes(b"drift\n")
         self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
