@@ -26,7 +26,17 @@
             "templates/ai/schemas/check-result.schema.json": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
           }
         },
-        "invalidation_files": {"type": "object", "additionalProperties": {"type": "object", "required": ["present"], "additionalProperties": false, "properties": {"present": {"type": "boolean"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}}
+        "invalidation_files": {
+          "type": "object", "minProperties": 1,
+          "additionalProperties": {
+            "type": "object", "required": ["present"], "additionalProperties": false,
+            "properties": {"present": {"type": "boolean"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+            "oneOf": [
+              {"type": "object", "required": ["present", "sha256"], "properties": {"present": {"type": "boolean", "const": true}}},
+              {"type": "object", "required": ["present"], "properties": {"present": {"type": "boolean", "const": false}}, "not": {"type": "object", "required": ["sha256"]}}
+            ]
+          }
+        }
       }
     },
     "environment": {
@@ -37,17 +47,24 @@
         "tools": {
           "type": "object", "required": ["git", "node", "npm", "gh", "docker", "claude", "codex", "python"], "additionalProperties": false,
           "properties": {
-            "git": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "node": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "npm": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "gh": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "docker": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "claude": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
-            "codex": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string"}}},
+            "git": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "node": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "npm": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "gh": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "docker": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "claude": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
+            "codex": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "MISSING", "NOT_VERIFIED"]}, "version": {"type": "string", "minLength": 1}}, "oneOf": [{"type": "object", "required": ["status", "version"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}}, {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["MISSING", "NOT_VERIFIED"]}}}]},
             "python": {"type": "object", "required": ["status", "version"], "additionalProperties": false, "properties": {"status": {"type": "string", "const": "AVAILABLE"}, "version": {"type": "string", "minLength": 1}}}
           }
         },
-        "repository": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "NOT_VERIFIED"]}, "root_name": {"type": "string", "minLength": 1}, "git_dir_name": {"type": "string", "minLength": 1}, "head": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "branch": {"type": "string", "minLength": 1}, "dirty_tracked": {"type": "integer", "minimum": 0}, "untracked": {"type": "integer", "minimum": 0}}}
+        "repository": {
+          "type": "object", "required": ["status"], "additionalProperties": false,
+          "properties": {"status": {"type": "string", "enum": ["AVAILABLE", "NOT_VERIFIED"]}, "root_name": {"type": "string", "minLength": 1}, "git_dir_name": {"type": "string", "minLength": 1}, "head": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "branch": {"type": "string", "minLength": 1}, "dirty_tracked": {"type": "integer", "minimum": 0}, "untracked": {"type": "integer", "minimum": 0}},
+          "oneOf": [
+            {"type": "object", "required": ["status", "root_name", "git_dir_name", "head", "tree", "dirty_tracked", "untracked"], "properties": {"status": {"type": "string", "const": "AVAILABLE"}}},
+            {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "const": "NOT_VERIFIED"}}, "not": {"type": "object", "anyOf": [{"type": "object", "required": ["root_name"]}, {"type": "object", "required": ["git_dir_name"]}, {"type": "object", "required": ["head"]}, {"type": "object", "required": ["tree"]}, {"type": "object", "required": ["branch"]}, {"type": "object", "required": ["dirty_tracked"]}, {"type": "object", "required": ["untracked"]}]}}
+          ]
+        }
       }
     },
     "started_at": {"type": "integer", "minimum": 0},
@@ -62,13 +79,50 @@
           "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "cwd": {"type": "string", "minLength": 1}, "exit_code": {"type": "integer"},
           "duration_ms": {"type": "integer", "minimum": 0}, "timed_out": {"type": "boolean"}, "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "stdout_size": {"type": "integer", "minimum": 0}, "stderr_size": {"type": "integer", "minimum": 0}, "stdout_truncated": {"type": "boolean"}, "stderr_truncated": {"type": "boolean"}, "candidate_export_mutated": {"type": "boolean"},
-          "evidence": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "evidence": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "dependency_statuses": {"type": "object", "additionalProperties": {"type": "string", "enum": ["PASS", "FAIL", "NOT_APPLICABLE", "NOT_VERIFIED"]}},
           "applicability": {"type": "object", "required": ["path_exists"], "additionalProperties": false, "properties": {"path_exists": {"type": "boolean"}}},
           "missing_prerequisites": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "artifacts": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
           "invalid_artifacts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
-        }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "evidence"],
+            "properties": {"status": {"type": "string", "const": "PASS"}, "exit_code": {"type": "integer", "const": 0}},
+            "not": {"type": "object", "required": ["timed_out"]}
+          },
+          {
+            "type": "object",
+            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "evidence"],
+            "properties": {"status": {"type": "string", "const": "FAIL"}, "exit_code": {"type": "integer", "not": {"type": "integer", "const": 0}}},
+            "not": {"type": "object", "required": ["timed_out"]}
+          },
+          {
+            "type": "object",
+            "required": ["status", "timed_out", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "evidence"],
+            "properties": {"status": {"type": "string", "const": "FAIL"}, "timed_out": {"type": "boolean", "const": true}},
+            "not": {"type": "object", "required": ["exit_code"]}
+          },
+          {
+            "type": "object",
+            "required": ["status"],
+            "properties": {"status": {"type": "string", "enum": ["NOT_APPLICABLE", "NOT_VERIFIED"]}},
+            "not": {
+              "type": "object",
+              "anyOf": [
+                {"type": "object", "required": ["exit_code"]}, {"type": "object", "required": ["timed_out"]},
+                {"type": "object", "required": ["duration_ms"]}, {"type": "object", "required": ["stdout_sha256"]},
+                {"type": "object", "required": ["stderr_sha256"]}, {"type": "object", "required": ["stdout_size"]},
+                {"type": "object", "required": ["stderr_size"]}, {"type": "object", "required": ["stdout_truncated"]},
+                {"type": "object", "required": ["stderr_truncated"]}, {"type": "object", "required": ["candidate_export_mutated"]},
+                {"type": "object", "required": ["evidence"]}, {"type": "object", "required": ["artifacts"]},
+                {"type": "object", "required": ["invalid_artifacts"]}
+              ]
+            }
+          }
+        ]
       }
     }
   }

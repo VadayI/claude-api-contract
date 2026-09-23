@@ -39,12 +39,15 @@ changed contained regular files; their content digests are recorded, while stale
 files, links and missing artifacts fail. Candidate mutations are compared with a
 before/after snapshot and must be explicitly allowed.
 
-The closed schema enumerates every emitted result field and exact SHA/digest
-syntax. Runtime semantic validation additionally requires complete execution
-metadata for PASS/FAIL, mutually exclusive nonzero-exit versus timeout evidence,
-complete identities for available tools/repositories, exact effective runner
-inputs, and presence-aware invalidation digests. Empty effective digest maps and
-partial executed results cannot be finalized.
+The closed standalone schema enumerates every emitted result field and exact
+SHA/digest syntax. Its versioned `oneOf`/`not` contracts independently reject
+partial PASS/FAIL execution evidence, PASS with a nonzero exit, ambiguous FAIL
+exit/timeout states, execution evidence on NA/NV, incomplete AVAILABLE tool or
+repository identities, and inconsistent present/absent digest records. The
+bundled offline schema validator implements those draft-2020-12 constructs plus
+nonempty digest-map and exact evidence-cardinality constraints. Runtime semantic
+validation repeats the critical relations before finalization, so schema-only
+acceptance is not mistaken for a weaker validation tier.
 
 `FAIL` returns 1. A missing mandatory prerequisite/evidence returns 2 and
 `NOT_VERIFIED`; it never becomes PASS. Mandatory `NOT_APPLICABLE` also prevents

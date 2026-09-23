@@ -493,27 +493,61 @@ class RunnerTests(unittest.TestCase):
         incomplete_execution = json.loads(json.dumps(document))
         del incomplete_execution["checks"][0]["stdout_sha256"]
         with self.assertRaises(ValueError):
+            validate(incomplete_execution, schema)
+        with self.assertRaises(ValueError):
             runner.validate_result_semantics(incomplete_execution, False)
         missing_present_digest = json.loads(json.dumps(document))
         del missing_present_digest["digests"]["invalidation_files"]["tracked.txt"]["sha256"]
         with self.assertRaises(ValueError):
+            validate(missing_present_digest, schema)
+        with self.assertRaises(ValueError):
             runner.validate_result_semantics(missing_present_digest, False)
+        false_digest_with_sha = json.loads(json.dumps(document))
+        false_digest_with_sha["digests"]["invalidation_files"]["tracked.txt"]["present"] = False
+        with self.assertRaises(ValueError):
+            validate(false_digest_with_sha, schema)
         available_without_version = json.loads(json.dumps(document))
         del available_without_version["environment"]["tools"]["python"]["version"]
         with self.assertRaises(ValueError):
+            validate(available_without_version, schema)
+        with self.assertRaises(ValueError):
             runner.validate_result_semantics(available_without_version, False)
+        available_git_without_version = json.loads(json.dumps(document))
+        self.assertEqual(available_git_without_version["environment"]["tools"]["git"]["status"], "AVAILABLE")
+        del available_git_without_version["environment"]["tools"]["git"]["version"]
+        with self.assertRaises(ValueError):
+            validate(available_git_without_version, schema)
         empty_runner_digests = json.loads(json.dumps(document))
         empty_runner_digests["digests"]["runner_files"] = {}
+        with self.assertRaises(ValueError):
+            validate(empty_runner_digests, schema)
         with self.assertRaises(ValueError):
             runner.validate_result_semantics(empty_runner_digests, False)
         available_repository_without_tree = json.loads(json.dumps(document))
         del available_repository_without_tree["environment"]["repository"]["tree"]
         with self.assertRaises(ValueError):
+            validate(available_repository_without_tree, schema)
+        with self.assertRaises(ValueError):
             runner.validate_result_semantics(available_repository_without_tree, False)
         invalid_exit_relation = json.loads(json.dumps(document))
         invalid_exit_relation["checks"][0].update({"status": "FAIL", "timed_out": True})
         with self.assertRaises(ValueError):
+            validate(invalid_exit_relation, schema)
+        with self.assertRaises(ValueError):
             runner.validate_result_semantics(invalid_exit_relation, False)
+        passing_nonzero = json.loads(json.dumps(document))
+        passing_nonzero["checks"][0]["exit_code"] = 7
+        with self.assertRaises(ValueError):
+            validate(passing_nonzero, schema)
+        skipped_with_evidence = json.loads(json.dumps(document))
+        skipped_with_evidence["checks"][0]["status"] = "NOT_APPLICABLE"
+        with self.assertRaises(ValueError):
+            validate(skipped_with_evidence, schema)
+        valid_timeout = json.loads(json.dumps(document))
+        valid_timeout["checks"][0]["status"] = "FAIL"
+        del valid_timeout["checks"][0]["exit_code"]
+        valid_timeout["checks"][0]["timed_out"] = True
+        validate(valid_timeout, schema)
 
     def test_post_check_failure_cleans_runtime_and_same_output_retries(self):
         """Roll back staging/evidence after a post-check failure, then retry safely.
