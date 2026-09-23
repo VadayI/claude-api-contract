@@ -1,0 +1,230 @@
+{
+  "baseline": "485bb7ae64e5c09ce046ea5cae6e92fd641a7ffe",
+  "entries": {
+    ".claude/agents/api-architect.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "60f42772429a4f894e72dce779a1e73b58e2a27422021c2084296778dd2ec7d7"
+    },
+    ".claude/agents/ba.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "a1eeee212c1023fffae5b01879f367bec0f6bbd87f46c126dda6736a9a95ebef"
+    },
+    ".claude/agents/breaking-change-analyst.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "d2246a961f0c7bebea4f2a17336ad7d2da44b22220ac2706685d311656ebdca7"
+    },
+    ".claude/agents/brief-synthesizer.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "6263d847fcaf5cc55a1ec73ba5da553c0ca1aa001ab020107a408b6304555eec"
+    },
+    ".claude/agents/contract-reviewer.md": {
+      "migration": "selected-adapter",
+      "sha256": "8e19396cca00090bff5101b141e7d39cb559442193b56078f181a0de40469fa7"
+    },
+    ".claude/agents/devil.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "2b68624e5e6275072f6b85037137cccf8f8d7a1a3a1e21a7dc630fa7d51100b1"
+    },
+    ".claude/agents/docs-writer.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "d69ddfe9e3ef54193c35edfaf7e1deaa1fb73f946613cdf193156c4ee356c9a0"
+    },
+    ".claude/agents/happy-path-author.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e"
+    },
+    ".claude/agents/mock-validator.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "fdf80526713c52b2f5d71c18ee8e3bcafefb13ece08b72341577531b2d061ddb"
+    },
+    ".claude/agents/tsp-author.md": {
+      "migration": "selected-adapter",
+      "sha256": "7dc7d04d6c95791dbf558f6f792df1a94094240eb8d2b4ec2b5d00abefb6dab0"
+    },
+    ".claude/commands/bootstrap.md": {
+      "migration": "selected-adapter",
+      "sha256": "f4aa22e40d80f777f243319d03d0fc30f5256ce338f703e732ccfe777ca4449b"
+    },
+    ".claude/commands/breaking-check.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "87e23b8934e1d36672355f6008d2e8baff73da07beb3dd9506e01383adf8542d"
+    },
+    ".claude/commands/check-config.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "f742aca75843acbf0b061d7e099064603c1afee3c1d4197cff2ec0cdda9c9ca1"
+    },
+    ".claude/commands/check-readme.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "14915dd1dfe0317cf50ac0816362524086188a705021202ff067ba8fad6060cb"
+    },
+    ".claude/commands/create-pr.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "bc075e2feb9b5deb3504291c9f3fa9a5e1521e368b9ffbefea58dc7930b2f5d3"
+    },
+    ".claude/commands/doctor.md": {
+      "migration": "selected-adapter",
+      "sha256": "2c8114d35bd167cf5811484f9de4a0d513de3e48d2c895b968a79155061b14b0"
+    },
+    ".claude/commands/fix-ci.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "0acf82866f5ea0b892a6cdbf32e035e7b5ff69901b73cfe7851e8e8158c71a25"
+    },
+    ".claude/commands/happy-paths.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "80adb6bb0e95f04be4fec2d374f808955e42d5f0e276757133d67761c8454f73"
+    },
+    ".claude/commands/mock.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "af0c531c646f8d90cf08937ef450e50a4e0049a6eaa735b14097eff3afc746df"
+    },
+    ".claude/commands/personalize.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "dfd17e07bca142d19ebba0b2f8bbeef149e008e912ec9ae84bf38943d008694b"
+    },
+    ".claude/commands/plugins.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "9aedcdf016d6ad99870f2fea5c7045a535c21fef162140482a2794e8ac241705"
+    },
+    ".claude/commands/preflight.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "38e09048d575397ff46e80a5a995d3a9237b042595d361f88b74dd05da72704e"
+    },
+    ".claude/commands/release.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "c6b211f80954dd0315c876cf234e0da1a28e45dd2059a0fc7f8cb5b6773bd76d"
+    },
+    ".claude/commands/review-pr.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "83afee487732e663ffbf50ab4dd1d70b074148770f8fadcb304955d14e755d1b"
+    },
+    ".claude/commands/ship-contract.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "b369c74dba9de572f906345c02a71575d2efdd733ac1205771c795a54df78a95"
+    },
+    ".claude/commands/synthesize-brief.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "db389160458579301955789dc76bada9cdd9ed0d6f01915893da9308c73fb349"
+    },
+    ".claude/commands/update-from-template.md": {
+      "migration": "selected-adapter",
+      "sha256": "8933307d3b6fbed4ba4889fd47e52872ed60072c03b5e8dac763f90070451649"
+    },
+    ".claude/commands/validate-contract.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "bb02a73c9044cd5f3e152aec5370b4785148193b028b873cc5e48c68ac165036"
+    },
+    ".claude/commands/verify.md": {
+      "migration": "selected-adapter",
+      "sha256": "2d864e64e4372909ef200f4ad12cc4c5175013d45bbc6edb027671cdd6f09829"
+    },
+    ".claude/rules/api-envelope.md": {
+      "migration": "canonical-rule",
+      "sha256": "89e11e34e67ce04de69d2944a0e35f270c13e9f815892574c3b2948cb3ce1db7"
+    },
+    ".claude/rules/auth-contract.md": {
+      "migration": "canonical-rule",
+      "sha256": "92c5661a29ec8a0d4706f94a5ab6ccff21e2df289e481a699e87570e1e46ba0f"
+    },
+    ".claude/rules/breaking-changes.md": {
+      "migration": "canonical-rule",
+      "sha256": "2ca8a0d89f4d3c9970ca618ca4fcf58ec2e927fcc164ce911ba7847bd8d5a80e"
+    },
+    ".claude/rules/contract-first.md": {
+      "migration": "canonical-rule",
+      "sha256": "85adbe85d08c0412f8225ff13d323c3e99711631c27a16c4e5b7d5a3c7f05be7"
+    },
+    ".claude/rules/deploy.md": {
+      "migration": "canonical-rule",
+      "sha256": "fb3052d52af261720d5773d260a865093bb7209897d7c7bb4a66309097f936e4"
+    },
+    ".claude/rules/endpoint-surface.md": {
+      "migration": "canonical-rule",
+      "sha256": "5d0a23f1d84d810fb9c3cdaec99bd65cd969c9592ef793428d12629ea7f8ff2f"
+    },
+    ".claude/rules/environment.md": {
+      "migration": "canonical-rule",
+      "sha256": "0eb746a5778bb0d2c8b3f1070c47c622a8e0d2c5afa3d77a823734128f8982ae"
+    },
+    ".claude/rules/examples-validation.md": {
+      "migration": "canonical-rule",
+      "sha256": "ee81f7341dffd59438a2a480c43c7e74088b8ce5bc3f8da51a7d719abc8258fc"
+    },
+    ".claude/rules/git-operations.md": {
+      "migration": "canonical-rule",
+      "sha256": "4b180fcdfc371ce3d40c72d195f5f7987874da8057c1c7505e68e3a450eead14"
+    },
+    ".claude/rules/living-plan.md": {
+      "migration": "canonical-rule",
+      "sha256": "04bdeb16d887e05d65f3ed18252af05b09cf4f1a6041742dd15343b1224b0e90"
+    },
+    ".claude/rules/mcp-stack.md": {
+      "migration": "canonical-rule",
+      "sha256": "fe0661fc973f8e8a598090cc56b5c874d5327975798e303f52cafb2079d0abdd"
+    },
+    ".claude/rules/no-stubs.md": {
+      "migration": "canonical-rule",
+      "sha256": "c8adc95480ec3e026ca095915e60a4376b04ca2878a2b4967193d8d0fe0be346"
+    },
+    ".claude/rules/node-commands.md": {
+      "migration": "canonical-rule",
+      "sha256": "c1fa9a8103eb041e4e831d77d500808ebd223484405d96fd9d48f9fc9680200d"
+    },
+    ".claude/rules/preflight.md": {
+      "migration": "canonical-rule",
+      "sha256": "3a07031945a42ad1176c71bfc35e425b4befcf6b29e7abb1b12346c796a09530"
+    },
+    ".claude/rules/prism-mock.md": {
+      "migration": "canonical-rule",
+      "sha256": "65a0ee816acc8a51f9e263e30f7ef227cdd632572735d21a323ab0a8968656fc"
+    },
+    ".claude/rules/project-maturity.md": {
+      "migration": "canonical-rule",
+      "sha256": "5732178b6b64d6ceddcdfca578f1706d982377db5abca8e452acbeba9ed427ef"
+    },
+    ".claude/rules/spectral-style.md": {
+      "migration": "canonical-rule",
+      "sha256": "a24349168d7c466b8fb47e4fb2f2e9cf2bb2834215d56918c9ea576a78a5cbe1"
+    },
+    ".claude/rules/typespec-style.md": {
+      "migration": "canonical-rule",
+      "sha256": "d867832d3d6a591a91b9e6044b7b1c0a7ad8bc17ce5f41be82be8c31ceff7862"
+    },
+    ".claude/rules/verification.md": {
+      "migration": "canonical-rule",
+      "sha256": "e66ea2f5d2a700344ea2555329a84b7326e07b5ae95e6307634566acdc940258"
+    },
+    ".claude/rules/versioning.md": {
+      "migration": "canonical-rule",
+      "sha256": "9c90640152c2ba2d813d1a84ad2531bc98cc8b669c9921d1e02705199895f2a1"
+    },
+    ".claude/rules/workflow.md": {
+      "migration": "canonical-rule",
+      "sha256": "7bef33a3bae332a54eb547b6a7b31ea2530e26f12102b825d886e10ab30c9430"
+    },
+    ".claude/skills/contract-versioning/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131"
+    },
+    ".claude/skills/oasdiff-breaking/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "cf0c1cea025bdaea50b1b0f2016fd1cf5c9e3cf480b576d281e85d249790b08e"
+    },
+    ".claude/skills/openapi-design/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "f429206793196e65ded48d5f5a22add7d8786212c4ec83c66b5c9e553d815c2d"
+    },
+    ".claude/skills/prism-mock/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "c34b0ecf43e3570f444475f2144646e6e4aa921ddbed15ce3cf1b0340e89d49e"
+    },
+    ".claude/skills/spectral-lint/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "43e85f51ca55c49676a2abe15cfa358f3d6f0746494ecdd504c509e6ec626fa2"
+    },
+    ".claude/skills/typespec-authoring/SKILL.md": {
+      "migration": "retained-legacy-P12",
+      "sha256": "74cfb448a48bc786e6595b98cb8e335051077e2c872e488b70eba991f8f6ac9a"
+    }
+  },
+  "schema_version": 1
+}

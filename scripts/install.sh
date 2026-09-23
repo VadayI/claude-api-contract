@@ -3,10 +3,10 @@
 #
 # Install the contract toolchain locally (idempotent).
 #   - npm dependencies (TypeSpec, Spectral, Prism) via `npm ci` (or `npm install`).
-#   - oasdiff (Go binary) — checked, with install hints if missing.
+#   - oasdiff (Go binary) вЂ” checked, with install hints if missing.
 #
 # Run from the repo root: bash scripts/install.sh
-set -uo pipefail
+set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1
@@ -17,7 +17,8 @@ if ! command -v python >/dev/null 2>&1; then
   echo "[install] ERROR: Python 3.13+ is required for shared template tooling."
   exit 1
 fi
-python template-core/scripts/ai/core_sync.py --local-source --apply || exit $?
+python scripts/ai/generate_adapters.py --check || exit $?
+python template-core/scripts/ai/core_sync.py --local-source --check || exit $?
 
 if ! command -v node >/dev/null 2>&1; then
   echo "[install] ERROR: node not found. Install Node 20.19+ (see scripts/setup-wsl.sh) and re-run."
@@ -26,7 +27,7 @@ fi
 
 echo "[install] Installing npm dependencies..."
 if [[ -f package-lock.json ]]; then
-  npm ci || npm install
+  npm ci
 else
   npm install
 fi

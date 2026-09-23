@@ -1,19 +1,5 @@
----
-model: sonnet
-description: "[claude-api-contract] Sync a derived project's .claude config to a newer claude-api-contract version."
----
+# Generated update-from-template entry point
 
-Bring a derived project's `.claude/` config up to a newer template version. Delegates to `template-sync` (ships from the `family-core` plugin; if bare-name dispatch does not resolve, use the scoped name `family-core:template-sync`).
-
-## Log
-```bash
-node scripts/log-cmd.mjs /update-from-template "$ARGUMENTS"
-```
-
-## Input
-Optional `$ARGUMENTS`: the target template tag/ref. Default: latest `v*` tag of `claude-api-contract`.
-
-## Steps
-1. Dispatch `template-sync`: diff this project's `.claude/` (agents, rules, commands, skills) + `scripts/` against the target template ref.
-2. Propose the deltas as a reviewable PR; never silently clobber project-local customizations — flag conflicts for the user.
-3. Re-run `npm run validate` after applying; report what changed.
+Read AGENTS.md and `docs/ai/workflows/update-from-template.md`.
+Use the current request arguments as procedure input. Follow every step with
+actual available capabilities; do not interpret Codex tools as Claude tools.

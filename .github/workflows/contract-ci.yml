@@ -48,6 +48,8 @@ jobs:
         run: |
           python template-core/scripts/ai/generate_core.py --check
           python scripts/ai/core_sync.py --local-source --check
+          python scripts/ai/production.py --check
+          python -m unittest discover -s tests -p test_production.py
           python -m unittest discover -s template-core/tests -p 'test_*.py'
 
       - name: Install dependencies

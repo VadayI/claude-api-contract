@@ -27,7 +27,11 @@
     "deploy:mock": "bash scripts/deploy-mock.sh",
     "personalize": "bash scripts/personalize.sh",
     "sandbox": "bash scripts/sandbox.sh",
-    "clean": "bash scripts/clean.sh"
+    "clean": "bash scripts/clean.sh",
+    "ai:generate": "python scripts/ai/production.py --apply",
+    "ai:check": "python scripts/ai/production.py --check",
+    "ai:adapters:check": "python scripts/ai/generate_adapters.py --check",
+    "ai:delivery:test": "python -m unittest discover -s tests -p test_production.py"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
