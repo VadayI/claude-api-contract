@@ -35,7 +35,7 @@
     },
     "docs/ai/runner.md": {
       "ownership": "template",
-      "sha256": "56b549fae45fc9422b47c2a36853ffa8682c38e2fc528fde8bb8990859696b73"
+      "sha256": "83df965e5ed603f1eb52d80710ec1584dcc7ec456fdd2bbd4d870f4ad3f976d7"
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
@@ -48,6 +48,10 @@
     "scripts/ai/adapters.py": {
       "ownership": "template",
       "sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9"
+    },
+    "scripts/ai/contract_policy.py": {
+      "ownership": "template",
+      "sha256": "18012088a72f0079842f813b4396a3e9dd8c07699f4b45cba28501f896716477"
     },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
@@ -95,27 +99,27 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "ead58816525f7f31dca95d93d92addf8d3f5ff4052760e05843082f07937d3b0"
+      "sha256": "a6b55a747a846432609b6fa8221a1481a3770919dda74b6f942d3592f4b2d7a2"
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
-      "sha256": "6ddd316723e4e0bafacd123aeb311b9a02ecd6721ebad1e757c09977a1386469"
+      "sha256": "f446d3dbcdfaedd52cecfe8268ad92aedde8e5fb114cd84dbfc16cef2bf97b0a"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
-      "sha256": "e5c68c799ee7e2d38171fdb2da96bddbab5a7ee5644afbd2a1d0b123d4c44d8e"
+      "sha256": "067c08b0e2a69c8ea285d226be9adbc2b8150f9fb11883489a18908a82c2b046"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
-      "sha256": "34de2079ddcbc97ca209e4c1d02edbb12987058b82c62841215713100b4b897b"
+      "sha256": "fa69f53fe89e1b2d448d299c25cd83d0536f08b998c2ce1bdaed16ff354ee1b1"
     },
     "templates/ai/checks/react.json": {
       "ownership": "template",
-      "sha256": "7e97150a074e79e3bb7add41ff5602d2753c8fa3cca25c6086d2813e85cf28bb"
+      "sha256": "b1258f3eb598ac485bd68c26d5bcc301de136b1c0f209190e0f5e108cb23d49d"
     },
     "templates/ai/checks/workflow-inventory.json": {
       "ownership": "template",
-      "sha256": "66e0f54c161561e7bc640a6f9f150f8d5d88a3a4fe0eb1e656e237c33faf789a"
+      "sha256": "24a3a3381764ea1c20f75f5093872d6fccfa253ad0ff7fd94b69ed91b8bd8e3b"
     },
     "templates/ai/mcp/codex.optional.toml": {
       "ownership": "template",
@@ -131,11 +135,11 @@
     },
     "templates/ai/schemas/check-catalog.schema.json": {
       "ownership": "template",
-      "sha256": "1127095a84751c2675a45a759e22cd8f8ee3821cb91c591df4d207f9c0346bde"
+      "sha256": "9e09614beffe660d4e5018077ba61208b4cf94010cacd879bfb9231c42c45863"
     },
     "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template",
-      "sha256": "1d1f4875dd31a6732c122e6a3a72e5c503967c6ce48a0a233552f30f50d0334e"
+      "sha256": "1ccb87f4c128ee217f12b1c01b67778dace35d72f03f49e8f8c6118138832ce9"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
@@ -148,6 +152,10 @@
     "tests/test_adapters.py": {
       "ownership": "template",
       "sha256": "7e4cce06cb154cd71f899ca4531d6fbc419c22cba7d806fd590247f9dc8a52fd"
+    },
+    "tests/test_contract_policy.py": {
+      "ownership": "template",
+      "sha256": "aea17ebecac6a32ef60fe0b96a6bc98e46e28ac95fb72a013a55bf78472fc8cc"
     },
     "tests/test_core_sync.py": {
       "ownership": "template",
@@ -167,7 +175,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "51d4806803ba6d24e3772dc3007a73a9a035138ba1a32e5aec99f1bf23832f4a"
+      "sha256": "97094c023bef049169af51640aa487111093686b424d715c631d4e4a60ab00e4"
     },
     "tests/test_schema.py": {
       "ownership": "template",

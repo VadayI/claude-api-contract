@@ -4,11 +4,14 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import platform
 import shutil
 import signal
 import subprocess
 import tempfile
 import time
+
+CAPTURE_LIMIT = 65537
 
 
 def sha256_bytes(content: bytes) -> str:
@@ -165,7 +168,66 @@ def evaluate_applicability(
     raise ValueError("Unsupported applicability predicate")
 
 
-def terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
+def create_windows_kill_job(process: subprocess.Popen[bytes]) -> int | None:
+    """Assign a Windows child to a kill-on-close Job Object.
+
+    Args:
+        process: Newly started subprocess whose descendants must be owned.
+
+    Returns:
+        Integer Job Object handle on Windows, otherwise ``None``.
+
+    Raises:
+        OSError: If Windows cannot create, configure, or assign the Job Object.
+
+    Side effects:
+        Creates one process-scoped Windows kernel Job Object and assigns the child.
+        It does not access files, databases, configuration, or the network.
+    """
+    if os.name != "nt":
+        return None
+    import ctypes
+    from ctypes import wintypes
+
+    class IO_COUNTERS(ctypes.Structure):
+        _fields_ = [(name, ctypes.c_ulonglong) for name in (
+            "ReadOperationCount", "WriteOperationCount", "OtherOperationCount",
+            "ReadTransferCount", "WriteTransferCount", "OtherTransferCount",
+        )]
+
+    class BASIC_LIMIT(ctypes.Structure):
+        _fields_ = [
+            ("PerProcessUserTimeLimit", ctypes.c_longlong), ("PerJobUserTimeLimit", ctypes.c_longlong),
+            ("LimitFlags", wintypes.DWORD), ("MinimumWorkingSetSize", ctypes.c_size_t),
+            ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", wintypes.DWORD),
+            ("Affinity", ctypes.c_size_t), ("PriorityClass", wintypes.DWORD),
+            ("SchedulingClass", wintypes.DWORD),
+        ]
+
+    class EXTENDED_LIMIT(ctypes.Structure):
+        _fields_ = [
+            ("BasicLimitInformation", BASIC_LIMIT), ("IoInfo", IO_COUNTERS),
+            ("ProcessMemoryLimit", ctypes.c_size_t), ("JobMemoryLimit", ctypes.c_size_t),
+            ("PeakProcessMemoryUsed", ctypes.c_size_t), ("PeakJobMemoryUsed", ctypes.c_size_t),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateJobObjectW.restype = wintypes.HANDLE
+    handle = kernel32.CreateJobObjectW(None, None)
+    if not handle:
+        raise OSError(ctypes.get_last_error(), "CreateJobObjectW failed")
+    limits = EXTENDED_LIMIT()
+    limits.BasicLimitInformation.LimitFlags = 0x00002000
+    if not kernel32.SetInformationJobObject(handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)):
+        kernel32.CloseHandle(handle)
+        raise OSError(ctypes.get_last_error(), "SetInformationJobObject failed")
+    if not kernel32.AssignProcessToJobObject(handle, wintypes.HANDLE(process._handle)):
+        kernel32.CloseHandle(handle)
+        raise OSError(ctypes.get_last_error(), "AssignProcessToJobObject failed")
+    return int(handle)
+
+
+def terminate_process_tree(process: subprocess.Popen[bytes], windows_job: int | None = None) -> None:
     """Terminate and reap a spawned process tree on Windows and POSIX.
 
     Args:
@@ -179,25 +241,23 @@ def terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
         Windows it invokes ``taskkill /T`` with literal argv. It performs no file,
         database, configuration, or network changes.
     """
-    if process.poll() is not None:
-        return
     if os.name == "nt":
-        subprocess.run(
-            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
-            capture_output=True,
-            timeout=10,
-            check=False,
-            shell=False,
-        )
+        if windows_job is None:
+            raise OSError("Windows subprocess lacks a kill-on-close Job Object")
+        import ctypes
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.TerminateJobObject(windows_job, 1)
+        kernel32.CloseHandle(windows_job)
     else:
         try:
             os.killpg(process.pid, signal.SIGTERM)
-            process.wait(timeout=2)
-        except (ProcessLookupError, subprocess.TimeoutExpired):
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
+        except ProcessLookupError:
+            return
+        time.sleep(0.1)
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
     try:
         process.wait(timeout=5)
     except subprocess.TimeoutExpired:
@@ -229,23 +289,31 @@ def run_argv(
     """
     creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     started = time.monotonic()
-    process = subprocess.Popen(
-        argv,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=False,
-        start_new_session=os.name != "nt",
-        creationflags=creationflags,
-    )
-    try:
-        stdout, stderr = process.communicate(timeout=timeout_seconds)
-        return process.returncode, stdout, stderr, False, round((time.monotonic() - started) * 1000)
-    except subprocess.TimeoutExpired as error:
-        terminate_process_tree(process)
-        stdout, stderr = process.communicate()
-        return None, stdout, stderr, True, round((time.monotonic() - started) * 1000)
+    with tempfile.TemporaryFile() as stdout_file, tempfile.TemporaryFile() as stderr_file:
+        process = subprocess.Popen(
+            argv, cwd=cwd, env=env, stdout=stdout_file, stderr=stderr_file,
+            shell=False, start_new_session=os.name != "nt", creationflags=creationflags,
+        )
+        try:
+            windows_job = create_windows_kill_job(process)
+        except OSError:
+            process.kill()
+            process.wait(timeout=5)
+            raise
+        timed_out = False
+        exit_code: int | None
+        try:
+            exit_code = process.wait(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            exit_code = None
+        finally:
+            terminate_process_tree(process, windows_job)
+        stdout_file.seek(0)
+        stderr_file.seek(0)
+        stdout = stdout_file.read(CAPTURE_LIMIT)
+        stderr = stderr_file.read(CAPTURE_LIMIT)
+        return exit_code, stdout, stderr, timed_out, round((time.monotonic() - started) * 1000)
 
 
 def provision_node(
@@ -283,19 +351,42 @@ def provision_node(
     if not lock.is_file() or lock.is_symlink():
         return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "package-lock.json missing"}
     npm = shutil.which("npm")
-    if npm is None:
-        return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "npm missing"}
+    node = shutil.which("node")
+    if npm is None or node is None:
+        return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "node_or_npm_missing"}
     version_probe = subprocess.run(
         [npm, "--version"], capture_output=True, timeout=20, check=False, shell=False
     )
     if version_probe.returncode != 0:
         return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "npm version unavailable"}
     npm_version = version_probe.stdout.decode("utf-8", errors="replace").strip()
+    node_probe = subprocess.run(
+        [node, "--version"], capture_output=True, timeout=20, check=False, shell=False
+    )
+    if node_probe.returncode != 0:
+        return {"id": "npm-ci", "status": "NOT_VERIFIED", "reason": "node version unavailable"}
+    node_version = node_probe.stdout.decode("utf-8", errors="replace").strip()
     lock_digest = sha256_bytes(lock.read_bytes())
-    cache_key = sha256_bytes(f"{lock_digest}\0{npm_version}".encode("utf-8"))
+    registry = str(policy.get("registry", "https://registry.npmjs.org/"))
+    system = platform.system().lower()
+    architecture = platform.machine().lower()
+    empty_config = root / ".ai-empty-npmrc"
+    empty_config.write_bytes(b"")
+    config_digest = sha256_bytes(b"")
+    cache_identity = {
+        "lock_sha256": lock_digest,
+        "node_version": node_version,
+        "npm_version": npm_version,
+        "registry": registry,
+        "os": system,
+        "arch": architecture,
+        "config_sha256": config_digest,
+    }
+    cache_key = sha256_bytes(json.dumps(cache_identity, sort_keys=True, separators=(",", ":")).encode("utf-8"))
     cache = root / ".ai-node-cache"
     cache.mkdir()
     reused = False
+    replaceable_stale = False
     stable_cache = cache_root / cache_key if cache_root is not None else None
     if stable_cache is not None:
         if cache_root.is_symlink() or cache_root.exists() and not cache_root.is_dir():
@@ -304,16 +395,12 @@ def provision_node(
         if stable_cache.is_dir() and not stable_cache.is_symlink():
             try:
                 metadata = json.loads((stable_cache / "metadata.json").read_text(encoding="utf-8"))
+                created_at = metadata.get("created_at")
+                age_seconds = int(time.time()) - created_at if type(created_at) is int else -1
                 fresh = (
-                    metadata == {
-                        "schema_version": 1,
-                        "key_sha256": cache_key,
-                        "lock_sha256": lock_digest,
-                        "npm_version": npm_version,
-                        "created_at": metadata.get("created_at"),
-                    }
-                    and type(metadata["created_at"]) is int
-                    and int(time.time()) - metadata["created_at"] <= int(policy.get("ttl_seconds", 86400))
+                    metadata == {"schema_version": 2, "key_sha256": cache_key, **cache_identity, "created_at": created_at}
+                    and type(created_at) is int
+                    and 0 <= age_seconds <= int(policy.get("ttl_seconds", 86400))
                 )
                 content = stable_cache / "content"
                 safe_entries = content.is_dir() and not content.is_symlink() and all(
@@ -322,6 +409,8 @@ def provision_node(
                 if fresh and safe_entries:
                     shutil.copytree(content, cache, dirs_exist_ok=True)
                     reused = True
+                elif safe_entries:
+                    replaceable_stale = True
             except (OSError, ValueError, KeyError, TypeError):
                 reused = False
     child_env = dict(env)
@@ -329,6 +418,9 @@ def provision_node(
     child_env["npm_config_ignore_scripts"] = "true"
     child_env["npm_config_audit"] = "false"
     child_env["npm_config_fund"] = "false"
+    child_env["npm_config_userconfig"] = str(empty_config)
+    child_env["npm_config_globalconfig"] = str(empty_config)
+    child_env["npm_config_registry"] = registry
     network = str(policy.get("network", "disabled"))
     argv = [npm, "ci", "--ignore-scripts", "--no-audit", "--no-fund"]
     if network == "disabled":
@@ -339,7 +431,10 @@ def provision_node(
         "id": "npm-ci", "status": status, "argv": ["npm", *argv[1:]],
         "duration_ms": duration, "timed_out": timed_out,
         "lock_sha256": lock_digest,
-        "cache": {"scope": "per-check", "reused": reused, "content_only": True, "key_sha256": cache_key},
+        "cache": {
+            "scope": "per-check", "reused": reused, "content_only": True,
+            "key_sha256": cache_key, "identity": cache_identity,
+        },
         "network": {"mode": network, "ttl_seconds": int(policy.get("ttl_seconds", 86400))},
         "stdout_sha256": sha256_bytes(stdout), "stderr_sha256": sha256_bytes(stderr),
     }
@@ -347,18 +442,22 @@ def provision_node(
         result["exit_code"] = exit_code
     if status == "NOT_VERIFIED":
         result["reason"] = "offline_cache_miss_or_install_error" if network == "disabled" else "network_install_error"
+    if reused:
+        result["cache"].update({"created_at": created_at, "age_seconds": age_seconds})
+    stale_quarantine: Path | None = None
+    if status == "PASS" and stable_cache is not None and replaceable_stale and network == "allowed":
+        stale_quarantine = cache_root / f"{cache_key}.stale-{os.getpid()}-{time.time_ns()}"
+        try:
+            stable_cache.rename(stale_quarantine)
+        except (FileNotFoundError, FileExistsError):
+            stale_quarantine = None
     if status == "PASS" and stable_cache is not None and not stable_cache.exists():
         staging = Path(tempfile.mkdtemp(prefix=cache_key + ".pending-", dir=cache_root))
         try:
             shutil.rmtree(cache / "_logs", ignore_errors=True)
             shutil.copytree(cache, staging / "content")
-            metadata = {
-                "schema_version": 1,
-                "key_sha256": cache_key,
-                "lock_sha256": lock_digest,
-                "npm_version": npm_version,
-                "created_at": int(time.time()),
-            }
+            created_at = int(time.time())
+            metadata = {"schema_version": 2, "key_sha256": cache_key, **cache_identity, "created_at": created_at}
             (staging / "metadata.json").write_text(
                 json.dumps(metadata, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
             )
@@ -366,9 +465,12 @@ def provision_node(
                 staging.rename(stable_cache)
             except FileExistsError:
                 pass
+            result["cache"].update({"created_at": created_at, "age_seconds": 0})
         finally:
             if staging.exists():
                 shutil.rmtree(staging)
+    if stale_quarantine is not None and stale_quarantine.exists():
+        shutil.rmtree(stale_quarantine)
     return result
 
 

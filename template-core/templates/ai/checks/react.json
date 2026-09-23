@@ -1,107 +1,154 @@
 {
   "schema_version": 2,
-  "catalog_id": "react.source-quality",
+  "catalog_id": "react.workflow-equivalent",
   "profile": "full",
-  "policy": {
-    "allow_mandatory_not_applicable": false
-  },
+  "policy": {"allow_mandatory_not_applicable": true},
   "invalidation_paths": [
-    "package-lock.json",
-    "package.json",
-    "tsconfig.json",
-    "eslint.config.js",
-    "vite.config.ts",
-    "templates/ai/checks/workflow-inventory.json"
+    "package-lock.json", "package.json", "tsconfig.json", "eslint.config.js",
+    "vite.config.ts", "vitest.config.ts", "playwright.config.ts", "contract.lock.json",
+    ".performance-budget.json", "scripts/ai/react_gate.py",
+    "templates/ai/checks/react.json", "templates/ai/checks/workflow-inventory.json"
   ],
   "run_context": {
-    "events": [
-      "pull_request",
-      "push",
-      "manual",
-      "schedule"
-    ],
+    "events": ["pull_request", "push", "manual"],
     "network": "allowed",
     "network_ttl_seconds": 86400
   },
   "inventory": {
     "manifest": "templates/ai/checks/workflow-inventory.json",
-    "expected_steps": 55
+    "expected_steps": 55,
+    "sha256": "24a3a3381764ea1c20f75f5093872d6fccfa253ad0ff7fd94b69ed91b8bd8e3b"
   },
   "checks": [
     {
-      "id": "react.typecheck",
-      "description": "Run the React TypeScript check in a private exact-candidate Node capsule.",
-      "argv": [
-        "npm",
-        "run",
-        "typecheck"
-      ],
-      "cwd": ".",
-      "mandatory": true,
-      "timeout_seconds": 600,
-      "prerequisites": [
-        "node",
-        "npm"
-      ],
-      "applicability": {
-        "kind": "always"
-      },
-      "expected_artifacts": [],
-      "dependencies": [],
-      "allowed_side_effects": [
-        "evidence"
-      ],
-      "provisioning": [
-        {
-          "id": "npm-ci",
-          "kind": "npm-ci",
-          "dependencies": [],
-          "network": "allowed",
-          "ttl_seconds": 86400
-        }
-      ],
-      "generated_comparisons": [],
-      "ephemeral_outputs": [
-        "tsconfig.app.tsbuildinfo",
-        "tsconfig.node.tsbuildinfo"
-      ]
+      "id": "react.audit", "description": "Run high/critical npm advisory audit with explicit external-network and outage semantics.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "audit"], "cwd": ".", "mandatory": true, "timeout_seconds": 300,
+      "prerequisites": ["python", "node", "npm"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "external", "not_verified_exit_codes": [75],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": []
     },
     {
-      "id": "react.lint",
-      "description": "Run the React lint gate in a separate private exact-candidate Node capsule.",
-      "argv": [
-        "npm",
-        "run",
-        "lint"
-      ],
-      "cwd": ".",
-      "mandatory": true,
-      "timeout_seconds": 600,
-      "prerequisites": [
-        "node",
-        "npm"
-      ],
-      "applicability": {
-        "kind": "always"
-      },
-      "expected_artifacts": [],
-      "dependencies": [
-        "react.typecheck"
-      ],
-      "allowed_side_effects": [
-        "evidence"
-      ],
-      "provisioning": [
-        {
-          "id": "npm-ci",
-          "kind": "npm-ci",
-          "dependencies": [],
-          "network": "allowed",
-          "ttl_seconds": 86400
-        }
-      ],
-      "generated_comparisons": [],
-      "ephemeral_outputs": []
+      "id": "react.typecheck", "description": "Run the exact TypeScript project build check in a private npm capsule.",
+      "argv": ["npm", "run", "typecheck"], "cwd": ".", "mandatory": true, "timeout_seconds": 600,
+      "prerequisites": ["node", "npm"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": ["tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
+    },
+    {
+      "id": "react.lint", "description": "Run the repository ESLint gate in a private exact-candidate npm capsule.",
+      "argv": ["npm", "run", "lint"], "cwd": ".", "mandatory": true, "timeout_seconds": 600,
+      "prerequisites": ["node", "npm"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.file-size", "description": "Enforce the checked-in TypeScript and TSX source-size policy.",
+      "argv": ["{git_bash}", "--login", "scripts/check_file_size.sh"], "cwd": ".", "mandatory": true, "timeout_seconds": 120,
+      "prerequisites": ["git-bash"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.stubs", "description": "Reject undocumented source stubs using the active repository gate.",
+      "argv": ["{git_bash}", "--login", "scripts/check_stubs.sh"], "cwd": ".", "mandatory": true, "timeout_seconds": 120,
+      "prerequisites": ["git-bash"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.feature-readmes", "description": "Require README coverage for checked-in feature directories.",
+      "argv": ["{git_bash}", "--login", "scripts/check_feature_readmes.sh"], "cwd": ".", "mandatory": true, "timeout_seconds": 120,
+      "prerequisites": ["git-bash"], "applicability": {"kind": "always"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.api-types", "description": "Regenerate API types inside the capsule and compare them with committed exact-candidate bytes.",
+      "argv": ["npm", "run", "api:types"], "cwd": ".", "mandatory": true, "timeout_seconds": 300,
+      "prerequisites": ["node", "npm"],
+      "applicability": {"kind": "path_exists", "path": "src/lib/api/openapi.yml", "missing_status": "NOT_VERIFIED"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": ["src/lib/api/schema.d.ts"], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.contract-sync", "description": "Verify vendored OpenAPI and lock bytes against the exact pinned public contract tag.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "contract-sync"], "cwd": ".", "mandatory": true, "timeout_seconds": 120,
+      "prerequisites": ["python"],
+      "applicability": {"kind": "path_exists", "path": "contract.lock.json", "missing_status": "NOT_VERIFIED"},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "external", "not_verified_exit_codes": [75], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.plan-sync", "description": "Apply living-plan policy to the runner-bound exact base/candidate changed-file manifest.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "policy", "plan", "--run-context", "{run_context}", "--base-root", "{base_export}"],
+      "cwd": ".", "mandatory": true, "timeout_seconds": 120, "prerequisites": ["python"],
+      "applicability": {"kind": "event_in", "events": ["pull_request", "manual"]},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.routes-sync", "description": "Reconcile router changes with the exact changed manifest, routes registry, and verification handoff.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "policy", "routes", "--run-context", "{run_context}", "--base-root", "{base_export}"],
+      "cwd": ".", "mandatory": true, "timeout_seconds": 120, "prerequisites": ["python"],
+      "applicability": {"kind": "event_in", "events": ["pull_request", "manual"]},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.guides-sync", "description": "Require guide changes for exact-base route/auth changes without ref or environment fallback.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "policy", "guides", "--run-context", "{run_context}", "--base-root", "{base_export}"],
+      "cwd": ".", "mandatory": true, "timeout_seconds": 120, "prerequisites": ["python"],
+      "applicability": {"kind": "event_in", "events": ["pull_request", "manual"]},
+      "expected_artifacts": [], "dependencies": [], "allowed_side_effects": ["evidence"],
+      "network_access": "none", "not_verified_exit_codes": [], "provisioning": [], "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.unit-coverage", "description": "Run Vitest unit/component coverage and require the generated HTML report.",
+      "argv": ["npm", "run", "test:cov"], "cwd": ".", "mandatory": true, "timeout_seconds": 900,
+      "prerequisites": ["node", "npm"], "applicability": {"kind": "always"},
+      "expected_artifacts": ["coverage/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": []
+    },
+    {
+      "id": "react.build", "description": "Build the production application and bind the emitted index artifact.",
+      "argv": ["npm", "run", "build"], "cwd": ".", "mandatory": true, "timeout_seconds": 900,
+      "prerequisites": ["node", "npm"], "applicability": {"kind": "always"},
+      "expected_artifacts": ["dist/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": ["tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
+    },
+    {
+      "id": "react.bundle-size", "description": "Build the exact candidate and enforce checked-in gzip bundle budgets in one capsule.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "bundle"],
+      "cwd": ".", "mandatory": true, "timeout_seconds": 900,
+      "prerequisites": ["python", "node", "npm"],
+      "applicability": {"kind": "path_exists", "path": ".performance-budget.json", "missing_status": "NOT_VERIFIED"},
+      "expected_artifacts": ["dist/index.html"], "dependencies": [], "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "none", "not_verified_exit_codes": [],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": ["tsconfig.app.tsbuildinfo", "tsconfig.node.tsbuildinfo"]
+    },
+    {
+      "id": "react.e2e", "description": "Supervise loopback Vite, Chromium Playwright journeys, axe assertions, and HTML reporting.",
+      "argv": ["{python}", "scripts/ai/react_gate.py", "e2e"], "cwd": ".", "mandatory": true, "timeout_seconds": 1200,
+      "prerequisites": ["python", "node", "npm"],
+      "applicability": {"kind": "path_exists", "path": "playwright.config.ts", "missing_status": "NOT_VERIFIED"},
+      "expected_artifacts": ["playwright-report/index.html"], "dependencies": [],
+      "allowed_side_effects": ["candidate_export", "evidence"],
+      "network_access": "loopback", "not_verified_exit_codes": [75],
+      "provisioning": [{"id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed", "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"}],
+      "generated_comparisons": [], "ephemeral_outputs": []
     }
   ]
 }

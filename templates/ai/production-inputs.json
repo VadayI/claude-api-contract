@@ -434,6 +434,9 @@
     "docs/ai/runner.md": {
       "ownership": "template"
     },
+    "docs/ai/react-runner.md": {
+      "ownership": "template"
+    },
     "docs/ai/schemas.md": {
       "legacy_sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47",
       "ownership": "template"
@@ -549,6 +552,15 @@
       "ownership": "template"
     },
     "scripts/ai/runner.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/contract_policy.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/react_gate.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/test_react_gate.py": {
       "ownership": "template"
     },
     "scripts/ai/runner_caps.py": {
@@ -737,6 +749,9 @@
       "ownership": "template"
     },
     "template-core/scripts/ai/runner.py": {
+      "ownership": "template"
+    },
+    "template-core/scripts/ai/contract_policy.py": {
       "ownership": "template"
     },
     "template-core/scripts/ai/runner_caps.py": {

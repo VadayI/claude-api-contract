@@ -93,9 +93,19 @@
         "type": "object", "required": ["id", "mandatory", "status", "argv", "cwd"], "additionalProperties": false,
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z][a-z0-9.-]*$"}, "mandatory": {"type": "boolean"}, "status": {"type": "string", "enum": ["PASS", "FAIL", "NOT_APPLICABLE", "NOT_VERIFIED"]},
+          "reason": {"type": "string", "minLength": 1},
+          "network": {
+            "type": "object", "required": ["declared_access", "requested_mode", "enforcement"], "additionalProperties": false,
+            "properties": {
+              "declared_access": {"type": "string", "enum": ["none", "loopback", "external"]},
+              "requested_mode": {"type": "string", "enum": ["disabled", "allowed"]},
+              "enforcement": {"type": "string", "const": "external-command-policy-gate"}
+            }
+          },
           "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "cwd": {"type": "string", "minLength": 1}, "exit_code": {"type": "integer"},
           "duration_ms": {"type": "integer", "minimum": 0}, "timed_out": {"type": "boolean"}, "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "stdout_size": {"type": "integer", "minimum": 0}, "stderr_size": {"type": "integer", "minimum": 0}, "stdout_truncated": {"type": "boolean"}, "stderr_truncated": {"type": "boolean"}, "candidate_export_mutated": {"type": "boolean"},
+          "base_export_mutated": {"type": "boolean"}, "run_context_mutated": {"type": "boolean"},
           "candidate_export_mutations": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "evidence": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "dependency_statuses": {"type": "object", "additionalProperties": {"type": "string", "enum": ["PASS", "FAIL", "NOT_APPLICABLE", "NOT_VERIFIED"]}},
@@ -143,7 +153,29 @@
               "reason": {"type": "string", "minLength": 1}, "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
               "duration_ms": {"type": "integer", "minimum": 0}, "timed_out": {"type": "boolean"}, "exit_code": {"type": "integer"},
               "lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-              "cache": {"type": "object", "required": ["scope", "reused", "content_only", "key_sha256"], "additionalProperties": false, "properties": {"scope": {"type": "string", "const": "per-check"}, "reused": {"type": "boolean"}, "content_only": {"type": "boolean", "const": true}, "key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+              "cache": {
+                "type": "object", "required": ["scope", "reused", "content_only", "key_sha256", "identity"], "additionalProperties": false,
+                "properties": {
+                  "scope": {"type": "string", "const": "per-check"}, "reused": {"type": "boolean"},
+                  "content_only": {"type": "boolean", "const": true}, "key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                  "created_at": {"type": "integer", "minimum": 0}, "age_seconds": {"type": "integer", "minimum": 0},
+                  "identity": {
+                    "type": "object", "required": ["lock_sha256", "node_version", "npm_version", "registry", "os", "arch", "config_sha256"], "additionalProperties": false,
+                    "properties": {
+                      "lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                      "node_version": {"type": "string", "minLength": 1}, "npm_version": {"type": "string", "minLength": 1},
+                      "registry": {"type": "string", "const": "https://registry.npmjs.org/"},
+                      "os": {"type": "string", "minLength": 1}, "arch": {"type": "string", "minLength": 1},
+                      "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                    }
+                  }
+                },
+                "allOf": [{
+                  "type": "object",
+                  "if": {"type": "object", "properties": {"reused": {"type": "boolean", "const": true}}, "required": ["reused"]},
+                  "then": {"type": "object", "required": ["created_at", "age_seconds"]}
+                }]
+              },
               "network": {"type": "object", "required": ["mode", "ttl_seconds"], "additionalProperties": false, "properties": {"mode": {"type": "string", "enum": ["disabled", "allowed"]}, "ttl_seconds": {"type": "integer", "minimum": 1}}}
             },
             "oneOf": [
@@ -156,21 +188,27 @@
         "oneOf": [
           {
             "type": "object",
-            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "evidence"],
+            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "base_export_mutated", "run_context_mutated", "evidence"],
             "properties": {"status": {"type": "string", "const": "PASS"}, "exit_code": {"type": "integer", "const": 0}},
             "not": {"type": "object", "required": ["timed_out"]}
           },
           {
             "type": "object",
-            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "evidence"],
+            "required": ["status", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "base_export_mutated", "run_context_mutated", "evidence"],
             "properties": {"status": {"type": "string", "const": "FAIL"}, "exit_code": {"type": "integer", "not": {"type": "integer", "const": 0}}},
             "not": {"type": "object", "required": ["timed_out"]}
           },
           {
             "type": "object",
-            "required": ["status", "timed_out", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "evidence"],
+            "required": ["status", "timed_out", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "base_export_mutated", "run_context_mutated", "evidence"],
             "properties": {"status": {"type": "string", "const": "FAIL"}, "timed_out": {"type": "boolean", "const": true}},
             "not": {"type": "object", "required": ["exit_code"]}
+          },
+          {
+            "type": "object",
+            "required": ["status", "reason", "exit_code", "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size", "stderr_size", "stdout_truncated", "stderr_truncated", "candidate_export_mutated", "candidate_export_mutations", "base_export_mutated", "run_context_mutated", "evidence"],
+            "properties": {"status": {"type": "string", "const": "NOT_VERIFIED"}, "exit_code": {"type": "integer", "not": {"type": "integer", "const": 0}}},
+            "not": {"type": "object", "required": ["timed_out"]}
           },
           {
             "type": "object",
@@ -185,6 +223,8 @@
                 {"type": "object", "required": ["stderr_size"]}, {"type": "object", "required": ["stdout_truncated"]},
                 {"type": "object", "required": ["stderr_truncated"]}, {"type": "object", "required": ["candidate_export_mutated"]},
                 {"type": "object", "required": ["candidate_export_mutations"]},
+                {"type": "object", "required": ["base_export_mutated"]},
+                {"type": "object", "required": ["run_context_mutated"]},
                 {"type": "object", "required": ["evidence"]}, {"type": "object", "required": ["artifacts"]},
                 {"type": "object", "required": ["invalid_artifacts"]}
               ]

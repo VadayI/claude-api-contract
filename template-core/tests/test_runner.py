@@ -3,9 +3,11 @@
 import json
 import os
 from pathlib import Path
+import socket
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest import mock
 
@@ -661,6 +663,10 @@ class RunnerTests(unittest.TestCase):
             runner_caps.subprocess, "run",
             return_value=subprocess.CompletedProcess(["npm", "--version"], 0, b"11.0.0\n", b""),
         ), mock.patch.object(
+            runner_caps.platform, "system", return_value="Windows"
+        ), mock.patch.object(
+            runner_caps.platform, "machine", return_value="AMD64"
+        ), mock.patch.object(
             runner_caps, "run_argv", return_value=(0, b"ok", b"", False, 7)
         ) as invocation:
             provision = runner_caps.provision_node(
@@ -674,6 +680,13 @@ class RunnerTests(unittest.TestCase):
             {"scope": "per-check", "reused": False, "content_only": True},
         )
         self.assertRegex(provision["cache"]["key_sha256"], r"^[0-9a-f]{64}$")
+        child_env = invocation.call_args.args[2]
+        self.assertEqual(child_env["npm_config_userconfig"], child_env["npm_config_globalconfig"])
+        self.assertEqual(child_env["npm_config_registry"], "https://registry.npmjs.org/")
+        self.assertEqual(
+            set(provision["cache"]["identity"]),
+            {"lock_sha256", "node_version", "npm_version", "registry", "os", "arch", "config_sha256"},
+        )
         self.assertTrue(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
         artifact.write_bytes(b"drift\n")
         self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
@@ -711,6 +724,122 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(document["checks"][0]["candidate_export_mutations"], ["allowed.tmp"])
         self.assertIn("candidate_export", document["checks"][1]["invalid_artifacts"])
 
+    def test_npm_cache_rejects_future_and_expired_metadata(self):
+        """Require cache age to stay between zero and the reviewed TTL.
+
+        Args: self owns disposable capsule/cache roots. Returns: None. Raises:
+        AssertionError when future-dated or expired content is reused. Side
+        effects: Creates runtime-only cache fixtures and mocks npm execution; no
+        real package installation, database, user config, or network access.
+        """
+        cache_root = Path(self.temp.name) / "npm cache"
+        cache_root.mkdir()
+        roots = []
+        for name in ("seed", "future", "expired"):
+            root = Path(self.temp.name) / name
+            root.mkdir()
+            (root / "package-lock.json").write_text('{"lockfileVersion":3}', encoding="utf-8")
+            roots.append(root)
+        common = (
+            mock.patch.object(runner_caps.shutil, "which", side_effect=lambda name: name),
+            mock.patch.object(
+                runner_caps.subprocess, "run",
+                return_value=subprocess.CompletedProcess(["tool", "--version"], 0, b"11.0.0\n", b""),
+            ),
+            mock.patch.object(runner_caps.platform, "system", return_value="Windows"),
+            mock.patch.object(runner_caps.platform, "machine", return_value="AMD64"),
+            mock.patch.object(runner_caps, "run_argv", return_value=(0, b"ok", b"", False, 7)),
+        )
+        with common[0], common[1], common[2], common[3], common[4]:
+            with mock.patch.object(runner_caps.time, "time", return_value=100):
+                seed = runner_caps.provision_node(
+                    roots[0], {"network": "allowed", "ttl_seconds": 60}, {"PATH": "fixture"}, 10, cache_root
+                )
+            with mock.patch.object(runner_caps.time, "time", return_value=99):
+                future = runner_caps.provision_node(
+                    roots[1], {"network": "allowed", "ttl_seconds": 60}, {"PATH": "fixture"}, 10, cache_root
+                )
+            with mock.patch.object(runner_caps.time, "time", return_value=200):
+                expired = runner_caps.provision_node(
+                    roots[2], {"network": "allowed", "ttl_seconds": 60}, {"PATH": "fixture"}, 10, cache_root
+                )
+        self.assertFalse(seed["cache"]["reused"])
+        self.assertFalse(future["cache"]["reused"])
+        self.assertFalse(expired["cache"]["reused"])
+
+    def test_external_command_network_is_blocked_and_exit_75_is_not_verified(self):
+        """Gate external command access and preserve the reviewed NV exit protocol.
+
+        Args: self owns the exact Git fixture. Returns: None. Raises:
+        AssertionError when disabled external access starts or exit 75 becomes FAIL.
+        Side effects: Runs one isolated local Python child for the allowed protocol
+        case and writes run-scoped evidence; no database or network access.
+        """
+        blocked = self.check(
+            "fixture.external", ["{python}", "-c", "raise SystemExit(0)"],
+            network_access="external", not_verified_exit_codes=[75],
+        )
+        with mock.patch.object(runner, "run_argv") as invocation:
+            document, code = runner.run(
+                self.repo, self.candidate, self.candidate, self.catalog([blocked]), self.output,
+                network="disabled",
+            )
+        self.assertEqual((code, document["checks"][0]["status"]), (2, "NOT_VERIFIED"))
+        self.assertFalse(invocation.called)
+        self.output.unlink()
+        protocol = self.check(
+            "fixture.protocol", ["{python}", "-c", "raise SystemExit(75)"],
+            network_access="none", not_verified_exit_codes=[75],
+        )
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate, self.catalog([protocol]), self.output
+        )
+        self.assertEqual((code, document["checks"][0]["status"]), (2, "NOT_VERIFIED"))
+        self.assertEqual(document["checks"][0]["exit_code"], 75)
+
+    def test_process_tree_cleanup_after_leader_exit_releases_port(self):
+        """Kill a listening descendant even when its direct leader already exited.
+
+        Args: self owns a disposable runtime directory. Returns: None. Raises:
+        AssertionError or socket/subprocess errors when cleanup is incomplete.
+        Side effects: Starts a local child process and loopback listener, then
+        verifies the runner-owned process group/job releases the port; no network
+        beyond loopback, database, repository, or user-file mutation.
+        """
+        runtime = Path(self.temp.name) / "process tree"
+        runtime.mkdir()
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+        child = (
+            "import pathlib,socket,time; s=socket.socket(); "
+            f"s.bind(('127.0.0.1',{port})); s.listen(); pathlib.Path('ready').write_text('1'); time.sleep(30)"
+        )
+        parent = (
+            "import pathlib,subprocess,sys,time\n"
+            f"p=subprocess.Popen([sys.executable,'-c',{child!r}])\n"
+            "deadline=time.time()+5\n"
+            "while not pathlib.Path('ready').exists() and time.time()<deadline:\n"
+            "    time.sleep(.02)\n"
+            "pathlib.Path('child.pid').write_text(str(p.pid))\n"
+            "time.sleep(.2)\n"
+        )
+        exit_code, _, _, timed_out, _ = runner_caps.run_argv(
+            [sys.executable, "-c", parent], runtime, dict(os.environ), 10
+        )
+        self.assertEqual((exit_code, timed_out), (0, False))
+        deadline = time.monotonic() + 5
+        while True:
+            try:
+                with socket.socket() as replacement:
+                    replacement.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    replacement.bind(("127.0.0.1", port))
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise
+                time.sleep(0.05)
+
     def test_workflow_inventory_maps_all_steps_and_five_source_gates(self):
         """Require complete 55-step routing and exactly five requested real gates.
 
@@ -725,9 +854,13 @@ class RunnerTests(unittest.TestCase):
         mapped = {gate for item in inventory["steps"] for gate in item["runner_check_ids"]}
         requested = {"contract.typespec-drift", "contract.spectral", "contract.examples", "react.typecheck", "react.lint"}
         self.assertTrue(requested.issubset(mapped))
-        pending = [item for item in inventory["steps"] if item["disposition"] == "NOT_VERIFIED_PENDING"]
-        self.assertTrue(pending)
-        self.assertTrue(all(item["reason"] and not item["runner_check_ids"] for item in pending))
+        pending = [
+            item for item in inventory["steps"]
+            if item["disposition"] in {"NOT_VERIFIED_PENDING", "REPORTING_PENDING"}
+        ]
+        self.assertEqual(pending, [])
+        executable = [item for item in inventory["steps"] if item["disposition"] == "EXECUTABLE"]
+        self.assertTrue(all(item["reason"] and item["runner_check_ids"] for item in executable))
 
     @unittest.skipUnless(os.name == "posix", "Executable-bit behavior requires a POSIX filesystem")
     def test_export_preserves_executable_bit_and_detects_chmod_only_mutation(self):

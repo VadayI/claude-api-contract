@@ -141,9 +141,9 @@
       "job_index": 0,
       "name": "Gate 4 — Breaking changes (oasdiff)",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: has_spec=true; oasdiff on PATH; full Git history/tags; openapi.yml."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.breaking"],
+      "reason": "Mapped to exact-base oasdiff without mutable ref or tag fallback."
     },
     {
       "id": "inventory.13.contract.contract-ci.gate-5-prism-mock-smoke",
@@ -152,9 +152,9 @@
       "job_index": 0,
       "name": "Gate 5 — Prism mock smoke",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: has_spec=true; npm ci; Prism; openapi.yml; local port/process tools used by helper."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.prism"],
+      "reason": "Mapped to supervised Prism start, health, smoke, stop and runner process-tree cleanup."
     },
     {
       "id": "inventory.14.contract.contract-ci.verify-endpoints-registry-coverage",
@@ -163,9 +163,9 @@
       "job_index": 0,
       "name": "Verify — Endpoints registry coverage",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: has_spec=true; Node; openapi.yml; .claude/memory/endpoints.json."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.endpoints"],
+      "reason": "Mapped to the reviewed endpoint registry and x-surface verifier."
     },
     {
       "id": "inventory.15.contract.contract-policy.checkout-full-history-for-base-diff",
@@ -196,9 +196,9 @@
       "job_index": 0,
       "name": "No bare TODO/FIXME in contract artifacts",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: /tmp/changed.txt; grep/sed; changed files checkout."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.no-bare-todo"],
+      "reason": "Mapped to exact run-context changed files; no shared /tmp artifact."
     },
     {
       "id": "inventory.18.contract.contract-policy.adr-required-when-oasdiff-ignore-txt-changes",
@@ -207,9 +207,9 @@
       "job_index": 0,
       "name": "ADR required when .oasdiff-ignore.txt changes",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: /tmp/changed.txt; grep."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.oasdiff-ignore-adr"],
+      "reason": "Mapped to exact run-context changed files and reviewed ADR path policy."
     },
     {
       "id": "inventory.19.contract.contract-policy.changelog-unreleased-fragment-required-for-contract-changes",
@@ -218,9 +218,9 @@
       "job_index": 0,
       "name": "CHANGELOG [Unreleased] fragment required for contract changes",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: /tmp/changed.txt; grep."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.changelog-unreleased"],
+      "reason": "Mapped to exact candidate/base Unreleased fragment comparison."
     },
     {
       "id": "inventory.20.contract.contract-policy.advisory-suggest-a-living-plan-for-spec-changes",
@@ -229,9 +229,9 @@
       "job_index": 0,
       "name": "Advisory — suggest a living plan for spec/ changes",
       "classification": "reporting",
-      "disposition": "REPORTING_PENDING",
+      "disposition": "REPORTING",
       "runner_check_ids": [],
-      "reason": "Reporter cannot upgrade or replace a mandatory gate."
+      "reason": "Advisory remains explicitly non-gating and consumes exact changed-file context."
     },
     {
       "id": "inventory.21.contract.contract-policy.readme-status-line-matches-package-json-version",
@@ -240,9 +240,9 @@
       "job_index": 0,
       "name": "README status line matches package.json version",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: /tmp/changed.txt; README.md; package.json; grep/head."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.readme-version"],
+      "reason": "Mapped to portable README/package semantic-version equality."
     },
     {
       "id": "inventory.22.contract.contract-policy.advisory-package-json-version-vs-latest-tag",
@@ -251,7 +251,7 @@
       "job_index": 0,
       "name": "Advisory — package.json version vs latest tag",
       "classification": "reporting",
-      "disposition": "REPORTING_PENDING",
+      "disposition": "REPORTING",
       "runner_check_ids": [],
       "reason": "Reporter cannot upgrade or replace a mandatory gate."
     },
@@ -284,7 +284,7 @@
       "job_index": 0,
       "name": "STUB / TODO inventory",
       "classification": "reporting",
-      "disposition": "REPORTING_PENDING",
+      "disposition": "REPORTING",
       "runner_check_ids": [],
       "reason": "Reporter cannot upgrade or replace a mandatory gate."
     },
@@ -295,7 +295,7 @@
       "job_index": 0,
       "name": "Version / doc drift",
       "classification": "reporting",
-      "disposition": "REPORTING_PENDING",
+      "disposition": "REPORTING",
       "runner_check_ids": [],
       "reason": "Reporter cannot upgrade or replace a mandatory gate."
     },
@@ -306,9 +306,9 @@
       "job_index": 0,
       "name": "Gate health",
       "classification": "trigger+provisioning+check+reporting",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Node 22; npm registry/network when spec exists; spec/openapi/tooling; oasdiff availability is implicit and not provisioned in this workflow."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.typespec-drift", "contract.spectral", "contract.examples", "contract.endpoints", "contract.breaking"],
+      "reason": "Scheduled gate health is exactly the shared validate plus exact-base breaking checks; missing pinned oasdiff is NOT_VERIFIED."
     },
     {
       "id": "inventory.28.django.family-core-delivery.checkout",
@@ -339,9 +339,9 @@
       "job_index": 0,
       "name": "Verify vendored source receipt",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Python 3.13; vendored docs/ai/core-source.json and managed payload."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.core-receipt"],
+      "reason": "Mapped to the reviewed Django exact-candidate catalog."
     },
     {
       "id": "inventory.31.django.family-core-delivery.exercise-fresh-and-conflicting-delivery",
@@ -350,9 +350,9 @@
       "job_index": 0,
       "name": "Exercise fresh and conflicting delivery",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Python 3.13; full Git history for exact baseline git show fixtures; host symlink capability may cause a unittest skip."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.delivery-unittest"],
+      "reason": "Mapped to the downstream-safe delivery self-test in the reviewed Django catalog."
     },
     {
       "id": "inventory.32.django.family-core-delivery.verify-canonical-adapters-and-instruction-ownership",
@@ -361,9 +361,9 @@
       "job_index": 0,
       "name": "Verify canonical adapters and instruction ownership",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Python 3.13; adapter sources/catalog; explicit legacy and seed inventories."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.adapter-drift", "django.instruction-manifest"],
+      "reason": "The workflow step contains both reviewed drift commands; both map to stable catalog IDs."
     },
     {
       "id": "inventory.33.react.frontend-ci.checkout",
@@ -405,9 +405,9 @@
       "job_index": 0,
       "name": "Gate — npm audit (high/critical)",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Node/npm; lockfile; npm advisory service/network."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.audit"],
+      "reason": "Mapped to the reviewed audit wrapper, where vulnerabilities FAIL and transport failure is NOT_VERIFIED."
     },
     {
       "id": "inventory.37.react.frontend-ci.type-check",
@@ -442,9 +442,9 @@
       "job_index": 0,
       "name": "Gate — file size",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; repository source files."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.file-size"],
+      "reason": "Mapped to the reviewed React source-size gate."
     },
     {
       "id": "inventory.40.react.frontend-ci.gate-stubs",
@@ -453,9 +453,9 @@
       "job_index": 0,
       "name": "Gate — stubs",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; repository source."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.stubs"],
+      "reason": "Mapped to the reviewed React stub policy gate."
     },
     {
       "id": "inventory.41.react.frontend-ci.gate-feature-readmes",
@@ -464,9 +464,9 @@
       "job_index": 0,
       "name": "Gate — feature READMEs",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; feature tree."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.feature-readmes"],
+      "reason": "Mapped to the reviewed feature README gate."
     },
     {
       "id": "inventory.42.react.frontend-ci.gate-api-types-drift",
@@ -475,9 +475,9 @@
       "job_index": 0,
       "name": "Gate — API types drift",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; npm-installed OpenAPI type generator; committed OpenAPI/types."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.api-types"],
+      "reason": "Mapped to isolated generated API type comparison."
     },
     {
       "id": "inventory.43.react.frontend-ci.gate-contract-sync",
@@ -486,9 +486,9 @@
       "job_index": 0,
       "name": "Gate — contract sync",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; contract metadata/files."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.contract-sync"],
+      "reason": "Mapped to the reviewed exact contract synchronization check."
     },
     {
       "id": "inventory.44.react.frontend-ci.gate-living-plan-sync",
@@ -497,9 +497,9 @@
       "job_index": 0,
       "name": "Gate — living plan sync",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; full history; GATE_BASE exists for PR; empty on push/workflow_dispatch."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.plan-sync"],
+      "reason": "Mapped to explicit exact-base/run-context policy without event fallback."
     },
     {
       "id": "inventory.45.react.frontend-ci.gate-routes-registry-sync",
@@ -508,9 +508,9 @@
       "job_index": 0,
       "name": "Gate — routes registry sync",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; full history; route registry; PR base when present."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.routes-sync"],
+      "reason": "Mapped to explicit exact-base/run-context route registry policy."
     },
     {
       "id": "inventory.46.react.frontend-ci.gate-guides-sync",
@@ -519,9 +519,9 @@
       "job_index": 0,
       "name": "Gate — guides sync",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Bash; full history; guide sources; PR base when present."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.guides-sync"],
+      "reason": "Mapped to explicit exact-base/run-context guide policy."
     },
     {
       "id": "inventory.47.react.frontend-ci.test-with-coverage",
@@ -530,9 +530,9 @@
       "job_index": 0,
       "name": "Test with coverage",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: npm ci; Vitest/coverage config."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.unit-coverage"],
+      "reason": "Mapped to the reviewed isolated Vitest coverage gate."
     },
     {
       "id": "inventory.48.react.frontend-ci.build",
@@ -541,9 +541,9 @@
       "job_index": 0,
       "name": "Build",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: npm ci; TypeScript/Vite configuration."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.build"],
+      "reason": "Mapped to the reviewed isolated production build."
     },
     {
       "id": "inventory.49.react.frontend-ci.gate-bundle-size",
@@ -552,9 +552,9 @@
       "job_index": 0,
       "name": "Gate — bundle size",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: successful Build; Bash; built assets and budget config."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.bundle-size"],
+      "reason": "Mapped to the reviewed bundle budget gate."
     },
     {
       "id": "inventory.50.react.frontend-ci.checkout",
@@ -607,9 +607,9 @@
       "job_index": 1,
       "name": "Run E2E tests",
       "classification": "check",
-      "disposition": "NOT_VERIFIED_PENDING",
-      "runner_check_ids": [],
-      "reason": "No reviewed shared implementation yet; prerequisite: Chromium installed; Playwright config; application/server lifecycle as configured by Playwright."
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.e2e"],
+      "reason": "Mapped to supervised Playwright browser/webServer lifecycle with failure report capture."
     },
     {
       "id": "inventory.55.react.frontend-ci.upload-playwright-report",
@@ -618,9 +618,9 @@
       "job_index": 1,
       "name": "Upload Playwright report",
       "classification": "reporting",
-      "disposition": "REPORTING_PENDING",
-      "runner_check_ids": [],
-      "reason": "Reporter cannot upgrade or replace a mandatory gate."
+      "disposition": "REPORTING",
+      "runner_check_ids": ["react.e2e"],
+      "reason": "Report upload consumes the E2E result artifacts and cannot upgrade its gate status."
     }
   ]
 }

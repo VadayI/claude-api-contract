@@ -26,12 +26,15 @@
   },
   "inventory": {
     "manifest": "templates/ai/checks/workflow-inventory.json",
-    "expected_steps": 55
+    "expected_steps": 55,
+    "sha256": "24a3a3381764ea1c20f75f5093872d6fccfa253ad0ff7fd94b69ed91b8bd8e3b"
   },
   "checks": [
     {
       "id": "contract.production-drift",
       "description": "Verify canonical contract production payload generation.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "{python}",
         "scripts/ai/production.py",
@@ -59,6 +62,8 @@
     {
       "id": "contract.adapter-drift",
       "description": "Verify generated runtime adapters against canonical sources.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "{python}",
         "scripts/ai/generate_adapters.py",
@@ -88,6 +93,8 @@
     {
       "id": "contract.local-core-drift",
       "description": "Verify owner-local shared-core delivery and receipt drift.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "{python}",
         "template-core/scripts/ai/core_sync.py",
@@ -120,6 +127,8 @@
     {
       "id": "contract.typespec-drift",
       "description": "Compile TypeSpec in a private Node capsule and compare generated OpenAPI bytes to the exact candidate.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "npm",
         "run",
@@ -150,7 +159,8 @@
           "kind": "npm-ci",
           "dependencies": [],
           "network": "allowed",
-          "ttl_seconds": 86400
+          "ttl_seconds": 86400,
+          "registry": "https://registry.npmjs.org/"
         }
       ],
       "generated_comparisons": [
@@ -163,6 +173,8 @@
     {
       "id": "contract.spectral",
       "description": "Lint the exact candidate OpenAPI contract with the repository Spectral ruleset.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "npm",
         "run",
@@ -192,7 +204,8 @@
           "kind": "npm-ci",
           "dependencies": [],
           "network": "allowed",
-          "ttl_seconds": 86400
+          "ttl_seconds": 86400,
+          "registry": "https://registry.npmjs.org/"
         }
       ],
       "generated_comparisons": [],
@@ -201,6 +214,8 @@
     {
       "id": "contract.examples",
       "description": "Validate contract examples using the reviewed Git Bash helper and private Node capsule.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
       "argv": [
         "{git_bash}",
         "scripts/check_examples.sh"
@@ -230,9 +245,142 @@
           "kind": "npm-ci",
           "dependencies": [],
           "network": "allowed",
-          "ttl_seconds": 86400
+          "ttl_seconds": 86400,
+          "registry": "https://registry.npmjs.org/"
         }
       ],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.breaking",
+      "description": "Compare candidate OpenAPI against the exact base artifact with pinned oasdiff semantics.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["{python}", "scripts/ai/contract_policy.py", "breaking", "--base-root", "{base_export}"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 300,
+      "prerequisites": ["python", "oasdiff"],
+      "applicability": {"kind": "contract_spec", "scaffold_package": "claude-api-contract"},
+      "expected_artifacts": [],
+      "dependencies": ["contract.examples"],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.prism",
+      "description": "Supervise Prism startup, loopback health/smoke and deterministic teardown.",
+      "network_access": "loopback",
+      "not_verified_exit_codes": [75],
+      "argv": ["{git_bash}", "scripts/check_mock.sh"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 180,
+      "prerequisites": ["node", "npm", "npx", "git-bash", "curl"],
+      "applicability": {"kind": "contract_spec", "scaffold_package": "claude-api-contract"},
+      "expected_artifacts": [],
+      "dependencies": ["contract.examples"],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [{
+        "id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed",
+        "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"
+      }],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.endpoints",
+      "description": "Verify OpenAPI operation coverage, endpoint surfaces and optional page registry integrity.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["npm", "run", "check:endpoints"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 180,
+      "prerequisites": ["node", "npm"],
+      "applicability": {"kind": "contract_spec", "scaffold_package": "claude-api-contract"},
+      "expected_artifacts": [],
+      "dependencies": ["contract.spectral"],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [{
+        "id": "npm-ci", "kind": "npm-ci", "dependencies": [], "network": "allowed",
+        "ttl_seconds": 86400, "registry": "https://registry.npmjs.org/"
+      }],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.no-bare-todo",
+      "description": "Reject bare TODO or FIXME markers in exactly changed contract artifacts.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["{python}", "scripts/ai/contract_policy.py", "todos", "--run-context", "{run_context}"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 60,
+      "prerequisites": ["python"],
+      "applicability": {"kind": "changed_any", "prefixes": ["spec", "examples", "openapi.yml"]},
+      "expected_artifacts": [],
+      "dependencies": [],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.oasdiff-ignore-adr",
+      "description": "Require a changed ADR for every exact diff touching the oasdiff ignore file.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["{python}", "scripts/ai/contract_policy.py", "adr", "--run-context", "{run_context}"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 60,
+      "prerequisites": ["python"],
+      "applicability": {"kind": "changed_any", "prefixes": [".oasdiff-ignore.txt"]},
+      "expected_artifacts": [],
+      "dependencies": [],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.changelog-unreleased",
+      "description": "Require a substantive new CHANGELOG Unreleased fragment for exact contract changes.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["{python}", "scripts/ai/contract_policy.py", "changelog", "--run-context", "{run_context}", "--base-root", "{base_export}"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 60,
+      "prerequisites": ["python"],
+      "applicability": {"kind": "changed_any", "prefixes": ["spec", "openapi.yml"]},
+      "expected_artifacts": [],
+      "dependencies": [],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [],
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
+    },
+    {
+      "id": "contract.readme-version",
+      "description": "Verify README status version equals package.json when either exact input changes.",
+      "network_access": "none",
+      "not_verified_exit_codes": [75],
+      "argv": ["{python}", "scripts/ai/contract_policy.py", "readme-version"],
+      "cwd": ".",
+      "mandatory": true,
+      "timeout_seconds": 60,
+      "prerequisites": ["python"],
+      "applicability": {"kind": "changed_any", "prefixes": ["README.md", "package.json"]},
+      "expected_artifacts": [],
+      "dependencies": [],
+      "allowed_side_effects": ["evidence"],
+      "provisioning": [],
       "generated_comparisons": [],
       "ephemeral_outputs": []
     }
