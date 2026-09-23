@@ -635,6 +635,9 @@
       "legacy_sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c",
       "ownership": "template"
     },
+    "scripts/policy/claude_edit_guard.mjs": {
+      "ownership": "template"
+    },
     "scripts/policy/check_command_gate.sh": {
       "legacy_sha256": "51a77214bdfcc5524d2c7587c309993ed183605b8562cfe94b83d8cf2256db3a",
       "ownership": "template"

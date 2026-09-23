@@ -101,6 +101,7 @@ class ProductionTests(unittest.TestCase):
         self.assertFalse((self.target / ".github/workflows").exists())
         self.assertTrue((self.target / ".agents/skills/bootstrap/SKILL.md").exists())
         self.assertTrue((self.target / ".codex/agents/tsp-author.toml").exists())
+        self.assertTrue((self.target / "scripts/policy/claude_edit_guard.mjs").exists())
         self.assertEqual(production.delivery(ROOT, self.target), ({}, []))
         result = subprocess.run([sys.executable, "scripts/ai/production.py", "--check"], cwd=self.target, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

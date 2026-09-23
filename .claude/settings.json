@@ -48,11 +48,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/policy/block_protected_edits.sh",
+            "command": "node scripts/policy/claude_edit_guard.mjs",
             "statusMessage": "Checking protected-file edit policy..."
           }
         ]

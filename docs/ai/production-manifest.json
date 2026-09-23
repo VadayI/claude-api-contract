@@ -309,7 +309,7 @@
     ".claude/settings.json": {
       "legacy_sha256": "8085d685c9500bfaf4459b7a31bade60e8aa8f152ebb9b589d06574a23044582",
       "ownership": "mixed",
-      "sha256": "907b53e94998539dcfb737172d7edcdb24654d65f88f8d56846aabf8a2df1ecd"
+      "sha256": "5fe28929e0c226c3a1a24fc87f26923940050cd21c3e00d2857ceca2545aa3ae"
     },
     ".claude/skills/contract-versioning/SKILL.md": {
       "legacy_sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131",
@@ -433,7 +433,7 @@
     },
     "README.md": {
       "ownership": "project",
-      "sha256": "5820bf8d6f12bb102754a5486405b9ac2d583a1f969558571c57bba45a700b61"
+      "sha256": "148fdc5bbde3211e9c9571008a18d250a6078b633acbda9489c516fe991d595d"
     },
     "commitlint.config.mjs": {
       "legacy_sha256": "9d49c285742196f12ad0e43490041281e05ae12c8958ea61606a4b254cc7bb2f",
@@ -885,7 +885,7 @@
     "scripts/policy/block_protected_edits.sh": {
       "legacy_sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c",
       "ownership": "template",
-      "sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c"
+      "sha256": "d9291980b243c792b0c2942353a7d15cab233f3347b50746accdb1b6880ce83c"
     },
     "scripts/policy/check_command_gate.sh": {
       "legacy_sha256": "51a77214bdfcc5524d2c7587c309993ed183605b8562cfe94b83d8cf2256db3a",
@@ -896,6 +896,10 @@
       "legacy_sha256": "1bf13b0a0630797d9ec9250a5c1bf8d15071cb8de948631ac88e8b142bed062a",
       "ownership": "template",
       "sha256": "1bf13b0a0630797d9ec9250a5c1bf8d15071cb8de948631ac88e8b142bed062a"
+    },
+    "scripts/policy/claude_edit_guard.mjs": {
+      "ownership": "template",
+      "sha256": "72044af2174c64664c084a3b05573129ab2bbf7df9e618b4b698be7cf2754f04"
     },
     "scripts/sandbox.sh": {
       "legacy_sha256": "d9eaf179ab5a70cdfa5a7723c678b1b0fd29d2cccf3ad4772cba8178327ea7f4",
@@ -1167,7 +1171,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "ca5f1d12d7d579c23e7171445b814f8dee68da3f239c81da20327f2c70c23cb3"
+      "sha256": "2f2c1f567f26b49581557b634ee420530586b949848a2c0bff70d21f9860dcf5"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",
@@ -1212,7 +1216,7 @@
     },
     "tests/test_production.py": {
       "ownership": "template",
-      "sha256": "8c715406f968cb5d1efc0c82fe4945b8b51475beaf55cb58e2ab8eac31b27677"
+      "sha256": "311fa68c12f6be71c4f8825302c33fcd72372a84c8dfd4faa7eaeaf42463ba09"
     },
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",
