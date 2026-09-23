@@ -711,6 +711,12 @@ def execute_check(
     if missing:
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": missing})
         return result
+    if not Path(argv[0]).is_absolute():
+        executable = shutil.which(argv[0])
+        if executable is None:
+            result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["command_executable"]})
+            return result
+        argv[0] = executable
     cwd = root if check["cwd"] == "." else root.joinpath(*safe_relative(check["cwd"]).parts)
     if not cwd.is_dir() or not cwd.resolve().is_relative_to(root.resolve()):
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["working_directory"]})
