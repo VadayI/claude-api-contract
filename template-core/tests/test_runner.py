@@ -161,6 +161,25 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.git("status", "--porcelain=v2", "--untracked-files=all").stdout, status_before)
         self.assertEqual(self.git("write-tree").stdout, index_before)
 
+    def test_large_candidate_archive_is_fully_drained(self):
+        """Export a candidate larger than a pipe buffer without inducing SIGPIPE.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when
+        streaming extraction closes Git stdout before archive padding is drained;
+        local fixture Git/filesystem errors otherwise propagate.
+        Side effects: Commits a large public fixture blob and exports it to a
+        temporary directory; no user checkout, database, or network is touched.
+        """
+        (self.repo / "large-public.bin").write_bytes(b"contract-fixture\n" * 131072)
+        self.git("add", "large-public.bin")
+        self.git("commit", "-m", "large archive fixture")
+        candidate = self.git("rev-parse", "HEAD").stdout.strip()
+        with tempfile.TemporaryDirectory(prefix="large export ") as directory:
+            target = Path(directory) / "candidate"
+            target.mkdir()
+            runner.export_candidate(self.repo, candidate, target)
+            self.assertEqual((target / "large-public.bin").stat().st_size, len(b"contract-fixture\n" * 131072))
+
     def test_missing_mandatory_prerequisite_is_not_verified_and_nonzero(self):
         """Require missing mandatory tooling to produce NOT_VERIFIED and exit 2.
 

@@ -324,8 +324,13 @@ def export_candidate(repository: Path, candidate: str, target: Path) -> None:
                     destination.chmod(0o755 if member.mode & 0o111 else 0o644)
                 else:
                     raise ValueError("Linked or unsupported candidate archive entry")
-    finally:
+        process.stdout.read()
+    except BaseException:
+        process.kill()
         process.stdout.close()
+        process.wait(timeout=30)
+        raise
+    process.stdout.close()
     stderr = process.stderr.read().decode("utf-8", errors="replace") if process.stderr else ""
     if process.stderr:
         process.stderr.close()
