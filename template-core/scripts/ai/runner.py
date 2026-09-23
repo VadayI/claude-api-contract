@@ -677,13 +677,6 @@ def execute_check(
         "argv": check["argv"],
         "cwd": check["cwd"],
     }
-    dependency_states = {name: completed[name]["status"] for name in check["dependencies"]}
-    if any(status in ("FAIL", "NOT_VERIFIED") for status in dependency_states.values()):
-        result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
-        return result
-    if any(status == "NOT_APPLICABLE" for status in dependency_states.values()):
-        result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
-        return result
     applicability_spec = check["applicability"]
     if "path_exists" in applicability_spec:
         applicability_spec = {
@@ -699,6 +692,10 @@ def execute_check(
     result["applicability"] = applicability_evidence
     if applicability_state != "APPLICABLE":
         result["status"] = applicability_state
+        return result
+    dependency_states = {name: completed[name]["status"] for name in check["dependencies"]}
+    if any(status in ("FAIL", "NOT_VERIFIED", "NOT_APPLICABLE") for status in dependency_states.values()):
+        result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
         return result
     missing = [
         name for name in check["prerequisites"]
