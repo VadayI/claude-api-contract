@@ -524,6 +524,12 @@
     "scripts/ai/ci_mode.py": {
       "ownership": "template"
     },
+    "scripts/ai/git_hooks.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/prepare_husky.py": {
+      "ownership": "template"
+    },
     "scripts/ai/detector.py": {
       "ownership": "template"
     },
@@ -881,6 +887,9 @@
       "ownership": "template"
     },
     "tests/test_production.py": {
+      "ownership": "template"
+    },
+    "tests/test_git_hooks.py": {
       "ownership": "template"
     },
     "tspconfig.yaml": {

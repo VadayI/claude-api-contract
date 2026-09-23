@@ -1,11 +1,6 @@
-# pre-push (husky) — heavier contract gates before sharing (mirror CI).
-# Self-skips on a fresh template scaffold (no spec/).
+#!/usr/bin/env sh
+# Verify every Git-provided ref update; AI_PYTHON selects Python 3.13+.
 set -e
-if [ -d spec ]; then
-  npm run validate
-  npm run breaking
-  npm run mock:smoke
-  npm run check:endpoints
-else
-  echo "[pre-push] no spec/ — contract gates skipped (template scaffold)."
-fi
+PYTHON="${AI_PYTHON:-python}"
+"$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 13) else 2)'
+"$PYTHON" scripts/ai/git_hooks.py pre-push --remote "$1"

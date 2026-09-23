@@ -6,6 +6,14 @@ Local mode creates manual-only workflows; GitHub mode activates the same exact
 runner catalog on automatic events. See `docs/ai/workflows/bootstrap.md` for
 the ownership-safe switch and repository setup order.
 
+Git hooks use `AI_PYTHON` when set, otherwise `python`, and require Python 3.13+.
+`pre-commit` examines staged bytes; `pre-push` checks each branch ref against an
+exact base. New branches require a current local tracking ref matching remote
+`main`; an unknown baseline stops the push. npm prepare preserves an existing
+foreign `core.hooksPath` and reports that manual chaining is needed. Hooks can
+be bypassed locally, so reviewed candidate results and remote policy remain
+necessary.
+
 **Single source of truth for a REST API contract.** TypeSpec в†’ a canonical, bundled `openapi.yml` (OpenAPI 3.1), linted (Spectral), mocked (Prism), and breaking-change gated (oasdiff). Two repositories consume it in parallel вЂ” `claude-django` (backend, validates its implementation against the contract) and `claude-react-mui` (frontend, generates TS types + a mock). Neither generates the contract; both pin a version.
 
 This is the third Claude Code configuration template in the set, alongside [`claude-django`](https://github.com/VadayI/claude-django) and [`claude-react-mui`](https://github.com/VadayI/claude-react-mui). It keeps their philosophy: agents / rules / skills / commands, WSL2, PR-only, context in git.
