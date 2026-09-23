@@ -433,7 +433,7 @@
     },
     "README.md": {
       "ownership": "project",
-      "sha256": "2a3d4dc70157f5a4619ee422d2709d5a146b9ed7027f62ad4a07ef77c8e02ed7"
+      "sha256": "c62198167657beb5327237b8cd1069858cbf68d47a01c31b4d7fca19e264212f"
     },
     "commitlint.config.mjs": {
       "legacy_sha256": "9d49c285742196f12ad0e43490041281e05ae12c8958ea61606a4b254cc7bb2f",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "053a06b97dac8cc701ed9215e1fd60c4e1dffcc405829557f8d4696694ff2db0"
+      "sha256": "30aeaf0d2ce1201a3d7d9c4a459d8ba37e4cfd355b83e9d25040825849d065be"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -643,7 +643,7 @@
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
-      "sha256": "abd16546928407b1fb248b8ab30a9d6d7d4cefe76089278566d5e7524116c28e"
+      "sha256": "5956c2b439b3e63f9e252118cfda3aeeb7500f1138258e0e7455a57df2945cd2"
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
@@ -731,6 +731,10 @@
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
       "ownership": "template",
       "sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9"
+    },
+    "scripts/ai/ci_mode.py": {
+      "ownership": "template",
+      "sha256": "a3a2ffddc8ff57d2b13e876366269b2f6cef564419a3c658984bbc2e0e147073"
     },
     "scripts/ai/contract_policy.py": {
       "ownership": "template",
@@ -1123,6 +1127,14 @@
       "ownership": "template",
       "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     },
+    "templates/.github/workflows/contract-audit.yml": {
+      "ownership": "template",
+      "sha256": "fbd2082e513d39a68c7f23947d1ab0c7ecbe24eff5ee4bb22051e939cc82e408"
+    },
+    "templates/.github/workflows/contract-checks.yml": {
+      "ownership": "template",
+      "sha256": "df6560235b836038ecde6863c341b9b37cba4c078a4389d948a6f67e5da5a3c2"
+    },
     "templates/PROJECT.md": {
       "legacy_sha256": "4a0a39f54f9479585b55594aab05a372d195e782882e59382c8bb0eeea4c3dbb",
       "ownership": "template",
@@ -1147,7 +1159,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "d94e72da484ff97283cb7aa4e5cacb47cad285d01e935680515eebaebdf4c410"
+      "sha256": "553004d179d3499113b89b4263a868d7fdd64d4359a14d6220d2fee9054a97f4"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",
@@ -1188,7 +1200,7 @@
     },
     "tests/test_production.py": {
       "ownership": "template",
-      "sha256": "dc75d52dbfc82047fb97173680d69d9bd616267aad819f8e8afe27cc82a19e75"
+      "sha256": "8c715406f968cb5d1efc0c82fe4945b8b51475beaf55cb58e2ab8eac31b27677"
     },
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",

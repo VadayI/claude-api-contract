@@ -12,10 +12,64 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts/ai"))
 import production
+import ci_mode
 
 
 class ProductionTests(unittest.TestCase):
     """Exercise observable delivery without any network or application execution."""
+
+    def test_explicit_ci_choice_switch_and_custom_workflow(self):
+        """Materialize reviewed contract runner jobs with safe trigger choices.
+
+        Args: self owns a disposable derived target.
+        Returns: None after asserting local/github/repeat/conflict behavior.
+        Raises: AssertionError if triggers, runner argv or preservation drift.
+        Side effects: Temporary project files and CLI subprocess only;
+            no database, network, branch API, release, or workflow run.
+        """
+        self.install()
+        self.assertTrue((self.target / "scripts/ai/ci_mode.py").is_file())
+        for filename in ci_mode.WORKFLOWS:
+            self.assertTrue((self.target / "templates/.github/workflows" / filename).is_file())
+        installed_preview = subprocess.run([sys.executable, str(self.target / "scripts/ai/ci_mode.py"),
+                                            "--target", str(self.target), "--mode", "local"],
+                                           cwd=self.target, capture_output=True, text=True, check=False)
+        self.assertEqual(installed_preview.returncode, 0,
+                         installed_preview.stdout + installed_preview.stderr)
+        pending, conflicts = ci_mode.plan(ROOT, self.target, "local")
+        self.assertEqual(conflicts, [])
+        self.assertEqual(len(pending), 4)
+        production.apply(self.target, pending)
+        for filename in ci_mode.WORKFLOWS:
+            text = (self.target / ".github/workflows" / filename).read_text(encoding="utf-8")
+            self.assertIn("  workflow_dispatch:", text)
+            self.assertNotIn("  push:", text)
+            self.assertNotIn("  pull_request:", text)
+            self.assertNotIn("  schedule:", text)
+            self.assertIn("scripts/ai/runner.py --repository .", text)
+            self.assertEqual(text.split("\njobs:\n", 1)[1],
+                             ci_mode.render(ROOT, filename, "github").split("\njobs:\n", 1)[1])
+        self.assertEqual(ci_mode.plan(ROOT, self.target, "local"), ({}, []))
+        project_path = self.target / ci_mode.PROJECT
+        project = json.loads(project_path.read_text(encoding="utf-8"))
+        project["extensions"] = {"owner": "fixture"}
+        project_path.write_text(json.dumps(project, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        pending, conflicts = ci_mode.plan(ROOT, self.target, "github")
+        self.assertEqual(conflicts, [])
+        production.apply(self.target, pending)
+        self.assertEqual(ci_mode.plan(ROOT, self.target, "github"), ({}, []))
+        self.assertEqual(json.loads(project_path.read_text(encoding="utf-8"))["extensions"],
+                         {"owner": "fixture"})
+        active = self.target / ".github/workflows/contract-checks.yml"
+        active.write_text(active.read_text(encoding="utf-8") + "# local edit\n", encoding="utf-8")
+        before = {path.relative_to(self.target).as_posix(): path.read_bytes()
+                  for path in self.target.rglob("*") if path.is_file()}
+        result = subprocess.run([sys.executable, str(ROOT / "scripts/ai/ci_mode.py"),
+                                 "--target", str(self.target), "--mode", "local", "--apply"],
+                                capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertEqual(before, {path.relative_to(self.target).as_posix(): path.read_bytes()
+                                  for path in self.target.rglob("*") if path.is_file()})
 
     def setUp(self):
         """Create an isolated Unicode target for one fixture.

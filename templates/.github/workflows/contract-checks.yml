@@ -1,0 +1,62 @@
+name: Contract exact checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Exact ancestor commit for manual verification
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Exact contract checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+      - name: Install pinned oasdiff prerequisite
+        run: |
+          go install github.com/oasdiff/oasdiff@v1.18.4
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Run exact-candidate catalog
+        env:
+          CI_EVENT: ${{ github.event_name }}
+          CI_CANDIDATE: ${{ github.sha }}
+          CI_PR_BASE: ${{ github.event.pull_request.base.sha }}
+          CI_PUSH_BASE: ${{ github.event.before }}
+          CI_MERGE_BASE: ${{ github.event.merge_group.base_sha }}
+          CI_MANUAL_BASE: ${{ inputs.base }}
+        run: |
+          set -euo pipefail
+          case "$CI_EVENT" in
+            pull_request) event=pull_request; base="$CI_PR_BASE" ;;
+            push) event=push; base="$CI_PUSH_BASE" ;;
+            merge_group) event=pull_request; base="$CI_MERGE_BASE" ;;
+            workflow_dispatch) event=manual; base="$CI_MANUAL_BASE" ;;
+            *) echo "Unsupported CI event: $CI_EVENT" >&2; exit 2 ;;
+          esac
+          python scripts/ai/runner.py --repository . --candidate "$CI_CANDIDATE" --base "$base" --event "$event" --network allowed --catalog templates/ai/checks/contract.json --output .ai-runtime/results/contract.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contract-exact-result
+          path: .ai-runtime/results/contract.json
+          if-no-files-found: warn

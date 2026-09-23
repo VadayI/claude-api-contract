@@ -521,6 +521,9 @@
       "legacy_sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d",
       "ownership": "template"
     },
+    "scripts/ai/ci_mode.py": {
+      "ownership": "template"
+    },
     "scripts/ai/detector.py": {
       "ownership": "template"
     },
@@ -837,6 +840,12 @@
       "ownership": "template"
     },
     "templates/ai/checks/workflow-inventory.json": {
+      "ownership": "template"
+    },
+    "templates/.github/workflows/contract-checks.yml": {
+      "ownership": "template"
+    },
+    "templates/.github/workflows/contract-audit.yml": {
       "ownership": "template"
     },
     "templates/ai/production-inputs.json": {
