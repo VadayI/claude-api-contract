@@ -1,0 +1,226 @@
+{
+  "files": {
+    ".agents/skills/audit/SKILL.md": {
+      "ownership": "template",
+      "sha256": "447c14cb10d4bcbabf64c35d9828707c3d8d6b29ca66993e0b2a1478491209b6"
+    },
+    ".agents/skills/bootstrap/SKILL.md": {
+      "ownership": "template",
+      "sha256": "5776ad75ca1ee02537d25e0c3f9f3a7032b2eeea1eb0e209b7dac3ecdfa9cf7c"
+    },
+    ".agents/skills/doctor/SKILL.md": {
+      "ownership": "template",
+      "sha256": "e900a83dc20b53e49a0422f775a58ef8a11fd129032c3da50ccd6f455ca5557b"
+    },
+    ".agents/skills/handoff/SKILL.md": {
+      "ownership": "template",
+      "sha256": "3152901a1f1002317b5c92fe758c874d2f69fbd7778e3297f46442c18b296e3c"
+    },
+    ".agents/skills/set-language/SKILL.md": {
+      "ownership": "template",
+      "sha256": "a3090ef0dface4f5ff44721162fefa0fc95e66169aedf700864f52fa2ddda7ae"
+    },
+    ".agents/skills/template-sync/SKILL.md": {
+      "ownership": "template",
+      "sha256": "a65c1c8f30a0ee05642f2bbbb9beb161866b37ecfb66e96fdaacca7a3e3cb690"
+    },
+    ".agents/skills/update-from-template/SKILL.md": {
+      "ownership": "template",
+      "sha256": "592f3a60f20f64a02a80828473dd6b66e560ffe663d73d98e411daf5eb9e8176"
+    },
+    ".agents/skills/verify/SKILL.md": {
+      "ownership": "template",
+      "sha256": "3f7071cc22c155a373922a879e9ed62c59c8d84f952936ccca8b8d5b1ac269e6"
+    },
+    ".agents/skills/wrap-up/SKILL.md": {
+      "ownership": "template",
+      "sha256": "e0f907d525aa679830ec19ac66d0b3a048b9d46945e8155b20058fa1986b7763"
+    },
+    ".claude/agents/contract-reviewer.md": {
+      "ownership": "template",
+      "sha256": "4e26f623d1eb971a20347237a8391282caf63caf7f057d0fc02612f1479febd8"
+    },
+    ".claude/agents/tsp-author.md": {
+      "ownership": "template",
+      "sha256": "85c42297af40d58d3b4d2a98fe0693e8cf4313b603df5697eb61b2f93e098ae5"
+    },
+    ".claude/commands/audit.md": {
+      "ownership": "template",
+      "sha256": "27823529d56af91470c8818d54128eb1a68fe75736e80a7528c29f4e644fc6e0"
+    },
+    ".claude/commands/bootstrap.md": {
+      "ownership": "template",
+      "sha256": "cbf35aa9c87948aec27cdbd6ccecf402764ae5b35c1ec6a4a0160c6083123b68"
+    },
+    ".claude/commands/doctor.md": {
+      "ownership": "template",
+      "sha256": "6b88cf93431d749deec3de086a828e498a8c764b1443a0391c81a185989a864c"
+    },
+    ".claude/commands/handoff.md": {
+      "ownership": "template",
+      "sha256": "ae674cf2148e55a805f736fac8d1658bc6d07b8620ec309752448ffebdae2988"
+    },
+    ".claude/commands/set-language.md": {
+      "ownership": "template",
+      "sha256": "223a7de56d3e5bc6e9c471fb04a38b5e1da54b9325efead22c777720163915e5"
+    },
+    ".claude/commands/template-sync.md": {
+      "ownership": "template",
+      "sha256": "f3ad75b63a9df42634f920d59888d13b788f62838e5c946e5966344832240c6b"
+    },
+    ".claude/commands/update-from-template.md": {
+      "ownership": "template",
+      "sha256": "d260b70a3a213fb6b8bc5da35528196012ab72396fcf2028c4982fee91af051c"
+    },
+    ".claude/commands/verify.md": {
+      "ownership": "template",
+      "sha256": "b53b23a8aa029b638bbd7aabffb3729f7a2e4c4ed4d9a8b6f435cee2dd63c235"
+    },
+    ".claude/commands/wrap-up.md": {
+      "ownership": "template",
+      "sha256": "be9a3f3b40ed3a7bd73c8eebd449999c00ced0e8ba462384e395b5c58bfb32f5"
+    },
+    ".claude/rules/api-envelope.md": {
+      "ownership": "template",
+      "sha256": "4010053aaca084eaf17f36e467ba65b25d24a66ec5bcec528a18ca857984df70"
+    },
+    ".claude/rules/auth-contract.md": {
+      "ownership": "template",
+      "sha256": "58ec40f5cad807e14b744b86df2ba11555a89807f5af6cf614b64d069f5ca8df"
+    },
+    ".claude/rules/breaking-changes.md": {
+      "ownership": "template",
+      "sha256": "e84b568ccde3a07d53251c4eacd7d4af31e17436601573b0d78fd21dcee2f350"
+    },
+    ".claude/rules/contract-first.md": {
+      "ownership": "template",
+      "sha256": "e851c97ace1b4617c22ddb866fa274c22c981a52aa0d4dbca12cfaeb0a3e97fb"
+    },
+    ".claude/rules/deploy.md": {
+      "ownership": "template",
+      "sha256": "32954c5aa88cce2c20646bc924a4551cc37ec66316ab2c09c207a43400867eca"
+    },
+    ".claude/rules/endpoint-surface.md": {
+      "ownership": "template",
+      "sha256": "eaeda129b20711488dfc0c1d7a55b15cf670e763c6e9c6d77dcfb7f9492ed014"
+    },
+    ".claude/rules/environment.md": {
+      "ownership": "template",
+      "sha256": "c0e8020b10ceedbae0b6bc759af00e2e58b860ba0316e57c452e30ff6e43f938"
+    },
+    ".claude/rules/examples-validation.md": {
+      "ownership": "template",
+      "sha256": "92cdfa1acc3d53bcd149bb1d1e686472e96ba623e4ae6ee87df4891bf2a3a6b4"
+    },
+    ".claude/rules/git-operations.md": {
+      "ownership": "template",
+      "sha256": "3dfca8833bc206dcfce5a5e0e0e701209a9e84319184e18301775894b68b1f33"
+    },
+    ".claude/rules/living-plan.md": {
+      "ownership": "template",
+      "sha256": "9719458a0ac30d8c9c4a255dafa0d73eb8ef1a54a7954728aff5f30784e6d731"
+    },
+    ".claude/rules/mcp-stack.md": {
+      "ownership": "template",
+      "sha256": "63eea8eff98549818ea9a53d7cda43f6051443cb7952b9714ecee3a0e7b34e4b"
+    },
+    ".claude/rules/no-stubs.md": {
+      "ownership": "template",
+      "sha256": "09822b6b9ac8e168bce5a6df7b31530823cc315e05cb119789536c3208b632f5"
+    },
+    ".claude/rules/node-commands.md": {
+      "ownership": "template",
+      "sha256": "e4cfef1c759a6bc265959c710487d7a2f07b03408be2f40f164d02c38fcb8ec4"
+    },
+    ".claude/rules/preflight.md": {
+      "ownership": "template",
+      "sha256": "8306f5f779020f001acbeb567f4a5d26083cb6811ff5d57cb6ec206e0ce0f7d5"
+    },
+    ".claude/rules/prism-mock.md": {
+      "ownership": "template",
+      "sha256": "a1b1793ed9f2f5cb2168a4530de0231de3d8a90ffaa38ddf6643e07a8b827425"
+    },
+    ".claude/rules/project-maturity.md": {
+      "ownership": "template",
+      "sha256": "f681b417af61d397db6718d445fc53a803873d25f5582301fa07f6cd7e03a5a6"
+    },
+    ".claude/rules/spectral-style.md": {
+      "ownership": "template",
+      "sha256": "68252579d5d1fb4228621b544b6d43d264923ef6ce9d1cce876365e4ffb69ce2"
+    },
+    ".claude/rules/typespec-style.md": {
+      "ownership": "template",
+      "sha256": "69b453f5e78380a303fd9ce9eae96dbdffa38d9b2390944d4d359e001fa53c2e"
+    },
+    ".claude/rules/verification.md": {
+      "ownership": "template",
+      "sha256": "bce1e91c6b8c7592a5216b2868f332a50002371925adf8fc7b3f08473ad067f8"
+    },
+    ".claude/rules/versioning.md": {
+      "ownership": "template",
+      "sha256": "0b3c6a3293e8843d477d2118e7a5d39d2e48eb14ff06e19965ea4fe99ed9d5aa"
+    },
+    ".claude/rules/workflow.md": {
+      "ownership": "template",
+      "sha256": "f07d9ea0ae800bf3f7317dcfe5a48079b758404e113807e533eabaa9e9e8f688"
+    },
+    ".codex/agents/contract-reviewer.toml": {
+      "ownership": "template",
+      "sha256": "5aafd0a73c77adbe4b3b71eedf0651ee35c902b6ddda9fd5ed9df18e85af04d3"
+    },
+    ".codex/agents/tsp-author.toml": {
+      "ownership": "template",
+      "sha256": "10d98f735a5ab93c23fadffea7fcb733ca6b63b3dde85461059589506f5dab13"
+    },
+    "CLAUDE.md": {
+      "ownership": "mixed",
+      "sha256": "fea1bb7d24fd01ae28593a9675a3ae923021acd951ccbd6cf103e390bc3c348c"
+    },
+    "docs/ai/generated/role-packs/contract-reviewer.md": {
+      "ownership": "template",
+      "sha256": "02e7089badd3448962cd47d356a384a8d2f6cee5f687327872e2e33393aa9db4"
+    },
+    "docs/ai/generated/role-packs/tsp-author.md": {
+      "ownership": "template",
+      "sha256": "f7a2c65d7b76c08d887531b493acff3443f0770af3093d7c2719452ec6cde7b5"
+    }
+  },
+  "generator": "family-core",
+  "schema_version": 1,
+  "sources": {
+    "AGENTS.md": "9cccb0959ee5e90bdc9a6b6a8af0d92bcc141d017410d0eeee45d36cd2c4bfec",
+    "docs/ai/catalog.json": "f543b08af0542febb599085ae482e6320493fa2c4d60b51de51a72e0f9d66cd0",
+    "docs/ai/roles/contract-reviewer.md": "f149a074701be58a05008585b214f5da11071c4e1adc8c9f88c258ba63668f0f",
+    "docs/ai/roles/tsp-author.md": "611ba432ea7babe162a3a43aedd2ab486e172f190c22c30e9315383cc7d78445",
+    "docs/ai/rules/api-envelope.md": "89e11e34e67ce04de69d2944a0e35f270c13e9f815892574c3b2948cb3ce1db7",
+    "docs/ai/rules/auth-contract.md": "5e89054ce899bf6ec2f95a32381d2cafc4d68d5a2147e2be5034549fc085fe91",
+    "docs/ai/rules/breaking-changes.md": "2ca8a0d89f4d3c9970ca618ca4fcf58ec2e927fcc164ce911ba7847bd8d5a80e",
+    "docs/ai/rules/contract-first.md": "4f2055a6845c939a5763079b81a49b471b06bb8f535c16fcea469b6aba0b2c9f",
+    "docs/ai/rules/deploy.md": "4eb255d7eb46f57cbe0350e8cf090692f1a1a073d276a0ad9b2e2f727b6c82df",
+    "docs/ai/rules/endpoint-surface.md": "8f2b93e6b310cc36b740ecb40e0e0503c717fbc0a98165a190a502f27b26189a",
+    "docs/ai/rules/environment.md": "c6675ad3c80d00d00df8002a4317c4702ac73fc3b1ed8d84e367b4c05c6d70b9",
+    "docs/ai/rules/examples-validation.md": "6953007dfa20ecc0cfe6f2f170a3ae9a9da6899a46a6a3d13235ccc8f81489b2",
+    "docs/ai/rules/git-operations.md": "fabab4b6eb28267d58eb66c453f9440e8789717483e167ba03448b1a7678c275",
+    "docs/ai/rules/living-plan.md": "162ed419da61246343e78b3db512bf3ca95277cb2324973280a57b9851a02ce7",
+    "docs/ai/rules/mcp-stack.md": "f95c283a700b2f8b1dfefc5bc357fc2e3ef0476c517029b5cfb74de7ea0c1cb3",
+    "docs/ai/rules/no-stubs.md": "92056a5215e9bfb1bd4e50cfe82ecc080e95a9a2cd3b79d161307c9be3a39bc5",
+    "docs/ai/rules/node-commands.md": "f4e4e808cdfa72322f127003cbf9064144629b358d84e97b5e369ac30f193abc",
+    "docs/ai/rules/preflight.md": "78c67e2cd0442b2cbab14ce8789bab6f0293abe16fbb452b00bf5b996c4b171d",
+    "docs/ai/rules/prism-mock.md": "9d41147b9d4bca8c56288f8e0be5b4621ef0fc28db921272974028a380b3c991",
+    "docs/ai/rules/project-maturity.md": "09b66e9748308c4864f5312e6158cbdb2fb56ac6369e68dac3dd9753b4fc8eb4",
+    "docs/ai/rules/spectral-style.md": "f0a3797168aeba3be4d40c27251572892f098cbb8bd4a39648e0981701915512",
+    "docs/ai/rules/typespec-style.md": "17609cd734d19f798ef3eb1add0e24c1121af832390cbf8f56fec4b7d46eecf9",
+    "docs/ai/rules/verification.md": "74c27d1486ae8fbe7eaee96eaf4ecdbe81041987dedc440678d9f046fa0fedf0",
+    "docs/ai/rules/versioning.md": "d8542372ef69b0f3654fe64bec3161517c3be644b1e1237e8cdde8bb1eef4e75",
+    "docs/ai/rules/workflow.md": "61a3e92e6c9e5d77c50c8975b9d298687ac2de4bb6ba173be798fd216ae469fb",
+    "docs/ai/workflows/audit.md": "fa92f0a9de29732f127e4b617ddfdc793187bc0db6b4cd3609c2950d3a81ebad",
+    "docs/ai/workflows/bootstrap.md": "abd16546928407b1fb248b8ab30a9d6d7d4cefe76089278566d5e7524116c28e",
+    "docs/ai/workflows/doctor.md": "4dcff984194c0bac1c1447154c1d910c5b572a9c3343f5cacc4472314516c238",
+    "docs/ai/workflows/handoff.md": "e5a054a2a160528a62b1da7df12067593217c4cec5778ab73744f161cedc3b4c",
+    "docs/ai/workflows/set-language.md": "8f601b57f90fa117437912f99bca94c72f8d1dd71e42202039503337b6718298",
+    "docs/ai/workflows/template-sync.md": "a50c009ca632000d024a31544f06f6554dbd30402d550c7b1d1610044cf77ab8",
+    "docs/ai/workflows/update-from-template.md": "055ee34d39e1ce3925e057548b3c79f29ba5d1a7b20e6b0128dc8dc2cad89af1",
+    "docs/ai/workflows/verify.md": "20840e887d31ceb52265c29b0e9fffc0b5b5aca7e62399a7c15fc48b110d4b7a",
+    "docs/ai/workflows/wrap-up.md": "58b16aea94d7491501e0fa9f4dbc113e723a0887219efb9e94144577efb3002e"
+  }
+}

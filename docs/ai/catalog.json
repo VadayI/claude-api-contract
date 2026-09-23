@@ -1,0 +1,399 @@
+{
+  "schema_version": 1,
+  "phase": "P04-production-structure",
+  "rules": [
+    {
+      "id": "api-envelope",
+      "path": "docs/ai/rules/api-envelope.md",
+      "legacy_path": ".claude/rules/api-envelope.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "auth-contract",
+      "path": "docs/ai/rules/auth-contract.md",
+      "legacy_path": ".claude/rules/auth-contract.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "api-envelope"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "breaking-changes",
+      "path": "docs/ai/rules/breaking-changes.md",
+      "legacy_path": ".claude/rules/breaking-changes.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "contract-first",
+      "path": "docs/ai/rules/contract-first.md",
+      "legacy_path": ".claude/rules/contract-first.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "auth-contract"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "deploy",
+      "path": "docs/ai/rules/deploy.md",
+      "legacy_path": ".claude/rules/deploy.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "endpoint-surface",
+      "path": "docs/ai/rules/endpoint-surface.md",
+      "legacy_path": ".claude/rules/endpoint-surface.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "auth-contract",
+        "spectral-style"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "environment",
+      "path": "docs/ai/rules/environment.md",
+      "legacy_path": ".claude/rules/environment.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "examples-validation",
+      "path": "docs/ai/rules/examples-validation.md",
+      "legacy_path": ".claude/rules/examples-validation.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "no-stubs",
+        "prism-mock"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "git-operations",
+      "path": "docs/ai/rules/git-operations.md",
+      "legacy_path": ".claude/rules/git-operations.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "versioning"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "living-plan",
+      "path": "docs/ai/rules/living-plan.md",
+      "legacy_path": ".claude/rules/living-plan.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "mcp-stack",
+      "path": "docs/ai/rules/mcp-stack.md",
+      "legacy_path": ".claude/rules/mcp-stack.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "living-plan",
+        "verification"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "no-stubs",
+      "path": "docs/ai/rules/no-stubs.md",
+      "legacy_path": ".claude/rules/no-stubs.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "contract-first",
+        "examples-validation"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "node-commands",
+      "path": "docs/ai/rules/node-commands.md",
+      "legacy_path": ".claude/rules/node-commands.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "preflight",
+      "path": "docs/ai/rules/preflight.md",
+      "legacy_path": ".claude/rules/preflight.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "prism-mock",
+      "path": "docs/ai/rules/prism-mock.md",
+      "legacy_path": ".claude/rules/prism-mock.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "deploy",
+        "examples-validation"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "project-maturity",
+      "path": "docs/ai/rules/project-maturity.md",
+      "legacy_path": ".claude/rules/project-maturity.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "breaking-changes",
+        "contract-first",
+        "examples-validation",
+        "no-stubs",
+        "preflight",
+        "workflow"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "spectral-style",
+      "path": "docs/ai/rules/spectral-style.md",
+      "legacy_path": ".claude/rules/spectral-style.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "api-envelope",
+        "endpoint-surface"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "typespec-style",
+      "path": "docs/ai/rules/typespec-style.md",
+      "legacy_path": ".claude/rules/typespec-style.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "api-envelope",
+        "auth-contract",
+        "breaking-changes",
+        "contract-first",
+        "endpoint-surface",
+        "mcp-stack",
+        "node-commands",
+        "versioning"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "verification",
+      "path": "docs/ai/rules/verification.md",
+      "legacy_path": ".claude/rules/verification.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "endpoint-surface"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "versioning",
+      "path": "docs/ai/rules/versioning.md",
+      "legacy_path": ".claude/rules/versioning.md",
+      "scope": "role-or-capability",
+      "explicit_consumers": [],
+      "declared_consumers": [
+        "tsp-author",
+        "contract-reviewer"
+      ],
+      "dependencies": [
+        "breaking-changes"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    },
+    {
+      "id": "workflow",
+      "path": "docs/ai/rules/workflow.md",
+      "legacy_path": ".claude/rules/workflow.md",
+      "scope": "coordinator",
+      "explicit_consumers": [],
+      "declared_consumers": [],
+      "dependencies": [
+        "contract-first",
+        "git-operations"
+      ],
+      "review": "Full source retained with explicit P04 runtime/ownership corrections; conservative full-rule packs."
+    }
+  ],
+  "roles": {
+    "tsp-author": {
+      "path": "docs/ai/roles/tsp-author.md",
+      "rules": [
+        "api-envelope",
+        "auth-contract",
+        "breaking-changes",
+        "contract-first",
+        "deploy",
+        "endpoint-surface",
+        "environment",
+        "examples-validation",
+        "git-operations",
+        "living-plan",
+        "mcp-stack",
+        "no-stubs",
+        "node-commands",
+        "preflight",
+        "prism-mock",
+        "project-maturity",
+        "spectral-style",
+        "typespec-style",
+        "verification",
+        "versioning"
+      ],
+      "delivery": "role-pack",
+      "read_only": false,
+      "reason": "All non-coordinator rules retained during initial production migration."
+    },
+    "contract-reviewer": {
+      "path": "docs/ai/roles/contract-reviewer.md",
+      "rules": [
+        "api-envelope",
+        "auth-contract",
+        "breaking-changes",
+        "contract-first",
+        "deploy",
+        "endpoint-surface",
+        "environment",
+        "examples-validation",
+        "git-operations",
+        "living-plan",
+        "mcp-stack",
+        "no-stubs",
+        "node-commands",
+        "preflight",
+        "prism-mock",
+        "project-maturity",
+        "spectral-style",
+        "typespec-style",
+        "verification",
+        "versioning"
+      ],
+      "delivery": "role-pack",
+      "read_only": true,
+      "reason": "All non-coordinator rules retained during initial production migration."
+    }
+  },
+  "workflows": {
+    "bootstrap": "docs/ai/workflows/bootstrap.md",
+    "doctor": "docs/ai/workflows/doctor.md",
+    "verify": "docs/ai/workflows/verify.md",
+    "orchestrate": "docs/ai/rules/workflow.md",
+    "handoff": "docs/ai/workflows/handoff.md",
+    "wrap-up": "docs/ai/workflows/wrap-up.md",
+    "update-from-template": "docs/ai/workflows/update-from-template.md",
+    "template-sync": "docs/ai/workflows/template-sync.md",
+    "audit": "docs/ai/workflows/audit.md",
+    "set-language": "docs/ai/workflows/set-language.md"
+  },
+  "legacy_inventory": {
+    "agents": 10,
+    "commands": 19,
+    "rules": 21,
+    "skills": 6
+  }
+}

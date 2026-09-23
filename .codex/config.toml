@@ -1,0 +1,2 @@
+# Project configuration intentionally leaves model, trust and permissions to users.
+# Optional MCP examples live in templates/ai/mcp/codex.optional.toml.
