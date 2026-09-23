@@ -1281,7 +1281,7 @@ def run(
             "digests": digests,
             "environment": environment_report(repository),
             "started_at": started,
-            "finished_at": int(time.time()),
+            "finished_at": max(started, int(time.time())),
             "outcome": outcome,
             "checks": checks,
         }

@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "1c0c85b8bd72037bf18e841510c42b1ab1ff8bd56c3ff192b764e641679f4cf5"
+      "sha256": "c21ef6abe8746cd0a91b573a7524df39810a5e53f7852740812077d109d563c0"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -790,7 +790,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "bc37ee1f09d723a47dae63ca04f5c8f1c2f6aa00fa7ffcec7bd171da93c9925e"
+      "sha256": "4c9caa84ee08be65a9e70dd2746b81aa570faf84ab87ef8578b8138446fa20e1"
     },
     "scripts/ai/runner_caps.py": {
       "ownership": "template",
@@ -928,7 +928,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "f968d13907bd09eacd8cd69c43280bea7e6a4ca4d91632f3c1263cd1c30c4fbf"
+      "sha256": "2e6e2bb702cc0e2649723fcc8eb96a350b62c4ecfcbf977026c3b0044ead1f28"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1034,7 +1034,7 @@
     },
     "template-core/scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "bc37ee1f09d723a47dae63ca04f5c8f1c2f6aa00fa7ffcec7bd171da93c9925e"
+      "sha256": "4c9caa84ee08be65a9e70dd2746b81aa570faf84ab87ef8578b8138446fa20e1"
     },
     "template-core/scripts/ai/runner_caps.py": {
       "ownership": "template",
@@ -1116,7 +1116,7 @@
     },
     "template-core/tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "f31a304f18bf8d115c65e134eccc646fd64ae00291626504eb03f6739319d31b"
+      "sha256": "1df9f1df7d3a2e9a0502e268877daf0943bea947a3f410708c3b946048a791b0"
     },
     "template-core/tests/test_schema.py": {
       "legacy_sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b",

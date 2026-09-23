@@ -860,11 +860,13 @@ class RunnerTests(unittest.TestCase):
             "fixture.protocol", ["{python}", "-c", "raise SystemExit(75)"],
             network_access="none", not_verified_exit_codes=[75],
         )
-        document, code = runner.run(
-            self.repo, self.candidate, self.candidate, self.catalog([protocol]), self.output
-        )
+        with mock.patch.object(runner.time, "time", side_effect=[100, 99]):
+            document, code = runner.run(
+                self.repo, self.candidate, self.candidate, self.catalog([protocol]), self.output
+            )
         self.assertEqual((code, document["checks"][0]["status"]), (2, "NOT_VERIFIED"))
         self.assertEqual(document["checks"][0]["exit_code"], 75)
+        self.assertEqual((document["started_at"], document["finished_at"]), (100, 100))
 
     def test_process_tree_cleanup_after_leader_exit_releases_port(self):
         """Kill a listening descendant even when its direct leader already exited.
