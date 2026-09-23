@@ -7,6 +7,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tarfile
@@ -108,12 +109,15 @@ def validate_catalog(document: object) -> dict[str, object]:
     Side effects:
         None; no filesystem, subprocess, database, network, or environment access.
     """
-    if not isinstance(document, dict) or set(document) != {"schema_version", "catalog_id", "profile", "invalidation_paths", "checks"}:
+    if not isinstance(document, dict) or set(document) != {"schema_version", "catalog_id", "profile", "policy", "invalidation_paths", "checks"}:
         raise ValueError("Invalid check catalog fields")
     if document["schema_version"] != 1 or not isinstance(document["catalog_id"], str) or not IDENTIFIER.fullmatch(document["catalog_id"]):
         raise ValueError("Invalid check catalog identity")
     if not isinstance(document["profile"], str) or not IDENTIFIER.fullmatch(document["profile"]):
         raise ValueError("Invalid check profile")
+    policy = document["policy"]
+    if not isinstance(policy, dict) or set(policy) != {"allow_mandatory_not_applicable"} or type(policy["allow_mandatory_not_applicable"]) is not bool:
+        raise ValueError("Invalid catalog result policy")
     paths = document["invalidation_paths"]
     if not isinstance(paths, list) or len(paths) != len(set(paths)):
         raise ValueError("Invalid invalidation paths")
@@ -159,9 +163,11 @@ def validate_catalog(document: object) -> dict[str, object]:
         if not isinstance(side_effects, list) or len(side_effects) != len(set(side_effects)) or set(side_effects) - {"candidate_export", "evidence"}:
             raise ValueError("Invalid allowed side effects")
         applicability = item["applicability"]
-        if not isinstance(applicability, dict) or set(applicability) != {"path_exists"}:
+        if not isinstance(applicability, dict) or set(applicability) != {"path_exists", "missing_status"}:
             raise ValueError("Invalid applicability")
         safe_relative(applicability["path_exists"])
+        if applicability["missing_status"] not in ("NOT_APPLICABLE", "NOT_VERIFIED"):
+            raise ValueError("Invalid applicability missing status")
         seen.add(identifier)
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("Duplicate check identifier")
@@ -258,7 +264,7 @@ def export_candidate(repository: Path, candidate: str, target: Path) -> None:
         raise ValueError(f"Candidate archive failed: {stderr.splitlines()[0][:200] if stderr else 'Git error'}")
 
 
-def file_digests(root: Path, names: list[str]) -> dict[str, str | None]:
+def file_digests(root: Path, names: list[str]) -> dict[str, dict[str, object]]:
     """Digest explicit invalidation files from the isolated candidate.
 
     Args:
@@ -266,7 +272,7 @@ def file_digests(root: Path, names: list[str]) -> dict[str, str | None]:
         names: Validated candidate-relative paths.
 
     Returns:
-        Mapping to SHA-256, or null for an explicitly absent input.
+        Mapping to explicit presence plus SHA-256 for each present input.
 
     Raises:
         ValueError: If a path is linked, escapes, or names a directory.
@@ -275,13 +281,115 @@ def file_digests(root: Path, names: list[str]) -> dict[str, str | None]:
     Side effects:
         Reads candidate files only; no writes, subprocess, DB, or network access.
     """
-    result: dict[str, str | None] = {}
+    result: dict[str, dict[str, object]] = {}
     for name in names:
         path = root.joinpath(*safe_relative(name).parts)
         if path.is_symlink() or path.is_dir() or path.exists() and not path.resolve().is_relative_to(root.resolve()):
             raise ValueError(f"Invalid invalidation input: {name}")
-        result[name] = digest_bytes(path.read_bytes()) if path.is_file() else None
+        result[name] = (
+            {"present": True, "sha256": digest_bytes(path.read_bytes())}
+            if path.is_file() else {"present": False}
+        )
     return result
+
+
+def runner_digests() -> dict[str, str]:
+    """Digest every local module and schema that controls runner semantics.
+
+    Returns:
+        Stable install-root-relative names mapped to SHA-256 digests.
+
+    Raises:
+        OSError: If an effective module or schema cannot be read.
+        ValueError: If the expected installation layout is incomplete.
+
+    Side effects:
+        Reads only public runner implementation and schema files; no writes,
+        subprocesses, databases, environment inspection, or network access.
+    """
+    install_root = Path(__file__).resolve().parents[2]
+    names = (
+        "scripts/ai/runner.py",
+        "scripts/ai/detector.py",
+        "templates/ai/schemas/check-catalog.schema.json",
+        "templates/ai/schemas/check-result.schema.json",
+    )
+    result = {}
+    for name in names:
+        path = install_root.joinpath(*PurePosixPath(name).parts)
+        if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(install_root):
+            raise ValueError(f"Missing effective runner input: {name}")
+        result[name] = digest_bytes(path.read_bytes())
+    return result
+
+
+def candidate_snapshot(root: Path) -> dict[str, str]:
+    """Create a link-rejecting digest snapshot of one isolated export.
+
+    Args:
+        root: Exact-candidate export owned by the current check.
+
+    Returns:
+        Sorted candidate-relative regular-file digests and directory markers.
+
+    Raises:
+        ValueError: If a link, special file, or escaping entry is encountered.
+        OSError: If metadata or bytes cannot be read.
+
+    Side effects:
+        Reads only the temporary export; no writes, subprocesses, DB or network.
+    """
+    snapshot: dict[str, str] = {}
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        for entry in sorted(directory.iterdir(), key=lambda item: item.name):
+            relative = entry.relative_to(root).as_posix()
+            mode = entry.lstat().st_mode
+            if stat.S_ISLNK(mode) or not entry.resolve().is_relative_to(root.resolve()):
+                raise ValueError(f"Linked or escaping candidate output: {relative}")
+            if stat.S_ISDIR(mode):
+                snapshot[relative + "/"] = "directory"
+                pending.append(entry)
+            elif stat.S_ISREG(mode):
+                snapshot[relative] = digest_bytes(entry.read_bytes())
+            else:
+                raise ValueError(f"Unsupported candidate output: {relative}")
+    return dict(sorted(snapshot.items()))
+
+
+def artifact_digest(root: Path, name: str) -> str | None:
+    """Return a contained regular artifact digest, rejecting links and specials.
+
+    Args:
+        root: Isolated exact-candidate export.
+        name: Validated candidate-relative expected artifact path.
+
+    Returns:
+        SHA-256 for a present regular file, otherwise ``None`` when absent.
+
+    Raises:
+        ValueError: If the artifact or an existing ancestor is linked, escaping,
+            a directory, or another unsupported type.
+        OSError: If filesystem metadata or bytes cannot be read.
+
+    Side effects:
+        Reads temporary artifact metadata/content only; no writes, DB or network.
+    """
+    path = root.joinpath(*safe_relative(name).parts)
+    current = root
+    for part in safe_relative(name).parts:
+        current = current / part
+        if current.exists() or current.is_symlink():
+            mode = current.lstat().st_mode
+            if stat.S_ISLNK(mode) or not current.resolve().is_relative_to(root.resolve()):
+                raise ValueError(f"Linked or escaping artifact: {name}")
+    if not path.exists():
+        return None
+    mode = path.lstat().st_mode
+    if not stat.S_ISREG(mode):
+        raise ValueError(f"Artifact is not a regular file: {name}")
+    return digest_bytes(path.read_bytes())
 
 
 def sanitized_evidence(content: bytes, candidate_root: Path) -> tuple[bytes, bool]:
@@ -303,13 +411,78 @@ def sanitized_evidence(content: bytes, candidate_root: Path) -> tuple[bytes, boo
     for value in {str(candidate_root), candidate_root.as_posix()}:
         text = text.replace(value, "<candidate>")
     text = re.sub(
-        r"(?i)\b(token|password|secret|api[_-]?key)\s*[:=]\s*[^\s]+",
+        r"(?im)\b((?:[A-Z][A-Z0-9_]*_)?(?:TOKEN|PASSWORD|SECRET|KEY)|API[_-]?KEY)\s*[:=]\s*[^\s]+",
         lambda match: f"{match.group(1)}=<redacted>", text,
+    )
+    text = re.sub(
+        r"(?im)\b(Authorization)\s*:\s*(?:Bearer|Basic)\s+[^\s]+",
+        lambda match: f"{match.group(1)}: <redacted>", text,
+    )
+    text = re.sub(
+        r"(?i)\b(https?://)[^/@\s:]+(?::[^/@\s]*)?@",
+        lambda match: f"{match.group(1)}<redacted>@",
+        text,
     )
     text = re.sub(r"(?<!\w)(?:[A-Za-z]:[\\/][^\s]+|/(?:home|tmp|var/tmp|Users)/[^\s]+)", "<external-path>", text)
     if truncated:
         text += "\n<evidence-truncated>\n"
     return text.encode("utf-8"), truncated
+
+
+def reserve_runtime_output(repository: Path, output: Path) -> tuple[Path, int, Path]:
+    """Reserve a no-follow result file and unique evidence directory safely.
+
+    Args:
+        repository: Git repository whose ``.ai-runtime`` is the only writable
+            result root accepted by the runner.
+        output: Requested result path, absolute or relative to the caller.
+
+    Returns:
+        Resolved output path, exclusive open file descriptor, and newly-created
+        run-unique evidence directory.
+
+    Raises:
+        ValueError: If output escapes ``.ai-runtime`` or any existing component
+            is a link/non-directory, or the predictable result already exists.
+        OSError: If secure directory/file creation fails.
+
+    Side effects:
+        Creates missing directories beneath repository ``.ai-runtime``, reserves
+        one new result file, and creates one unique evidence directory. It never
+        overwrites an existing path and performs no DB, subprocess, or network I/O.
+    """
+    root = Path(git(repository, "rev-parse", "--show-toplevel").stdout.strip()).resolve()
+    runtime = root / ".ai-runtime"
+    requested = output if output.is_absolute() else Path.cwd() / output
+    requested = requested.absolute()
+    try:
+        relative = requested.relative_to(runtime)
+    except ValueError:
+        raise ValueError("Result output must be inside repository .ai-runtime") from None
+    if not relative.parts or any(part in ("", ".", "..") for part in relative.parts):
+        raise ValueError("Invalid result output path")
+    current = root
+    for part in (".ai-runtime", *relative.parts[:-1]):
+        current = current / part
+        if current.exists() or current.is_symlink():
+            mode = current.lstat().st_mode
+            if stat.S_ISLNK(mode) or not stat.S_ISDIR(mode) or not current.resolve().is_relative_to(root):
+                raise ValueError("Linked or non-directory result ancestor")
+        else:
+            current.mkdir()
+    if requested.exists() or requested.is_symlink():
+        raise ValueError("Result output already exists")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = os.open(requested, flags, 0o600)
+    try:
+        evidence = Path(tempfile.mkdtemp(prefix=requested.stem + "-evidence-", dir=requested.parent))
+    except BaseException:
+        os.close(descriptor)
+        requested.unlink(missing_ok=True)
+        raise
+    return requested, descriptor, evidence
 
 
 def execute_check(
@@ -348,11 +521,11 @@ def execute_check(
         result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
         return result
     if any(status == "NOT_APPLICABLE" for status in dependency_states.values()):
-        result.update({"status": "NOT_APPLICABLE", "dependency_statuses": dependency_states})
+        result.update({"status": "NOT_VERIFIED", "dependency_statuses": dependency_states})
         return result
     applicability = root.joinpath(*safe_relative(check["applicability"]["path_exists"]).parts)
     if not applicability.exists():
-        result.update({"status": "NOT_APPLICABLE", "applicability": {"path_exists": False}})
+        result.update({"status": check["applicability"]["missing_status"], "applicability": {"path_exists": False}})
         return result
     result["applicability"] = {"path_exists": True}
     missing = [
@@ -366,8 +539,11 @@ def execute_check(
     if not cwd.is_dir() or not cwd.resolve().is_relative_to(root.resolve()):
         result.update({"status": "NOT_VERIFIED", "missing_prerequisites": ["working_directory"]})
         return result
+    artifact_before = {name: artifact_digest(root, name) for name in check["expected_artifacts"]}
+    snapshot_before = candidate_snapshot(root)
     started = time.time()
     env = {key: os.environ[key] for key in ("PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL") if key in os.environ}
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
     try:
         process = subprocess.run(
             argv, cwd=cwd, env=env, capture_output=True, timeout=check["timeout_seconds"], shell=False,
@@ -375,22 +551,42 @@ def execute_check(
         status = "PASS" if process.returncode == 0 else "FAIL"
         stdout, stderr, exit_code = process.stdout, process.stderr, process.returncode
     except subprocess.TimeoutExpired as error:
-        status, exit_code = "FAIL", 124
+        status, exit_code = "FAIL", None
         stdout, stderr = error.stdout or b"", error.stderr or b""
-    evidence.mkdir(parents=True, exist_ok=True)
     stdout_path = evidence / f"{identifier}.stdout.txt"
     stderr_path = evidence / f"{identifier}.stderr.txt"
     stdout, stdout_truncated = sanitized_evidence(stdout, root)
     stderr, stderr_truncated = sanitized_evidence(stderr, root)
-    stdout_path.write_bytes(stdout)
-    stderr_path.write_bytes(stderr)
-    missing_artifacts = [name for name in check["expected_artifacts"] if not root.joinpath(*safe_relative(name).parts).is_file()]
-    if status == "PASS" and missing_artifacts:
+    with stdout_path.open("xb") as stream:
+        stream.write(stdout)
+    with stderr_path.open("xb") as stream:
+        stream.write(stderr)
+    invalid_artifacts = []
+    artifacts = {}
+    for name, before in artifact_before.items():
+        try:
+            after = artifact_digest(root, name)
+        except ValueError:
+            after = None
+            invalid_artifacts.append(name)
+        if after is None or after == before:
+            invalid_artifacts.append(name)
+        elif after is not None:
+            artifacts[name] = after
+    try:
+        snapshot_after = candidate_snapshot(root)
+        mutated = snapshot_after != snapshot_before
+    except ValueError:
+        mutated = True
+        invalid_artifacts.extend(name for name in check["expected_artifacts"] if name not in invalid_artifacts)
+    if mutated and "candidate_export" not in check["allowed_side_effects"]:
+        invalid_artifacts.append("candidate_export")
+    invalid_artifacts = sorted(set(invalid_artifacts))
+    if status == "PASS" and invalid_artifacts:
         status = "FAIL"
         exit_code = 1
-    result.update({
+    execution = {
         "status": status,
-        "exit_code": exit_code,
         "duration_ms": round((time.time() - started) * 1000),
         "stdout_sha256": digest_bytes(stdout),
         "stderr_sha256": digest_bytes(stderr),
@@ -399,10 +595,63 @@ def execute_check(
         "stdout_truncated": stdout_truncated,
         "stderr_truncated": stderr_truncated,
         "evidence": [f"{evidence.name}/{stdout_path.name}", f"{evidence.name}/{stderr_path.name}"],
-    })
-    if missing_artifacts:
-        result["missing_artifacts"] = missing_artifacts
+        "candidate_export_mutated": mutated,
+    }
+    if exit_code is not None:
+        execution["exit_code"] = exit_code
+    else:
+        execution["timed_out"] = True
+    result.update(execution)
+    if artifacts:
+        result["artifacts"] = artifacts
+    if invalid_artifacts:
+        result["invalid_artifacts"] = invalid_artifacts
     return result
+
+
+def validate_result_semantics(document: dict[str, object], allow_mandatory_na: bool) -> None:
+    """Enforce result relationships beyond the bundled JSON Schema vocabulary.
+
+    Args:
+        document: Fully assembled machine result.
+        allow_mandatory_na: Reviewed catalog policy controlling whether mandatory
+            NOT_APPLICABLE checks may still produce an overall PASS.
+
+    Returns:
+        None when statuses, exit metadata, timestamps, and outcome agree.
+
+    Raises:
+        ValueError: If a result is internally inconsistent or could claim PASS
+            without the evidence required by catalog policy.
+
+    Side effects:
+        None; validates in-memory public metadata without I/O, DB, or network.
+    """
+    checks = document["checks"]
+    for item in checks:
+        status = item["status"]
+        executed = "duration_ms" in item
+        if executed != ("evidence" in item):
+            raise ValueError("Executed check evidence is inconsistent")
+        if status == "PASS" and (not executed or item.get("exit_code") != 0 or item.get("timed_out")):
+            raise ValueError("PASS requires a completed zero exit")
+        if status == "FAIL" and not executed:
+            raise ValueError("FAIL requires attempted execution")
+        if status in ("NOT_APPLICABLE", "NOT_VERIFIED") and ("exit_code" in item or "timed_out" in item):
+            raise ValueError("Unexecuted status cannot contain exit metadata")
+        if item.get("timed_out") is True and "exit_code" in item:
+            raise ValueError("Timed out check cannot invent an exit code")
+    mandatory = [item for item in checks if item["mandatory"]]
+    if any(item["status"] == "FAIL" for item in mandatory):
+        expected = "FAIL"
+    elif any(item["status"] == "NOT_VERIFIED" for item in mandatory) or (
+        not allow_mandatory_na and any(item["status"] == "NOT_APPLICABLE" for item in mandatory)
+    ):
+        expected = "NOT_VERIFIED"
+    else:
+        expected = "PASS"
+    if document["outcome"] != expected or document["finished_at"] < document["started_at"]:
+        raise ValueError("Result outcome or timestamps are inconsistent")
 
 
 def run(repository: Path, candidate: str, base: str, catalog_path: Path, output: Path) -> tuple[dict[str, object], int]:
@@ -435,25 +684,38 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
     catalog_bytes = catalog_path.read_bytes()
     catalog = validate_catalog(json.loads(catalog_bytes))
     started = int(time.time())
-    evidence_name = output.stem + "-evidence"
-    evidence = output.parent / evidence_name
-    with tempfile.TemporaryDirectory(prefix="ai-candidate-") as directory:
-        export = Path(directory) / "candidate"
-        export.mkdir()
-        export_candidate(repository, candidate, export)
+    output, descriptor, evidence = reserve_runtime_output(repository, output)
+    try:
+        with tempfile.TemporaryDirectory(prefix="ai-candidate-input-") as directory:
+            export = Path(directory) / "candidate"
+            export.mkdir()
+            export_candidate(repository, candidate, export)
+            invalidation_files = file_digests(export, catalog["invalidation_paths"])
         digests = {
             "catalog_sha256": digest_bytes(catalog_bytes),
-            "runner_sha256": digest_bytes(Path(__file__).read_bytes()),
-            "invalidation_files": file_digests(export, catalog["invalidation_paths"]),
+            "runner_files": runner_digests(),
+            "invalidation_files": invalidation_files,
         }
         checks = []
         completed: dict[str, dict[str, object]] = {}
         for item in catalog["checks"]:
-            result = execute_check(item, export, evidence, completed)
-            checks.append(result)
-            completed[str(item["id"])] = result
+            with tempfile.TemporaryDirectory(prefix="ai-candidate-check-") as directory:
+                check_export = Path(directory) / "candidate"
+                check_export.mkdir()
+                export_candidate(repository, candidate, check_export)
+                result = execute_check(item, check_export, evidence, completed)
+                checks.append(result)
+                completed[str(item["id"])] = result
+    except BaseException:
+        os.close(descriptor)
+        output.unlink(missing_ok=True)
+        shutil.rmtree(evidence, ignore_errors=True)
+        raise
     failed = any(item["mandatory"] and item["status"] == "FAIL" for item in checks)
     missing = any(item["mandatory"] and item["status"] == "NOT_VERIFIED" for item in checks)
+    mandatory_na = any(item["mandatory"] and item["status"] == "NOT_APPLICABLE" for item in checks)
+    if mandatory_na and not catalog["policy"]["allow_mandatory_not_applicable"]:
+        missing = True
     outcome, code = ("FAIL", 1) if failed else ("NOT_VERIFIED", 2) if missing else ("PASS", 0)
     document: dict[str, object] = {
         "schema_version": 1,
@@ -472,8 +734,10 @@ def run(repository: Path, candidate: str, base: str, catalog_path: Path, output:
         "outcome": outcome,
         "checks": checks,
     }
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(document, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
+    validate_result_semantics(document, catalog["policy"]["allow_mandatory_not_applicable"])
+    payload = (json.dumps(document, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    with os.fdopen(descriptor, "wb") as stream:
+        stream.write(payload)
     return document, code
 
 

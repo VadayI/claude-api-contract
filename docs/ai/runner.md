@@ -7,11 +7,10 @@ service intentionally. Missing and failed probes remain `MISSING` or
 `NOT_VERIFIED`.
 
 `scripts/ai/runner.py` requires full candidate and base commit IDs and requires
-the base to be an ancestor. It uses `git archive` to export only committed files
-to a temporary directory, rejecting links and unsafe archive paths. Dirty,
-staged and untracked working-copy data cannot enter the executed candidate. Each
-command is an argv array and runs with `shell=False` and an allowlisted child
-environment.
+the base to be an ancestor. It uses `git archive` to create a separate pristine
+export for every check, rejecting links and unsafe archive paths. Dirty, staged,
+untracked, or earlier-check mutations cannot enter a later check. Each command is
+an argv array and runs with `shell=False` and an allowlisted child environment.
 
 ```text
 python scripts/ai/detector.py --repository . --output .ai-runtime/environment.json
@@ -21,20 +20,32 @@ python scripts/ai/runner.py --repository . \
   --output .ai-runtime/results/full.json
 ```
 
-The result binds candidate/base commits and trees, catalog/runner digests,
-declared invalidation file digests, environment facts, timestamps, exact statuses,
-exit codes and sanitized relative evidence paths. Evidence is credential/path
-redacted, bounded to 64 KiB per stream and marks truncation explicitly. `FAIL`
-returns 1. A missing mandatory prerequisite/evidence returns 2 and
-`NOT_VERIFIED`; it never becomes PASS. A declared applicability miss is
-`NOT_APPLICABLE`. Dependencies must name preceding checks; failed or unverified
-dependencies cannot yield PASS.
+Results must be new files below the repository's `.ai-runtime`; linked ancestors,
+existing output paths and escaping locations are rejected before checks run.
+Evidence directories are run-unique and created beside the reserved no-follow
+result file.
+
+The result binds candidate/base commits and trees, catalog, runner, detector and
+schema digests, declared configuration/lockfile digests, environment facts,
+timestamps, exact statuses, exit metadata and sanitized relative evidence paths.
+Evidence redacts prefixed credential assignments, authorization headers,
+credential-bearing URLs and host paths; each stored stream is bounded to 64 KiB
+and marks truncation explicitly. Expected artifacts must be newly created or
+changed contained regular files; their content digests are recorded, while stale
+files, links and missing artifacts fail. Candidate mutations are compared with a
+before/after snapshot and must be explicitly allowed.
+
+`FAIL` returns 1. A missing mandatory prerequisite/evidence returns 2 and
+`NOT_VERIFIED`; it never becomes PASS. Mandatory `NOT_APPLICABLE` also prevents
+PASS unless the catalog explicitly enables that policy. Current implementation
+paths use `NOT_VERIFIED` when absent. Dependencies must name preceding checks;
+failed, unverified, or skipped dependencies cannot yield PASS.
 
 The initial contract catalog intentionally invokes only current production,
 adapter and owner-local core drift gates. TypeSpec, Spectral, examples, breaking,
 Prism, policy, scheduled audit, React and Django commands still require the full
 workflow-step inventory and environment provisioning in later P05 slices. This
 slice does not yet provide network TTL policy, derived/scaffold applicability,
-generated-artifact comparison, or cross-platform descendant-process-tree cleanup
-after timeout. It does not claim one-source local/GitHub execution or P05
-completion.
+cross-repository generated-artifact comparison, streaming capture limits before
+sanitization, or cross-platform descendant-process-tree cleanup after timeout.
+It does not claim one-source local/GitHub execution or P05 completion.

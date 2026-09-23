@@ -2,12 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Shared check catalog v1",
   "type": "object",
-  "required": ["schema_version", "catalog_id", "profile", "invalidation_paths", "checks"],
+  "required": ["schema_version", "catalog_id", "profile", "policy", "invalidation_paths", "checks"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {"type": "integer", "const": 1},
     "catalog_id": {"type": "string", "minLength": 1},
     "profile": {"type": "string", "minLength": 1},
+    "policy": {
+      "type": "object",
+      "required": ["allow_mandatory_not_applicable"],
+      "additionalProperties": false,
+      "properties": {"allow_mandatory_not_applicable": {"type": "boolean"}}
+    },
     "invalidation_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
     "checks": {
       "type": "array",
@@ -29,9 +35,12 @@
           "allowed_side_effects": {"type": "array", "uniqueItems": true, "items": {"type": "string", "enum": ["candidate_export", "evidence"]}},
           "applicability": {
             "type": "object",
-            "required": ["path_exists"],
+            "required": ["path_exists", "missing_status"],
             "additionalProperties": false,
-            "properties": {"path_exists": {"type": "string", "minLength": 1}}
+            "properties": {
+              "path_exists": {"type": "string", "minLength": 1},
+              "missing_status": {"type": "string", "enum": ["NOT_APPLICABLE", "NOT_VERIFIED"]}
+            }
           }
         }
       }

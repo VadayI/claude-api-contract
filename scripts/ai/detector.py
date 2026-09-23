@@ -123,16 +123,18 @@ def repository_report(repository: Path) -> dict[str, object]:
         root = Path(git_value(repository, "rev-parse", "--show-toplevel"))
         status = git_value(root, "status", "--porcelain=v1", "--untracked-files=all").splitlines()
         branch = git_value(root, "branch", "--show-current")
-        return {
+        result = {
             "status": "AVAILABLE",
             "root_name": root.name,
             "git_dir_name": Path(git_value(root, "rev-parse", "--absolute-git-dir")).name,
             "head": git_value(root, "rev-parse", "HEAD"),
             "tree": git_value(root, "rev-parse", "HEAD^{tree}"),
-            "branch": branch or None,
             "dirty_tracked": sum(not line.startswith("??") for line in status),
             "untracked": sum(line.startswith("??") for line in status),
         }
+        if branch:
+            result["branch"] = branch
+        return result
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired, UnicodeError):
         return {"status": "NOT_VERIFIED"}
 

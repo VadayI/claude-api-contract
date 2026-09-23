@@ -35,7 +35,7 @@
     },
     "docs/ai/runner.md": {
       "ownership": "template",
-      "sha256": "e9fa6466c7911ab9798d109d759ef1190f1cae8369c4435560741aee2e50a46b"
+      "sha256": "bdfa11450d6b577641eb1d6b472a4b990ed1292bcf84bf5c6daa7a1878f38856"
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
@@ -59,7 +59,7 @@
     },
     "scripts/ai/detector.py": {
       "ownership": "template",
-      "sha256": "4e6df7fc0c731c7db0a52380af33bf3f85e81454a2e2d235cb7a662fdf18019f"
+      "sha256": "a92a1dcc0c1a73e9fdb0548cb82ab8f9bb3c4f5f79be251e6ea280ef763c8096"
     },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
@@ -95,7 +95,7 @@
     },
     "scripts/ai/runner.py": {
       "ownership": "template",
-      "sha256": "93d1dac7b78c0197f7cf396563c11d577ba7d32ec7fb802938b9983c9712caeb"
+      "sha256": "d2388afecd0e914dc12d63267aa00031bce95fa0f48f7cd057ba753981be1d84"
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
@@ -103,7 +103,7 @@
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
-      "sha256": "58f898baafe66ee0f5e6bef4cb20f05d396276efa3525e0d0e7231234f465959"
+      "sha256": "5f10e1d076f2932cdd604065d440befb218182422733897b439d3e4f0eb6c71a"
     },
     "templates/ai/mcp/codex.optional.toml": {
       "ownership": "template",
@@ -119,11 +119,11 @@
     },
     "templates/ai/schemas/check-catalog.schema.json": {
       "ownership": "template",
-      "sha256": "892cd8d541c50df65e7a5c9f8fed4ecc4ecd235dfed06c94f69d42e3c031e81d"
+      "sha256": "68977ef497a4804662f10a96870fa80192b9075c22ccfd757d356ac35ef41777"
     },
     "templates/ai/schemas/check-result.schema.json": {
       "ownership": "template",
-      "sha256": "dc05036a669b07a068c7fdc3700e62134ad1eef6ca8a982d3dbb3e81cbbb8021"
+      "sha256": "8cb2dbe07eedf201f61a2844c7f97b2d097a807bba427084c02b32341b0426e3"
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
@@ -151,7 +151,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "bf9ef2e4be79c2938552dea6279d3617bc191d071b1038833dd7d6e57553dfff"
+      "sha256": "02b3a05fef163eec905a2f58787a5a7235d2838c0dc27272805a25113a237be4"
     },
     "tests/test_schema.py": {
       "ownership": "template",

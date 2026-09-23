@@ -2,6 +2,7 @@
   "schema_version": 1,
   "catalog_id": "contract.current-core",
   "profile": "full",
+  "policy": {"allow_mandatory_not_applicable": false},
   "invalidation_paths": [
     "package-lock.json",
     "package.json",
@@ -19,10 +20,10 @@
       "mandatory": true,
       "timeout_seconds": 120,
       "prerequisites": ["python"],
-      "applicability": {"path_exists": "scripts/ai/production.py"},
+      "applicability": {"path_exists": "scripts/ai/production.py", "missing_status": "NOT_VERIFIED"},
       "expected_artifacts": [],
       "dependencies": [],
-      "allowed_side_effects": ["candidate_export", "evidence"]
+      "allowed_side_effects": ["evidence"]
     },
     {
       "id": "contract.adapter-drift",
@@ -32,10 +33,10 @@
       "mandatory": true,
       "timeout_seconds": 120,
       "prerequisites": ["python"],
-      "applicability": {"path_exists": "scripts/ai/generate_adapters.py"},
+      "applicability": {"path_exists": "scripts/ai/generate_adapters.py", "missing_status": "NOT_VERIFIED"},
       "expected_artifacts": [],
       "dependencies": ["contract.production-drift"],
-      "allowed_side_effects": ["candidate_export", "evidence"]
+      "allowed_side_effects": ["evidence"]
     },
     {
       "id": "contract.local-core-drift",
@@ -45,10 +46,10 @@
       "mandatory": true,
       "timeout_seconds": 120,
       "prerequisites": ["python", "git"],
-      "applicability": {"path_exists": "template-core/scripts/ai/core_sync.py"},
+      "applicability": {"path_exists": "template-core/scripts/ai/core_sync.py", "missing_status": "NOT_VERIFIED"},
       "expected_artifacts": [],
       "dependencies": ["contract.production-drift", "contract.adapter-drift"],
-      "allowed_side_effects": ["candidate_export", "evidence"]
+      "allowed_side_effects": ["evidence"]
     }
   ]
 }

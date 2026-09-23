@@ -48,10 +48,11 @@ class RunnerTests(unittest.TestCase):
             "and not Path('foreign.tmp').exists() else 9)\n",
             encoding="utf-8",
         )
-        self.git("add", "--", "tracked.txt", "check.py")
+        (self.repo / ".gitignore").write_text(".ai-runtime/\n", encoding="utf-8")
+        self.git("add", "--", "tracked.txt", "check.py", ".gitignore")
         self.git("commit", "-m", "fixture")
         self.candidate = self.git("rev-parse", "HEAD").stdout.strip()
-        self.output = Path(self.temp.name) / "results" / "full.json"
+        self.output = self.repo / ".ai-runtime" / "full.json"
 
     def git(self, *args: str) -> subprocess.CompletedProcess[str]:
         """Run a fixture-local Git command with literal argv.
@@ -95,6 +96,7 @@ class RunnerTests(unittest.TestCase):
             "schema_version": 1,
             "catalog_id": "fixture.runner",
             "profile": "full",
+            "policy": {"allow_mandatory_not_applicable": False},
             "invalidation_paths": invalidation or ["tracked.txt"],
             "checks": checks,
         }
@@ -123,10 +125,10 @@ class RunnerTests(unittest.TestCase):
             "mandatory": True,
             "timeout_seconds": 20,
             "prerequisites": ["python"],
-            "applicability": {"path_exists": "check.py"},
+            "applicability": {"path_exists": "check.py", "missing_status": "NOT_VERIFIED"},
             "expected_artifacts": [],
             "dependencies": [],
-            "allowed_side_effects": ["candidate_export", "evidence"],
+            "allowed_side_effects": ["evidence"],
         }
         result.update(changes)
         return result
@@ -150,7 +152,7 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual((code, document["outcome"]), (0, "PASS"))
         self.assertEqual(document["checks"][0]["status"], "PASS")
         self.assertNotIn(
-            document["digests"]["invalidation_files"]["tracked.txt"],
+            document["digests"]["invalidation_files"]["tracked.txt"]["sha256"],
             {runner.digest_bytes(b"dirty\n"), runner.digest_bytes(b"dirty\r\n")},
         )
         self.assertTrue(all(not Path(name).is_absolute() and ".." not in Path(name).parts for name in document["checks"][0]["evidence"]))
@@ -180,7 +182,7 @@ class RunnerTests(unittest.TestCase):
         """
         fail = self.check("fixture.fail", ["{python}", "-c", "raise SystemExit(7)"])
         missing = self.check("fixture.missing", ["{python}", "check.py"], prerequisites=["definitely-missing-tool"])
-        skipped = self.check("fixture.na", ["{python}", "check.py"], applicability={"path_exists": "absent.file"})
+        skipped = self.check("fixture.na", ["{python}", "check.py"], applicability={"path_exists": "absent.file", "missing_status": "NOT_APPLICABLE"}, mandatory=False)
         document, code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([fail, missing, skipped]), self.output)
         self.assertEqual((code, document["outcome"]), (1, "FAIL"))
         self.assertEqual([item["status"] for item in document["checks"]], ["FAIL", "NOT_VERIFIED", "NOT_APPLICABLE"])
@@ -254,7 +256,11 @@ class RunnerTests(unittest.TestCase):
         future = self.check("fixture.future", ["{python}", "check.py"])
         with self.assertRaises(ValueError):
             runner.validate_catalog(json.loads(self.catalog([dependent, future]).read_text()))
-        command = "print('TOKEN=fake-secret'); print('/tmp/private/path')"
+        command = (
+            "print('GH_TOKEN=fake-token'); print('DATABASE_PASSWORD=fake-password'); "
+            "print('Authorization: Bearer fake-bearer'); print('https://user:fake-url@example.invalid/path'); "
+            "print('/tmp/private/path')"
+        )
         document, code = runner.run(
             self.repo, self.candidate, self.candidate,
             self.catalog([self.check("fixture.redact", ["{python}", "-c", command])]), self.output,
@@ -262,7 +268,8 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(code, 0)
         evidence = self.output.parent / document["checks"][0]["evidence"][0]
         text = evidence.read_text(encoding="utf-8")
-        self.assertNotIn("fake-secret", text)
+        for secret in ("fake-token", "fake-password", "fake-bearer", "fake-url"):
+            self.assertNotIn(secret, text)
         self.assertNotIn("/tmp/private/path", text)
         self.assertIn("<redacted>", text)
         self.assertIn("<external-path>", text)
@@ -281,6 +288,206 @@ class RunnerTests(unittest.TestCase):
         for name in (".env", ".env.local", "nested/.env.example"):
             with self.assertRaises(ValueError):
                 runner.safe_relative(name, allow_env_example=True)
+
+    def test_mandatory_not_applicable_requires_explicit_catalog_policy(self):
+        """Prevent an all-skipped mandatory catalog from producing PASS.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError for a
+        fail-open mandatory applicability policy; temporary I/O errors propagate.
+        Side effects: Writes one isolated NOT_APPLICABLE result beneath the
+        fixture runtime; no database, network, or user repository mutation.
+        """
+        check = self.check(
+            "fixture.absent", ["{python}", "check.py"],
+            applicability={"path_exists": "absent.py", "missing_status": "NOT_APPLICABLE"},
+        )
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate, self.catalog([check]), self.output,
+        )
+        self.assertEqual(document["checks"][0]["status"], "NOT_APPLICABLE")
+        self.assertEqual((document["outcome"], code), ("NOT_VERIFIED", 2))
+
+    def test_missing_mandatory_implementation_is_not_verified(self):
+        """Treat a missing mandatory implementation path as missing evidence.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        deleted gate implementation skips or passes; fixture Git errors propagate.
+        Side effects: Commits deletion only in the disposable repository and
+        writes isolated evidence; no database, network, or external repository.
+        """
+        self.git("rm", "check.py")
+        self.git("commit", "-m", "remove gate")
+        candidate = self.git("rev-parse", "HEAD").stdout.strip()
+        check = self.check("fixture.missing-implementation", ["{python}", "check.py"])
+        document, code = runner.run(self.repo, candidate, self.candidate, self.catalog([check]), self.output)
+        self.assertEqual((document["checks"][0]["status"], document["outcome"], code), ("NOT_VERIFIED", "NOT_VERIFIED", 2))
+
+    def test_each_check_receives_a_pristine_candidate_export(self):
+        """Keep an earlier check mutation out of every dependent check export.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError if a
+        later check observes prior mutations; process and temporary I/O may raise.
+        Side effects: Mutates only a disposable per-check export and writes bounded
+        evidence; source worktree/index, database, and network stay untouched.
+        """
+        mutate = self.check(
+            "fixture.mutate", ["{python}", "-c", "open('tracked.txt','w').write('mutated\\n')"],
+            allowed_side_effects=["candidate_export", "evidence"],
+        )
+        verify = self.check("fixture.verify-pristine", ["{python}", "check.py"], dependencies=["fixture.mutate"])
+        document, code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([mutate, verify]), self.output)
+        self.assertEqual((code, [item["status"] for item in document["checks"]]), (0, ["PASS", "PASS"]))
+        self.assertTrue(document["checks"][0]["candidate_export_mutated"])
+        self.assertFalse(document["checks"][1]["candidate_export_mutated"])
+
+    def test_existing_result_symlink_cannot_overwrite_external_file(self):
+        """Reject predictable linked output before any check or evidence write.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        link is followed; platforms denying fixture links skip this one assertion.
+        Side effects: Creates a temporary link/sentinel only; no DB or network.
+        """
+        self.output.parent.mkdir(parents=True)
+        sentinel = Path(self.temp.name) / "external sentinel.txt"
+        sentinel.write_text("unchanged\n", encoding="utf-8")
+        try:
+            self.output.symlink_to(sentinel)
+        except OSError as error:
+            self.skipTest(f"Host does not permit fixture file links: {error}")
+        with self.assertRaises(ValueError):
+            runner.run(self.repo, self.candidate, self.candidate, self.catalog([self.check("fixture.pass", ["{python}", "check.py"])]), self.output)
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "unchanged\n")
+
+    def test_metacharacters_remain_single_literal_argv_values(self):
+        """Preserve spaces, Unicode, shell syntax, quotes, and backslashes in argv.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError if
+        cross-platform argv transport changes or evaluates any literal value.
+        Side effects: Runs one isolated Python child and writes temporary evidence;
+        no shell, database, network, or external filesystem access.
+        """
+        values = ["space Україна", ";", "$()", 'quote"value', r"C:\\path with space"]
+        program = "import sys; raise SystemExit(0 if sys.argv[1:] == " + repr(values) + " else 8)"
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate,
+            self.catalog([self.check("fixture.argv", ["{python}", "-c", program, *values])]), self.output,
+        )
+        self.assertEqual((code, document["checks"][0]["status"]), (0, "PASS"))
+
+    def test_base_and_detector_changes_invalidate_result_identity(self):
+        """Bind alternate exact bases and detector bytes into result identity.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        base/module change leaves reusable identity unchanged; Git/I/O may raise.
+        Side effects: Adds fixture commits, runs two isolated checks, and mocks one
+        public module read; no database, network, or user repository change.
+        """
+        original_base = self.candidate
+        (self.repo / "tracked.txt").write_text("committed two\n", encoding="utf-8")
+        self.git("add", "tracked.txt")
+        self.git("commit", "-m", "second")
+        candidate = self.git("rev-parse", "HEAD").stdout.strip()
+        first, _ = runner.run(self.repo, candidate, original_base, self.catalog([self.check("fixture.pass", ["{python}", "-c", "raise SystemExit(0)"])]), self.output)
+        second_output = self.repo / ".ai-runtime" / "second.json"
+        second, _ = runner.run(self.repo, candidate, candidate, self.catalog([self.check("fixture.pass", ["{python}", "-c", "raise SystemExit(0)"])]), second_output)
+        self.assertNotEqual(first["base"], second["base"])
+        before = runner.runner_digests()
+        original_read = Path.read_bytes
+        def changed_read(path):
+            """Return fixture-altered detector bytes for invalidation testing.
+
+            Args:
+                path: Path instance intercepted from ``runner_digests``.
+
+            Returns:
+                Original public bytes, with a suffix only for ``detector.py``.
+
+            Raises:
+                OSError: If the original fixture read fails.
+
+            Side effects:
+                Reads the same public files as the production helper; performs no
+                writes, subprocesses, database operations, or network access.
+            """
+            content = original_read(path)
+            return content + b"fixture" if path.name == "detector.py" else content
+        with mock.patch.object(Path, "read_bytes", changed_read):
+            after = runner.runner_digests()
+        self.assertNotEqual(before["scripts/ai/detector.py"], after["scripts/ai/detector.py"])
+        self.assertEqual(before["scripts/ai/runner.py"], after["scripts/ai/runner.py"])
+
+    def test_timeout_is_fail_without_invented_exit_code(self):
+        """Represent an executed timeout as FAIL with explicit timeout metadata.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        timeout passes, becomes infrastructure NA, or invents a process exit code.
+        Side effects: Starts and times out one isolated sleeping child, then writes
+        bounded evidence; descendant cleanup remains a documented later limit.
+        """
+        check = self.check("fixture.timeout", ["{python}", "-c", "import time; time.sleep(5)"], timeout_seconds=1)
+        document, code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([check]), self.output)
+        result = document["checks"][0]
+        self.assertEqual((code, result["status"], result["timed_out"]), (1, "FAIL", True))
+        self.assertNotIn("exit_code", result)
+
+    def test_expected_artifact_requires_new_regular_content(self):
+        """Reject stale expected artifacts and record newly generated file digests.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError if an
+        unchanged preexisting artifact satisfies provenance or a new one lacks a
+        digest. Side effects: Uses isolated exports/results only; no DB/network.
+        """
+        stale = self.check("fixture.stale", ["{python}", "-c", "raise SystemExit(0)"], expected_artifacts=["tracked.txt"])
+        stale_doc, stale_code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([stale]), self.output)
+        self.assertEqual((stale_code, stale_doc["checks"][0]["status"]), (1, "FAIL"))
+        generated_output = self.repo / ".ai-runtime" / "generated.json"
+        generate = self.check(
+            "fixture.generate", ["{python}", "-c", "open('generated.txt','w').write('new')"],
+            expected_artifacts=["generated.txt"], allowed_side_effects=["candidate_export", "evidence"],
+        )
+        generated, generated_code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([generate]), generated_output)
+        self.assertEqual((generated_code, generated["checks"][0]["status"]), (0, "PASS"))
+        self.assertRegex(generated["checks"][0]["artifacts"]["generated.txt"], r"^[0-9a-f]{64}$")
+
+    def test_linked_expected_artifact_fails_without_external_write(self):
+        """Reject a child-created artifact symlink instead of following its target.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when a
+        link is accepted; hosts that deny symlink creation return a normal FAIL.
+        Side effects: The child attempts a link inside its disposable export only;
+        no external file content, database, network, or source checkout is changed.
+        """
+        command = "import os; os.symlink('tracked.txt', 'linked.txt')"
+        check = self.check(
+            "fixture.linked-artifact", ["{python}", "-c", command],
+            expected_artifacts=["linked.txt"], allowed_side_effects=["candidate_export", "evidence"],
+        )
+        document, code = runner.run(self.repo, self.candidate, self.candidate, self.catalog([check]), self.output)
+        self.assertEqual((code, document["checks"][0]["status"]), (1, "FAIL"))
+        self.assertIn("linked.txt", document["checks"][0]["invalid_artifacts"])
+
+    def test_result_schema_rejects_unknown_fields_and_malformed_digests(self):
+        """Prove the closed result schema rejects extra fields and weak hashes.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when
+        malformed machine results validate; local schema/process errors propagate.
+        Side effects: Runs one isolated check and validates in-memory copies; writes
+        fixture evidence only, with no database or network interaction.
+        """
+        schema = load_json(ROOT / "templates/ai/schemas/check-result.schema.json")
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate,
+            self.catalog([self.check("fixture.pass", ["{python}", "check.py"])]), self.output,
+        )
+        self.assertEqual(code, 0)
+        extra = json.loads(json.dumps(document))
+        extra["checks"][0]["unexpected_secret"] = "must-not-validate"
+        with self.assertRaises(ValueError):
+            validate(extra, schema)
+        malformed = json.loads(json.dumps(document))
+        malformed["candidate"]["commit"] = "a" * 41
+        with self.assertRaises(ValueError):
+            validate(malformed, schema)
 
 
 if __name__ == "__main__":
