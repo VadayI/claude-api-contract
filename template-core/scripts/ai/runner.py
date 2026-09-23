@@ -152,11 +152,11 @@ def validate_catalog(document: object) -> dict[str, object]:
     allowed = {
         "id", "description", "argv", "cwd", "mandatory", "timeout_seconds",
         "prerequisites", "applicability", "expected_artifacts", "dependencies",
-        "allowed_side_effects", "provisioning", "generated_comparisons",
+        "allowed_side_effects", "provisioning", "generated_comparisons", "ephemeral_outputs",
     }
     seen: set[str] = set()
     for item in checks:
-        legacy_allowed = allowed - {"provisioning", "generated_comparisons"}
+        legacy_allowed = allowed - {"provisioning", "generated_comparisons", "ephemeral_outputs"}
         if not isinstance(item, dict) or set(item) not in (allowed, legacy_allowed):
             raise ValueError("Invalid check fields")
         identifier = item["id"]
@@ -229,6 +229,11 @@ def validate_catalog(document: object) -> dict[str, object]:
         if not isinstance(generated, list) or len(generated) != len(set(generated)):
             raise ValueError("Invalid generated comparisons")
         for name in generated:
+            safe_relative(name)
+        ephemeral = item.get("ephemeral_outputs", [])
+        if not isinstance(ephemeral, list) or len(ephemeral) != len(set(ephemeral)):
+            raise ValueError("Invalid ephemeral outputs")
+        for name in ephemeral:
             safe_relative(name)
         seen.add(identifier)
     if len(identifiers) != len(set(identifiers)):
@@ -777,7 +782,22 @@ def execute_check(
     except ValueError:
         mutated = True
         invalid_artifacts.extend(name for name in check["expected_artifacts"] if name not in invalid_artifacts)
-    if mutated and "candidate_export" not in check["allowed_side_effects"]:
+        snapshot_after = {}
+    mutations = sorted(
+        name for name in set(snapshot_before) | set(snapshot_after)
+        if snapshot_before.get(name) != snapshot_after.get(name)
+    )
+    if "ephemeral_outputs" in check:
+        allowed_files = set(check["generated_comparisons"]) | set(check["ephemeral_outputs"])
+        allowed_directories = {
+            "/".join(parts[:index]) + "/"
+            for name in allowed_files for parts in [safe_relative(name).parts]
+            for index in range(1, len(parts))
+        }
+        unexpected_mutations = set(mutations) - allowed_files - allowed_directories
+        if unexpected_mutations:
+            invalid_artifacts.append("candidate_export")
+    elif mutated and "candidate_export" not in check["allowed_side_effects"]:
         invalid_artifacts.append("candidate_export")
     if check.get("generated_comparisons"):
         try:
@@ -802,6 +822,7 @@ def execute_check(
         "stderr_truncated": stderr_truncated,
         "evidence": [f"{evidence.name}/{stdout_path.name}", f"{evidence.name}/{stderr_path.name}"],
         "candidate_export_mutated": mutated,
+        "candidate_export_mutations": mutations,
     }
     if exit_code is not None:
         execution["exit_code"] = exit_code
@@ -812,6 +833,16 @@ def execute_check(
         result["artifacts"] = artifacts
     if invalid_artifacts:
         result["invalid_artifacts"] = invalid_artifacts
+    ephemeral_outputs = {}
+    for name in check.get("ephemeral_outputs", []):
+        try:
+            digest = artifact_digest(root, name)
+        except ValueError:
+            digest = None
+        if digest is not None:
+            ephemeral_outputs[name] = digest
+    if ephemeral_outputs:
+        result["ephemeral_outputs"] = ephemeral_outputs
     return result
 
 
@@ -892,7 +923,7 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
     executed_fields = {
         "duration_ms", "stdout_sha256", "stderr_sha256", "stdout_size",
         "stderr_size", "stdout_truncated", "stderr_truncated", "evidence",
-        "candidate_export_mutated",
+        "candidate_export_mutated", "candidate_export_mutations",
     }
     for item in checks:
         status = item["status"]
@@ -907,6 +938,8 @@ def validate_result_semantics(document: dict[str, object], allow_mandatory_na: b
             or type(item["stderr_size"]) is not int or item["stderr_size"] < 0
             or type(item["stdout_truncated"]) is not bool or type(item["stderr_truncated"]) is not bool
             or type(item["candidate_export_mutated"]) is not bool
+            or not isinstance(item["candidate_export_mutations"], list)
+            or item["candidate_export_mutated"] != bool(item["candidate_export_mutations"])
             or not digest_pattern.fullmatch(str(item["stdout_sha256"]))
             or not digest_pattern.fullmatch(str(item["stderr_sha256"]))
             or not isinstance(item["evidence"], list) or len(item["evidence"]) != 2

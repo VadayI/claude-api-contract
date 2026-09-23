@@ -60,7 +60,11 @@
           "ttl_seconds": 86400
         }
       ],
-      "generated_comparisons": []
+      "generated_comparisons": [],
+      "ephemeral_outputs": [
+        "tsconfig.app.tsbuildinfo",
+        "tsconfig.node.tsbuildinfo"
+      ]
     },
     {
       "id": "react.lint",
@@ -96,7 +100,8 @@
           "ttl_seconds": 86400
         }
       ],
-      "generated_comparisons": []
+      "generated_comparisons": [],
+      "ephemeral_outputs": []
     }
   ]
 }

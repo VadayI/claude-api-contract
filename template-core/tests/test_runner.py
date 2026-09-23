@@ -671,6 +671,39 @@ class RunnerTests(unittest.TestCase):
         artifact.write_bytes(b"drift\n")
         self.assertFalse(runner_caps.compare_generated(root, {"generated.json": b"exact\n"}, ["generated.json"])["matched"])
 
+    def test_ephemeral_output_allowlist_rejects_unrelated_mutation(self):
+        """Permit only exact reviewed ephemeral paths in a v2-style check record.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when an
+        undeclared mutation passes or a declared transient output is rejected.
+        Side effects: Runs two isolated Python children that create disposable
+        files inside separate candidate exports; no DB, network, or user files.
+        """
+        common = {
+            "allowed_side_effects": ["candidate_export", "evidence"],
+            "provisioning": [],
+            "generated_comparisons": [],
+            "ephemeral_outputs": ["allowed.tmp"],
+        }
+        allowed = self.check(
+            "fixture.ephemeral-allowed",
+            ["{python}", "-c", "from pathlib import Path; Path('allowed.tmp').write_text('ok')"],
+            **common,
+        )
+        unexpected = self.check(
+            "fixture.ephemeral-unexpected",
+            ["{python}", "-c", "from pathlib import Path; Path('unexpected.tmp').write_text('bad')"],
+            dependencies=["fixture.ephemeral-allowed"],
+            **common,
+        )
+        document, code = runner.run(
+            self.repo, self.candidate, self.candidate, self.catalog([allowed, unexpected]), self.output
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual([item["status"] for item in document["checks"]], ["PASS", "FAIL"])
+        self.assertEqual(document["checks"][0]["candidate_export_mutations"], ["allowed.tmp"])
+        self.assertIn("candidate_export", document["checks"][1]["invalid_artifacts"])
+
     def test_workflow_inventory_maps_all_steps_and_five_source_gates(self):
         """Require complete 55-step routing and exactly five requested real gates.
 
