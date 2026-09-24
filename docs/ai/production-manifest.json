@@ -485,15 +485,15 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "445c5732de3565e6f56138582c2292ad0e381545cbbc219f4a95d24cfb946e4f"
+      "sha256": "8b3d7539f689b8490950db3a307dcee60fd8d5be764d34495d27f94106926421"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "02e7089badd3448962cd47d356a384a8d2f6cee5f687327872e2e33393aa9db4"
+      "sha256": "8b7201bac1f19342d6f553ab7ab7a2e6311a601399e624737d071c2a4b1fabe1"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "f7a2c65d7b76c08d887531b493acff3443f0770af3093d7c2719452ec6cde7b5"
+      "sha256": "9acbb00fa5fc942be4b77173f2afec4e035488ec7f276978165c1abe9a9046cb"
     },
     "docs/ai/launchers.md": {
       "legacy_sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec",
@@ -545,7 +545,7 @@
     },
     "docs/ai/rules/auth-contract.md": {
       "ownership": "template",
-      "sha256": "5e89054ce899bf6ec2f95a32381d2cafc4d68d5a2147e2be5034549fc085fe91"
+      "sha256": "97aef5c27caa8b8582fc5b77c42c0f6b0357303f0379a1d3f46067a3eebdd431"
     },
     "docs/ai/rules/breaking-changes.md": {
       "ownership": "template",

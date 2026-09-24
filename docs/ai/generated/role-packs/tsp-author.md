@@ -85,7 +85,7 @@ Two predictable shapes so every 4xx/5xx is parseable:
 <!-- END SOURCE docs/ai/rules/api-envelope.md -->
 
 
-<!-- SOURCE docs/ai/rules/auth-contract.md SHA256 5e89054ce899bf6ec2f95a32381d2cafc4d68d5a2147e2be5034549fc085fe91 -->
+<!-- SOURCE docs/ai/rules/auth-contract.md SHA256 97aef5c27caa8b8582fc5b77c42c0f6b0357303f0379a1d3f46067a3eebdd431 -->
 
 # Auth in the contract (Bearer/JWT, user-flow + service-flow)
 
@@ -113,6 +113,16 @@ security:
 | `POST /api/v1/auth/logout` | `bearerAuth` | — / `refresh` | 204 |
 
 **Refresh transport (D2):** `access` in `Authorization: Bearer`, `refresh` **in the response body**. The contract is self-contained and the mock is trivial. An ADR (`docs/decisions/`) must record the XSS trade-off and the option to switch to an httpOnly cookie in a derived project.
+
+## Credential validation defaults
+
+Apply these defaults when scaffolding the reusable auth contract for a new project:
+
+- Model auth email inputs with TypeSpec `@format("email")` so clients and schema-based tests only treat syntactically valid addresses as valid credentials.
+- Require login passwords to be non-empty (`@minLength(1)`) and registration passwords to be at least 8 characters (`@minLength(8)`). Reject NUL characters in both fields because common framework serializers cannot safely accept them.
+- Do not encode character-class requirements as a generic password rule. A derived project may apply contextual registration checks such as user similarity or common/breached-password blocklists and return the documented 400 validation response.
+- Keep portable backend validation aligned with the OpenAPI request schema. For contextual registration policy, keep the 400 error envelope in the contract and configure conformance to expect that status for registration while validating the response schema.
+- Treat any stricter request constraint as a contract change and classify its compatibility impact before release.
 
 ## Service-to-service flow (D5 — primary client profile)
 

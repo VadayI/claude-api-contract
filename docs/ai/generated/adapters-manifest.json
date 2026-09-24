@@ -178,11 +178,11 @@
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "02e7089badd3448962cd47d356a384a8d2f6cee5f687327872e2e33393aa9db4"
+      "sha256": "8b7201bac1f19342d6f553ab7ab7a2e6311a601399e624737d071c2a4b1fabe1"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "f7a2c65d7b76c08d887531b493acff3443f0770af3093d7c2719452ec6cde7b5"
+      "sha256": "9acbb00fa5fc942be4b77173f2afec4e035488ec7f276978165c1abe9a9046cb"
     }
   },
   "generator": "family-core",
@@ -193,7 +193,7 @@
     "docs/ai/roles/contract-reviewer.md": "f149a074701be58a05008585b214f5da11071c4e1adc8c9f88c258ba63668f0f",
     "docs/ai/roles/tsp-author.md": "611ba432ea7babe162a3a43aedd2ab486e172f190c22c30e9315383cc7d78445",
     "docs/ai/rules/api-envelope.md": "89e11e34e67ce04de69d2944a0e35f270c13e9f815892574c3b2948cb3ce1db7",
-    "docs/ai/rules/auth-contract.md": "5e89054ce899bf6ec2f95a32381d2cafc4d68d5a2147e2be5034549fc085fe91",
+    "docs/ai/rules/auth-contract.md": "97aef5c27caa8b8582fc5b77c42c0f6b0357303f0379a1d3f46067a3eebdd431",
     "docs/ai/rules/breaking-changes.md": "2ca8a0d89f4d3c9970ca618ca4fcf58ec2e927fcc164ce911ba7847bd8d5a80e",
     "docs/ai/rules/contract-first.md": "4f2055a6845c939a5763079b81a49b471b06bb8f535c16fcea469b6aba0b2c9f",
     "docs/ai/rules/deploy.md": "4eb255d7eb46f57cbe0350e8cf090692f1a1a073d276a0ad9b2e2f727b6c82df",
