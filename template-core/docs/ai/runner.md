@@ -33,6 +33,11 @@ that run's matching staging/final inode and evidence so the same output can retr
 The result binds candidate/base commits and trees, catalog, runner, detector and
 schema digests, declared configuration/lockfile digests, environment facts,
 timestamps, exact statuses, exit metadata and sanitized relative evidence paths.
+Catalog invalidation inputs may name files or directories. File inputs retain
+their content-only SHA-256 digest; a directory digest covers a sorted recursive
+manifest of relative names, entry types, file content digests and executable
+bits where available, including empty directories. Symlinks, junctions,
+escaping paths and special files anywhere in an invalidated tree are rejected.
 Evidence redacts prefixed credential assignments, authorization headers,
 credential-bearing URLs and host paths; each stored stream is bounded to 64 KiB
 and marks truncation explicitly. Expected artifacts must be newly created or
