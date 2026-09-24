@@ -49,12 +49,12 @@
     ".claude/agents/breaking-change-analyst.md": {
       "legacy_sha256": "d2246a961f0c7bebea4f2a17336ad7d2da44b22220ac2706685d311656ebdca7",
       "ownership": "template",
-      "sha256": "d2246a961f0c7bebea4f2a17336ad7d2da44b22220ac2706685d311656ebdca7"
+      "sha256": "d69edd09cd814679896efba4fcf9ca26a6a5adf55de5e793985e8e74e98caebe"
     },
     ".claude/agents/brief-synthesizer.md": {
       "legacy_sha256": "6263d847fcaf5cc55a1ec73ba5da553c0ca1aa001ab020107a408b6304555eec",
       "ownership": "template",
-      "sha256": "6263d847fcaf5cc55a1ec73ba5da553c0ca1aa001ab020107a408b6304555eec"
+      "sha256": "3558d181935851fbbb21ca850ef59b60a5e479bb99f977037a3760a69dbc6f4d"
     },
     ".claude/agents/contract-reviewer.md": {
       "legacy_sha256": "8e19396cca00090bff5101b141e7d39cb559442193b56078f181a0de40469fa7",
@@ -74,7 +74,7 @@
     ".claude/agents/happy-path-author.md": {
       "legacy_sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e",
       "ownership": "template",
-      "sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e"
+      "sha256": "6f93b15e8d0f2460ad316d5bdf37993dd62434a487de80ab82486b5029c5251e"
     },
     ".claude/agents/mock-validator.md": {
       "legacy_sha256": "fdf80526713c52b2f5d71c18ee8e3bcafefb13ece08b72341577531b2d061ddb",
