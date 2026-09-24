@@ -29,8 +29,10 @@ path and, for `repo_pin`, an explicit pin. URLs cannot contain credentials, quer
 parameters or fragments. A digest is a declared identity until the integrity runner
 verifies it. This schema does not fetch URLs or certify reachability. Artifact and
 documentation paths may refer to future files, but cannot traverse outside the
-project or through links. Project-state creation/migration is a separate P06/P07
-step; installing these schemas does not create or overwrite project settings.
+project or through links. P06 materializes an explicit CI choice in project
+settings. P07 migrates legacy settings and registries with the procedures in
+`project-state-migration.md`; installing these schemas does not create or
+overwrite project settings.
 
 Legacy maturity data is checked against the existing P09 resolver's historical
 floors. Saved deployment profiles use that resolver and must match the project's

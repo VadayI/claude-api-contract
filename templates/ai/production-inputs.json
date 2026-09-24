@@ -441,6 +441,9 @@
       "legacy_sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47",
       "ownership": "template"
     },
+    "docs/ai/project-state-migration.md": {
+      "ownership": "template"
+    },
     "docs/ai/workflows/audit.md": {
       "ownership": "template"
     },
@@ -561,6 +564,9 @@
       "ownership": "template"
     },
     "scripts/ai/runner.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/project_state.py": {
       "ownership": "template"
     },
     "scripts/ai/contract_policy.py": {
@@ -713,6 +719,9 @@
       "legacy_sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47",
       "ownership": "template"
     },
+    "template-core/docs/ai/project-state-migration.md": {
+      "ownership": "template"
+    },
     "template-core/scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
       "ownership": "template"
@@ -761,6 +770,9 @@
       "ownership": "template"
     },
     "template-core/scripts/ai/runner.py": {
+      "ownership": "template"
+    },
+    "template-core/scripts/ai/project_state.py": {
       "ownership": "template"
     },
     "template-core/scripts/ai/contract_policy.py": {
@@ -828,6 +840,9 @@
       "ownership": "template"
     },
     "template-core/tests/test_runner.py": {
+      "ownership": "template"
+    },
+    "template-core/tests/test_project_state.py": {
       "ownership": "template"
     },
     "template-core/tests/test_schema.py": {

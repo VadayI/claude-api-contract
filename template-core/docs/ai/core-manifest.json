@@ -33,6 +33,10 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "docs/ai/project-state-migration.md": {
+      "ownership": "template",
+      "sha256": "43a3094f503d8861822a8e65fab58b7389bfeb3f81c06192a8eb148f72935129"
+    },
     "docs/ai/runner.md": {
       "ownership": "template",
       "sha256": "54fd4b2948eec015b8099e5e2f1d787adf3344b721bb6ecd7284900cece6fbbd"
@@ -43,7 +47,7 @@
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47"
+      "sha256": "639a0fc7381342988ebdeae03f015ee3e0e446c80f1cd9b6f70833b09b0916fd"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -71,7 +75,7 @@
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "4d3397bff5b73570dff5db208a1362bbf10e06a5179016a78888330252681d5e"
+      "sha256": "85cb2c826ea50c1b3f6c14c89463ada953193ed863ea26b0a1aff126c0943ceb"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -92,6 +96,10 @@
     "scripts/ai/legacy_launch.py": {
       "ownership": "template",
       "sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc"
+    },
+    "scripts/ai/project_state.py": {
+      "ownership": "template",
+      "sha256": "186eb9da593da4e8a372f5222b0f2c7d7891cb996cb00c82fffb2ee2869cecfa"
     },
     "scripts/ai/readiness.py": {
       "ownership": "template",
@@ -169,6 +177,10 @@
       "ownership": "template",
       "sha256": "00446d33ea5864f2a9057faf92b2196dba49e89d02076f2723a903850fa896bb"
     },
+    "tests/test_project_state.py": {
+      "ownership": "template",
+      "sha256": "a04836f8cc8e58448c5113c7055f0f9d02963edd89232ac7ae85809fac9f094a"
+    },
     "tests/test_readiness.py": {
       "ownership": "template",
       "sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65"
@@ -182,6 +194,6 @@
       "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     }
   },
-  "phase": "P05-in-progress",
+  "phase": "P07-in-progress",
   "schema_version": 1
 }
