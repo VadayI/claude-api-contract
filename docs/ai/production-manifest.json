@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "30aeaf0d2ce1201a3d7d9c4a459d8ba37e4cfd355b83e9d25040825849d065be"
+      "sha256": "445c5732de3565e6f56138582c2292ad0e381545cbbc219f4a95d24cfb946e4f"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -643,7 +643,7 @@
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
-      "sha256": "5956c2b439b3e63f9e252118cfda3aeeb7500f1138258e0e7455a57df2945cd2"
+      "sha256": "0c8683fd7c1ef2d584765be21a934d1f4e96a0a792ae32f1ce0b804f4554ca15"
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
@@ -1216,7 +1216,7 @@
     },
     "tests/test_production.py": {
       "ownership": "template",
-      "sha256": "4b46dedd9cf1cb87b129d4b141f7bc87672af351719e2c95b7c9aacf5c8bc07b"
+      "sha256": "35e77f563ce877f9ba726395178d620680def40b7f1f18ade95e71b4f8c4df7a"
     },
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",

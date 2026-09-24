@@ -25,7 +25,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  copied-template-block:
+    name: Copied template requires CI choice
+    if: github.repository != 'VadayI/claude-api-contract'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::Copied upstream workflow cannot run as derived CI. Choose CI mode and remove copied maintenance workflows."
+          exit 1
   contract-ci:
+    if: github.repository == 'VadayI/claude-api-contract'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (full history + tags for oasdiff)

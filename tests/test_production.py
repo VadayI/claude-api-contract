@@ -18,6 +18,26 @@ import ci_mode
 class ProductionTests(unittest.TestCase):
     """Exercise observable delivery without any network or application execution."""
 
+    def test_upstream_maintenance_jobs_are_repository_bound(self):
+        """Fail copied workflow runs visibly while retaining upstream jobs.
+
+        Args: self reads three reviewed upstream maintenance workflows.
+        Returns: None after each workflow has a failure job and owner guard.
+        Raises: AssertionError if copied jobs can report misleading green.
+        Side effects: Reads source YAML only; no DB, network or writes.
+        Business rule: Upstream jobs still run in the source repository.
+        """
+        guard = "    if: github.repository == 'VadayI/claude-api-contract'\n"
+        copied = "    if: github.repository != 'VadayI/claude-api-contract'\n"
+        for name, job in (("contract-ci.yml", "contract-ci"),
+                          ("contract-policy.yml", "policy"),
+                          ("scheduled-audit.yml", "audit")):
+            content = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
+            self.assertIn(f"jobs:\n  copied-template-block:\n    name: Copied template requires CI choice\n{copied}", content)
+            self.assertIn(f"  {job}:\n{guard}    runs-on:", content)
+            self.assertIn("          exit 1\n", content)
+            self.assertEqual(content.count("    runs-on:"), 2)
+
     def test_copied_upstream_auto_workflows_block_local_choice_without_writes(self):
         """Reject a GitHub template copy that still has automatic workflows.
 
