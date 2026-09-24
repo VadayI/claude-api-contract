@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Compatible legacy detector hook: no lock cleanup, env seeding or package install.
-# Shared detector integration remains P05/P06. A failed probe is visibly unknown.
+# The shared detector (scripts/ai/detector.py) serves the exact-candidate runner;
+# this legacy probe stays until the P07 project-state migration. A failed probe is
+# visibly unknown.
 set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if ! command -v node >/dev/null 2>&1; then

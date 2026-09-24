@@ -2,6 +2,30 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-24 — post-P06 consistency
+
+Branch `fix/p06-contract-consistency` on top of `main` `9db26a0` (P06 merged via
+PR #61; runner directory-digest fix #62; reusable auth-validation docs #64).
+Integrated so far: P04 production structure and local-source core delivery,
+P05 detector/exact-candidate runner, P06 explicit CI mode (`scripts/ai/ci_mode.py`),
+Husky staged/all-ref hooks and the Claude edit-payload parser. Not delivered:
+P07 shared project state (core commit `68305e3` on `feat/p07-shared-memory`,
+rebase onto this branch pending), P08 Git lifecycle, P10/P11 roles, P13.
+
+- `AGENTS.md`, `docs/ai/rules/{preflight,environment}.md`,
+  `docs/ai/production-structure.md`, `docs/ai/workflows/wrap-up.md` and
+  `scripts/session-start.sh` no longer describe the CI choice or the shared
+  detector/runner as future P05/P06 work; role packs regenerated.
+- Django and React are repinned to integrated core `9db26a0` on their own fix
+  branches (`fix/p06-django-consistency`, `fix/p06-react-delivery-drift`).
+- Verified on Linux Python 3.13.15: `generate_core --check`,
+  `core_sync --local-source --check`, `production --check`,
+  `generate_adapters --check` PASS; `tests/test_production.py` 14 OK;
+  `template-core/tests` 85 OK.
+- Next: rebase `feat/p07-shared-memory` here, fix the stale core docs
+  (`schemas.md`, `core-manifest.json` phase) inside that core revision, deliver it
+  downstream with development pins. Merge only on the user's command.
+
 ## 2026-09-20 — local core delivery continuation
 
 Verified base: `b6d1b3d3582c4a18545050be6f475d270f53bc48` (merged core PR #56).
