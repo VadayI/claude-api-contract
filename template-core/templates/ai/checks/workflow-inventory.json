@@ -1,0 +1,626 @@
+{
+  "schema_version": 1,
+  "source_recorded_at": "2026-09-23",
+  "expected_steps": 55,
+  "steps": [
+    {
+      "id": "inventory.01.contract.contract-ci.checkout-full-history-tags-for-oasdiff",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Checkout (full history + tags for oasdiff)",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.02.contract.contract-ci.setup-node-22",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Setup Node 22",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.03.contract.contract-ci.setup-family-tooling-python",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Setup family tooling Python",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.04.contract.contract-ci.verify-canonical-core-and-local-delivery",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Verify canonical core and local delivery",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "contract.production-drift",
+        "contract.adapter-drift",
+        "contract.local-core-drift"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.05.contract.contract-ci.install-dependencies",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Install dependencies",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.06.contract.contract-ci.detect-spec-template-state-guard",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Detect spec/ (template-state guard)",
+      "classification": "trigger",
+      "disposition": "CONTEXT",
+      "runner_check_ids": [],
+      "reason": "Trigger logic is represented by exact run context and typed applicability."
+    },
+    {
+      "id": "inventory.07.contract.contract-ci.install-oasdiff-breaking-change-gate",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Install oasdiff (breaking-change gate)",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.08.contract.contract-ci.add-go-bin-to-path",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Add Go bin to PATH",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.09.contract.contract-ci.gate-1-typespec-drift",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Gate 1 — TypeSpec drift",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "contract.typespec-drift"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.10.contract.contract-ci.gate-2-spectral-lint",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Gate 2 — Spectral lint",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "contract.spectral"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.11.contract.contract-ci.gate-3-examples-validation",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Gate 3 — Examples validation",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "contract.examples"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.12.contract.contract-ci.gate-4-breaking-changes-oasdiff",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Gate 4 — Breaking changes (oasdiff)",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.breaking"],
+      "reason": "Mapped to exact-base oasdiff without mutable ref or tag fallback."
+    },
+    {
+      "id": "inventory.13.contract.contract-ci.gate-5-prism-mock-smoke",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Gate 5 — Prism mock smoke",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.prism"],
+      "reason": "Mapped to supervised Prism start, health, smoke, stop and runner process-tree cleanup."
+    },
+    {
+      "id": "inventory.14.contract.contract-ci.verify-endpoints-registry-coverage",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-ci.yml",
+      "job_index": 0,
+      "name": "Verify — Endpoints registry coverage",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.endpoints"],
+      "reason": "Mapped to the reviewed endpoint registry and x-surface verifier."
+    },
+    {
+      "id": "inventory.15.contract.contract-policy.checkout-full-history-for-base-diff",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "Checkout (full history for base diff)",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.16.contract.contract-policy.compute-changed-files-pr-diff-vs-base",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "Compute changed files (PR diff vs base)",
+      "classification": "trigger",
+      "disposition": "CONTEXT",
+      "runner_check_ids": [],
+      "reason": "Trigger logic is represented by exact run context and typed applicability."
+    },
+    {
+      "id": "inventory.17.contract.contract-policy.no-bare-todo-fixme-in-contract-artifacts",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "No bare TODO/FIXME in contract artifacts",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.no-bare-todo"],
+      "reason": "Mapped to exact run-context changed files; no shared /tmp artifact."
+    },
+    {
+      "id": "inventory.18.contract.contract-policy.adr-required-when-oasdiff-ignore-txt-changes",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "ADR required when .oasdiff-ignore.txt changes",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.oasdiff-ignore-adr"],
+      "reason": "Mapped to exact run-context changed files and reviewed ADR path policy."
+    },
+    {
+      "id": "inventory.19.contract.contract-policy.changelog-unreleased-fragment-required-for-contract-changes",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "CHANGELOG [Unreleased] fragment required for contract changes",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.changelog-unreleased"],
+      "reason": "Mapped to exact candidate/base Unreleased fragment comparison."
+    },
+    {
+      "id": "inventory.20.contract.contract-policy.advisory-suggest-a-living-plan-for-spec-changes",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "Advisory — suggest a living plan for spec/ changes",
+      "classification": "reporting",
+      "disposition": "REPORTING",
+      "runner_check_ids": [],
+      "reason": "Advisory remains explicitly non-gating and consumes exact changed-file context."
+    },
+    {
+      "id": "inventory.21.contract.contract-policy.readme-status-line-matches-package-json-version",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "README status line matches package.json version",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.readme-version"],
+      "reason": "Mapped to portable README/package semantic-version equality."
+    },
+    {
+      "id": "inventory.22.contract.contract-policy.advisory-package-json-version-vs-latest-tag",
+      "repository": "contract",
+      "workflow": ".github/workflows/contract-policy.yml",
+      "job_index": 0,
+      "name": "Advisory — package.json version vs latest tag",
+      "classification": "reporting",
+      "disposition": "REPORTING",
+      "runner_check_ids": [],
+      "reason": "Reporter cannot upgrade or replace a mandatory gate."
+    },
+    {
+      "id": "inventory.23.contract.scheduled-audit.checkout-full-history-tags",
+      "repository": "contract",
+      "workflow": ".github/workflows/scheduled-audit.yml",
+      "job_index": 0,
+      "name": "Checkout (full history + tags)",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.24.contract.scheduled-audit.setup-node-22",
+      "repository": "contract",
+      "workflow": ".github/workflows/scheduled-audit.yml",
+      "job_index": 0,
+      "name": "Setup Node 22",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.25.contract.scheduled-audit.stub-todo-inventory",
+      "repository": "contract",
+      "workflow": ".github/workflows/scheduled-audit.yml",
+      "job_index": 0,
+      "name": "STUB / TODO inventory",
+      "classification": "reporting",
+      "disposition": "REPORTING",
+      "runner_check_ids": [],
+      "reason": "Reporter cannot upgrade or replace a mandatory gate."
+    },
+    {
+      "id": "inventory.26.contract.scheduled-audit.version-doc-drift",
+      "repository": "contract",
+      "workflow": ".github/workflows/scheduled-audit.yml",
+      "job_index": 0,
+      "name": "Version / doc drift",
+      "classification": "reporting",
+      "disposition": "REPORTING",
+      "runner_check_ids": [],
+      "reason": "Reporter cannot upgrade or replace a mandatory gate."
+    },
+    {
+      "id": "inventory.27.contract.scheduled-audit.gate-health",
+      "repository": "contract",
+      "workflow": ".github/workflows/scheduled-audit.yml",
+      "job_index": 0,
+      "name": "Gate health",
+      "classification": "trigger+provisioning+check+reporting",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["contract.typespec-drift", "contract.spectral", "contract.examples", "contract.endpoints", "contract.breaking"],
+      "reason": "Scheduled gate health is exactly the shared validate plus exact-base breaking checks; missing pinned oasdiff is NOT_VERIFIED."
+    },
+    {
+      "id": "inventory.28.django.family-core-delivery.checkout",
+      "repository": "django",
+      "workflow": ".github/workflows/family-core.yml",
+      "job_index": 0,
+      "name": "Checkout",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.29.django.family-core-delivery.setup-python-3-13",
+      "repository": "django",
+      "workflow": ".github/workflows/family-core.yml",
+      "job_index": 0,
+      "name": "Setup Python 3.13",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.30.django.family-core-delivery.verify-vendored-source-receipt",
+      "repository": "django",
+      "workflow": ".github/workflows/family-core.yml",
+      "job_index": 0,
+      "name": "Verify vendored source receipt",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.core-receipt"],
+      "reason": "Mapped to the reviewed Django exact-candidate catalog."
+    },
+    {
+      "id": "inventory.31.django.family-core-delivery.exercise-fresh-and-conflicting-delivery",
+      "repository": "django",
+      "workflow": ".github/workflows/family-core.yml",
+      "job_index": 0,
+      "name": "Exercise fresh and conflicting delivery",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.delivery-unittest"],
+      "reason": "Mapped to the downstream-safe delivery self-test in the reviewed Django catalog."
+    },
+    {
+      "id": "inventory.32.django.family-core-delivery.verify-canonical-adapters-and-instruction-ownership",
+      "repository": "django",
+      "workflow": ".github/workflows/family-core.yml",
+      "job_index": 0,
+      "name": "Verify canonical adapters and instruction ownership",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["django.adapter-drift", "django.instruction-manifest"],
+      "reason": "The workflow step contains both reviewed drift commands; both map to stable catalog IDs."
+    },
+    {
+      "id": "inventory.33.react.frontend-ci.checkout",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Checkout",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.34.react.frontend-ci.set-up-node-24",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Set up Node 24",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.35.react.frontend-ci.install-dependencies",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Install dependencies",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.36.react.frontend-ci.gate-npm-audit-high-critical",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — npm audit (high/critical)",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.audit"],
+      "reason": "Mapped to the reviewed audit wrapper, where vulnerabilities FAIL and transport failure is NOT_VERIFIED."
+    },
+    {
+      "id": "inventory.37.react.frontend-ci.type-check",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Type check",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "react.typecheck"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.38.react.frontend-ci.lint",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Lint",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": [
+        "react.lint"
+      ],
+      "reason": "Mapped to shared runner catalog check IDs."
+    },
+    {
+      "id": "inventory.39.react.frontend-ci.gate-file-size",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — file size",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.file-size"],
+      "reason": "Mapped to the reviewed React source-size gate."
+    },
+    {
+      "id": "inventory.40.react.frontend-ci.gate-stubs",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — stubs",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.stubs"],
+      "reason": "Mapped to the reviewed React stub policy gate."
+    },
+    {
+      "id": "inventory.41.react.frontend-ci.gate-feature-readmes",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — feature READMEs",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.feature-readmes"],
+      "reason": "Mapped to the reviewed feature README gate."
+    },
+    {
+      "id": "inventory.42.react.frontend-ci.gate-api-types-drift",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — API types drift",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.api-types"],
+      "reason": "Mapped to isolated generated API type comparison."
+    },
+    {
+      "id": "inventory.43.react.frontend-ci.gate-contract-sync",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — contract sync",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.contract-sync"],
+      "reason": "Mapped to the reviewed exact contract synchronization check."
+    },
+    {
+      "id": "inventory.44.react.frontend-ci.gate-living-plan-sync",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — living plan sync",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.plan-sync"],
+      "reason": "Mapped to explicit exact-base/run-context policy without event fallback."
+    },
+    {
+      "id": "inventory.45.react.frontend-ci.gate-routes-registry-sync",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — routes registry sync",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.routes-sync"],
+      "reason": "Mapped to explicit exact-base/run-context route registry policy."
+    },
+    {
+      "id": "inventory.46.react.frontend-ci.gate-guides-sync",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — guides sync",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.guides-sync"],
+      "reason": "Mapped to explicit exact-base/run-context guide policy."
+    },
+    {
+      "id": "inventory.47.react.frontend-ci.test-with-coverage",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Test with coverage",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.unit-coverage"],
+      "reason": "Mapped to the reviewed isolated Vitest coverage gate."
+    },
+    {
+      "id": "inventory.48.react.frontend-ci.build",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Build",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.build"],
+      "reason": "Mapped to the reviewed isolated production build."
+    },
+    {
+      "id": "inventory.49.react.frontend-ci.gate-bundle-size",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 0,
+      "name": "Gate — bundle size",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.bundle-size"],
+      "reason": "Mapped to the reviewed bundle budget gate."
+    },
+    {
+      "id": "inventory.50.react.frontend-ci.checkout",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Checkout",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.51.react.frontend-ci.set-up-node-24",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Set up Node 24",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.52.react.frontend-ci.install-dependencies",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Install dependencies",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.53.react.frontend-ci.install-playwright-browsers",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Install Playwright browsers",
+      "classification": "provisioning",
+      "disposition": "ORCHESTRATION",
+      "runner_check_ids": [],
+      "reason": "Provisioning is explicit runner orchestration, not a PASS-producing check."
+    },
+    {
+      "id": "inventory.54.react.frontend-ci.run-e2e-tests",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Run E2E tests",
+      "classification": "check",
+      "disposition": "EXECUTABLE",
+      "runner_check_ids": ["react.e2e"],
+      "reason": "Mapped to supervised Playwright browser/webServer lifecycle with failure report capture."
+    },
+    {
+      "id": "inventory.55.react.frontend-ci.upload-playwright-report",
+      "repository": "react",
+      "workflow": ".github/workflows/frontend-ci.yml",
+      "job_index": 1,
+      "name": "Upload Playwright report",
+      "classification": "reporting",
+      "disposition": "REPORTING",
+      "runner_check_ids": ["react.e2e"],
+      "reason": "Report upload consumes the E2E result artifacts and cannot upgrade its gate status."
+    }
+  ]
+}

@@ -22,7 +22,14 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1
 
-PORT="${PRISM_PORT:-4010}"
+if [[ -n "${PRISM_PORT:-}" ]]; then
+  PORT="$PRISM_PORT"
+else
+  PORT="$(node -e "const n=require('node:net');const s=n.createServer();s.listen(0,'127.0.0.1',()=>{console.log(s.address().port);s.close()})")" || {
+    echo "[mock] NOT_VERIFIED: unable to reserve a loopback port."
+    exit 75
+  }
+fi
 BASE="http://127.0.0.1:${PORT}"
 LOG="$(mktemp -t prism-mock.XXXXXX.log)"
 CT='Content-Type: application/json'

@@ -24,6 +24,10 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "docs/ai/runner.md": {
+      "ownership": "template",
+      "sha256": "3786b47a4a0f66df249c2a1315bec893815de4b3842fe3bbea1fef6913a4b42d"
+    },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
       "sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07"
@@ -36,6 +40,10 @@
       "ownership": "template",
       "sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9"
     },
+    "scripts/ai/contract_policy.py": {
+      "ownership": "template",
+      "sha256": "18012088a72f0079842f813b4396a3e9dd8c07699f4b45cba28501f896716477"
+    },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
       "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
@@ -43,6 +51,10 @@
     "scripts/ai/core_sync.py": {
       "ownership": "template",
       "sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d"
+    },
+    "scripts/ai/detector.py": {
+      "ownership": "template",
+      "sha256": "c62a0c431e75d6c3b6e0aa81cde9f4ae39ea5c0b960cd0d35f8fe469d6ee1975"
     },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
@@ -68,9 +80,29 @@
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
     },
+    "scripts/ai/runner.py": {
+      "ownership": "template",
+      "sha256": "4c9caa84ee08be65a9e70dd2746b81aa570faf84ab87ef8578b8138446fa20e1"
+    },
+    "scripts/ai/runner_caps.py": {
+      "ownership": "template",
+      "sha256": "abca8fbe50b6a91c1b15416699388666792c71bc5901af5c90725e5dfa1ec7c1"
+    },
     "scripts/ai/schema.py": {
       "ownership": "template",
-      "sha256": "7acad99cf3a6fd4a3508752f1caee355d11f3fd6a52d93df507d6f988e4bd487"
+      "sha256": "067c08b0e2a69c8ea285d226be9adbc2b8150f9fb11883489a18908a82c2b046"
+    },
+    "templates/ai/checks/contract.json": {
+      "ownership": "template",
+      "sha256": "fa69f53fe89e1b2d448d299c25cd83d0536f08b998c2ce1bdaed16ff354ee1b1"
+    },
+    "templates/ai/checks/react.json": {
+      "ownership": "template",
+      "sha256": "2310a1675a1a66f79ef8b0564099c4da490c80f825ebaf120d360a7637162b4b"
+    },
+    "templates/ai/checks/workflow-inventory.json": {
+      "ownership": "template",
+      "sha256": "24a3a3381764ea1c20f75f5093872d6fccfa253ad0ff7fd94b69ed91b8bd8e3b"
     },
     "templates/ai/mcp/codex.optional.toml": {
       "ownership": "template",
@@ -84,16 +116,28 @@
       "ownership": "template",
       "sha256": "bb8aaabbea242c0d4b1713e5a5a4a45154ed977a4a252b9885b25a1bb1e9b719"
     },
+    "templates/ai/schemas/check-catalog.schema.json": {
+      "ownership": "template",
+      "sha256": "c721c7ba041665c8a45410388ed46ff40ef224d8cc82a42e3e70dc7da927d045"
+    },
+    "templates/ai/schemas/check-result.schema.json": {
+      "ownership": "template",
+      "sha256": "2834173a6436d6fd6615cd442488e05efc16bed2b42817b62411712a4860f31a"
+    },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
       "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
+    },
+    "templates/ai/schemas/run-context.schema.json": {
+      "ownership": "template",
+      "sha256": "5f5a84216b5a8aca8d64c49704bb88b1413f6e506c3c81bf2f8dcdc05e863383"
     }
   },
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
+  "source_manifest_digest": "2e6e2bb702cc0e2649723fcc8eb96a350b62c4ecfcbf977026c3b0044ead1f28",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
-  "version": "0.1.0-dev"
+  "version": "0.2.0-dev"
 }

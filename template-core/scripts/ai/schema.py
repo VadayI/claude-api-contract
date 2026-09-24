@@ -12,7 +12,8 @@ from core_sync import safe_name
 
 KEYWORDS = {"$schema", "title", "description", "type", "const", "enum", "required",
             "properties", "additionalProperties", "items", "minItems", "uniqueItems",
-            "minLength", "pattern", "minimum"}
+            "minLength", "pattern", "minimum", "minProperties", "oneOf", "anyOf",
+            "not", "maxItems", "allOf", "if", "then", "else", "maximum"}
 TYPES = {"object": dict, "array": list, "string": str, "integer": int,
          "boolean": bool, "null": type(None)}
 
@@ -29,13 +30,13 @@ def check_schema(schema: dict) -> None:
         raise ValueError("Unsupported schema vocabulary")
     if schema.get("type") not in TYPES:
         raise ValueError("Every schema requires one supported type")
-    typed_keywords = {"object": {"properties", "required", "additionalProperties"},
-                      "array": {"items", "minItems", "uniqueItems"},
-                      "string": {"minLength", "pattern"}, "integer": {"minimum"}}
+    typed_keywords = {"object": {"properties", "required", "additionalProperties", "minProperties"},
+                      "array": {"items", "minItems", "maxItems", "uniqueItems"},
+                      "string": {"minLength", "pattern"}, "integer": {"minimum", "maximum"}}
     for kind, keywords in typed_keywords.items():
         if schema["type"] != kind and keywords.intersection(schema):
             raise ValueError(f"Schema keyword requires {kind} type")
-    for key in ("minItems", "minLength", "minimum"):
+    for key in ("minItems", "maxItems", "minLength", "minimum", "maximum", "minProperties"):
         if key in schema and (type(schema[key]) is not int or schema[key] < 0):
             raise ValueError(f"Invalid schema {key}")
     if "uniqueItems" in schema and type(schema["uniqueItems"]) is not bool:
@@ -66,6 +67,29 @@ def check_schema(schema: dict) -> None:
         raise ValueError("Required property excluded by closed schema")
     if "items" in schema:
         check_schema(schema["items"])
+    if "oneOf" in schema:
+        if not isinstance(schema["oneOf"], list) or not schema["oneOf"]:
+            raise ValueError("Invalid oneOf branches")
+        for child in schema["oneOf"]:
+            check_schema(child)
+    if "anyOf" in schema:
+        if not isinstance(schema["anyOf"], list) or not schema["anyOf"]:
+            raise ValueError("Invalid anyOf branches")
+        for child in schema["anyOf"]:
+            check_schema(child)
+    if "not" in schema:
+        check_schema(schema["not"])
+    if "allOf" in schema:
+        if not isinstance(schema["allOf"], list) or not schema["allOf"]:
+            raise ValueError("Invalid allOf branches")
+        for child in schema["allOf"]:
+            check_schema(child)
+    if "if" in schema:
+        check_schema(schema["if"])
+        if "then" in schema:
+            check_schema(schema["then"])
+        if "else" in schema:
+            check_schema(schema["else"])
 
 
 def validate(value: object, schema: dict, location: str = "$") -> None:
@@ -83,6 +107,8 @@ def validate(value: object, schema: dict, location: str = "$") -> None:
     if "enum" in schema and not any(type(value) is type(item) and value == item for item in schema["enum"]):
         raise ValueError(f"{location}: unknown value")
     if isinstance(value, dict):
+        if len(value) < schema.get("minProperties", 0):
+            raise ValueError(f"{location}: too few properties")
         if set(schema.get("required", [])) - value.keys():
             raise ValueError(f"{location}: missing required fields")
         for key, item in value.items():
@@ -94,6 +120,8 @@ def validate(value: object, schema: dict, location: str = "$") -> None:
     if isinstance(value, list):
         if len(value) < schema.get("minItems", 0):
             raise ValueError(f"{location}: too few items")
+        if "maxItems" in schema and len(value) > schema["maxItems"]:
+            raise ValueError(f"{location}: too many items")
         encoded = [json.dumps(item, sort_keys=True) for item in value]
         if schema.get("uniqueItems") and len(set(encoded)) != len(encoded):
             raise ValueError(f"{location}: duplicate items")
@@ -105,6 +133,46 @@ def validate(value: object, schema: dict, location: str = "$") -> None:
             raise ValueError(f"{location}: invalid string")
     if type(value) is int and value < schema.get("minimum", value):
         raise ValueError(f"{location}: below minimum")
+    if type(value) is int and value > schema.get("maximum", value):
+        raise ValueError(f"{location}: above maximum")
+    if "oneOf" in schema:
+        matches = 0
+        for child in schema["oneOf"]:
+            try:
+                validate(value, child, location)
+            except ValueError:
+                continue
+            matches += 1
+        if matches != 1:
+            raise ValueError(f"{location}: expected exactly one schema branch")
+    if "anyOf" in schema:
+        for child in schema["anyOf"]:
+            try:
+                validate(value, child, location)
+            except ValueError:
+                continue
+            break
+        else:
+            raise ValueError(f"{location}: expected at least one schema branch")
+    if "not" in schema:
+        try:
+            validate(value, schema["not"], location)
+        except ValueError:
+            pass
+        else:
+            raise ValueError(f"{location}: forbidden schema matched")
+    if "allOf" in schema:
+        for child in schema["allOf"]:
+            validate(value, child, location)
+    if "if" in schema:
+        try:
+            validate(value, schema["if"], location)
+            matched = True
+        except ValueError:
+            matched = False
+        branch = schema.get("then") if matched else schema.get("else")
+        if branch is not None:
+            validate(value, branch, location)
 
 
 def catalog_links(catalog: dict, root: Path) -> None:
