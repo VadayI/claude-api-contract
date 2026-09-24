@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Claude API Contract
-  version: 0.1.0
+  version: 1.0.0
   contact:
     name: claude-api-contract
     url: https://github.com/VadayI/claude-api-contract
@@ -828,9 +828,11 @@ components:
       properties:
         email:
           type: string
-          description: User email address.
+          format: email
+          description: A valid user email address.
         password:
           type: string
+          minLength: 1
           description: Plain-text password (transport-encrypted).
       description: Login credentials.
     RefreshRequest:
@@ -850,10 +852,12 @@ components:
       properties:
         email:
           type: string
-          description: User email address.
+          format: email
+          description: A valid user email address.
         password:
           type: string
-          description: Plain-text password (transport-encrypted).
+          minLength: 8
+          description: Plain-text password (transport-encrypted), at least 8 characters long.
         name:
           type: string
           description: Optional display name.

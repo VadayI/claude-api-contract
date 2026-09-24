@@ -22,6 +22,10 @@ Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/br
 - `spec/articles.tsp`: Added STUB comment above `listArticles` last-page null example — deferred due to Spectral/AJV null-nullable-3.1 incompatibility; no wire-shape change.
 
 ---
+## [1.0.0] - 2026-09-24
+
+### Changed (breaking)
+- Auth request schemas now require valid email syntax, a non-empty login password, and a registration password of at least 8 characters. This aligns reusable defaults with backend serializer validation; consumers that send previously accepted invalid credentials must update their requests. This is the MAJOR (`1.0.0`) release.
 
 ## [0.1.0] - 2026-06-07
 

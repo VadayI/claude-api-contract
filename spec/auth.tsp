@@ -39,10 +39,12 @@ model TokenPair {
 /** Credentials to register a new user account. */
 @doc("Credentials to register a new user account.")
 model RegisterRequest {
-  @doc("User email address.")
+  @doc("A valid user email address.")
+  @format("email")
   email: string;
 
-  @doc("Plain-text password (transport-encrypted).")
+  @doc("Plain-text password (transport-encrypted), at least 8 characters long.")
+  @minLength(8)
   password: string;
 
   @doc("Optional display name.")
@@ -62,10 +64,12 @@ model RegisterResponse {
 /** Login credentials. */
 @doc("Login credentials.")
 model LoginRequest {
-  @doc("User email address.")
+  @doc("A valid user email address.")
+  @format("email")
   email: string;
 
   @doc("Plain-text password (transport-encrypted).")
+  @minLength(1)
   password: string;
 }
 

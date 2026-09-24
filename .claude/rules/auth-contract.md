@@ -25,6 +25,12 @@ security:
 
 **Refresh transport (D2):** `access` in `Authorization: Bearer`, `refresh` **in the response body**. The contract is self-contained and the mock is trivial. An ADR (`docs/decisions/`) must record the XSS trade-off and the option to switch to an httpOnly cookie in a derived project.
 
+### Credential validation defaults
+
+- Model auth email inputs with TypeSpec `@format("email")` so generated clients and schema-based tests do not treat arbitrary strings as valid credentials.
+- Require a non-empty password for login (`@minLength(1)`) and at least 8 characters for registration (`@minLength(8)`). A derived project may set a stricter registration policy when its requirements call for it.
+- Keep the generated OpenAPI schema aligned with the backend serializer validation; the backend must not reject a request that the published request schema declares valid.
+
 ## Service-to-service flow (D5 — primary client profile)
 
 | Method + path | Security | Request | Response |
