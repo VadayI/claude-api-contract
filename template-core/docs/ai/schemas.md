@@ -55,5 +55,6 @@ and `minimum`, with `$schema`, `title` and `description` annotations. Only JSON
 object/array/string/integer/boolean/null types are supported. Duplicate keys,
 NaN/Infinity, booleans used as integers, and keywords on incompatible types fail.
 
-Check/runner result schemas, launcher integration and downstream delivery remain
-separate P04/P05 work; these contracts alone do not complete family acceptance.
+Check/runner result schemas, launcher integration and downstream delivery are
+integrated (P04/P05/P06); the P07 project-state migration below is in progress.
+These contracts alone do not complete family acceptance (P13).

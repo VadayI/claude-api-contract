@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "4569c7546fffab5eaef2a4c2c4f4e00975b95dc2155c8f3f9e8630802679fffc"
+      "sha256": "5dce1edccf95b61956804a9fdce00d1da57a393efaae14c8d9b13c68cd2e7a50"
     },
     "core.json": {
       "ownership": "template",
@@ -19,7 +19,7 @@
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
-      "sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec"
+      "sha256": "9320603d3ee350b66baa4f6f252fb88c3fde29c13d93974b7f63c591838c94a0"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -47,7 +47,7 @@
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "639a0fc7381342988ebdeae03f015ee3e0e446c80f1cd9b6f70833b09b0916fd"
+      "sha256": "0096e8d2b75422cce6cca4c00e3f96025b5eacad0204992cd47572d5f4ddc625"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
