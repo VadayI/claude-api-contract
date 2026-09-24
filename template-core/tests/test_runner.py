@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import socket
+import stat
 import subprocess
 import sys
 import tempfile
@@ -21,6 +22,172 @@ from schema import check_schema, load_json, validate
 
 class RunnerTests(unittest.TestCase):
     """Exercise exact Git isolation, result states, schemas and invalidation."""
+
+    def test_direct_file_invalidation_digest_remains_content_only(self):
+        """Preserve the established SHA-256 result for regular file inputs.
+
+        Args: self owns the test case; a temporary candidate file is created.
+        Returns: None after comparing the result to the exact content digest.
+        Raises: AssertionError if file result shape or content digest changes.
+        Side effects: Writes one temporary public file only; no DB or network.
+        """
+        with tempfile.TemporaryDirectory(prefix="direct file digest ") as directory:
+            root = Path(directory)
+            content = b"regular invalidation input\n"
+            path = root / "backend" / "settings.py"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(content)
+
+            self.assertEqual(
+                runner.file_digests(root, ["backend/settings.py"]),
+                {
+                    "backend/settings.py": {
+                        "present": True,
+                        "sha256": runner.digest_bytes(content),
+                    }
+                },
+            )
+
+    def test_direct_file_invalidation_rejects_in_root_symlinked_parent(self):
+        """Reject a regular file addressed through a symlinked in-root parent.
+
+        Args: self owns the test case; the symlink target stays within its
+            temporary candidate export.
+        Returns: None after the linked component is rejected.
+        Raises: AssertionError if a linked ancestor is accepted. Hosts denying
+            symlink creation skip this platform-specific check.
+        Side effects: Creates temporary files and one directory symlink only;
+            no production paths, database, or network are touched.
+        """
+        with tempfile.TemporaryDirectory(prefix="file digest parent link ") as directory:
+            root = Path(directory)
+            target_directory = root / "real"
+            target_directory.mkdir()
+            (target_directory / "settings.py").write_text("DEBUG = False\n", encoding="utf-8")
+            linked_directory = root / "linked"
+            try:
+                linked_directory.symlink_to(target_directory, target_is_directory=True)
+            except OSError as error:
+                if os.name == "nt" and (
+                    isinstance(error, PermissionError) or getattr(error, "winerror", None) == 1314
+                ):
+                    self.skipTest("Windows does not permit symlink creation for this user")
+                raise
+
+            with self.assertRaises(ValueError):
+                runner.file_digests(root, ["linked/settings.py"])
+
+    def test_directory_invalidation_digest_tracks_descendants_deterministically(self):
+        """Bind recursive directory invalidation to sorted relative contents.
+
+        Args: self owns the test case; a temporary candidate tree is created.
+        Returns: None after checking repeatability, content, names, and membership.
+        Raises: AssertionError when a meaningful tree change is not reflected.
+        Side effects: Writes temporary local files only; no DB or network access.
+        """
+        with tempfile.TemporaryDirectory(prefix="directory digest ") as directory:
+            root = Path(directory)
+            backend = root / "backend"
+            nested = backend / "apps" / "sample"
+            nested.mkdir(parents=True)
+            first = nested / "one.py"
+            first.write_text("value = 1\n", encoding="utf-8")
+
+            original = runner.file_digests(root, ["backend"])
+            self.assertEqual(runner.file_digests(root, ["backend"]), original)
+
+            first.write_text("value = 2\n", encoding="utf-8")
+            changed_content = runner.file_digests(root, ["backend"])
+            self.assertNotEqual(changed_content, original)
+
+            first.rename(nested / "renamed.py")
+            changed_name = runner.file_digests(root, ["backend"])
+            self.assertNotEqual(changed_name, changed_content)
+
+            empty_directory = backend / "empty"
+            empty_directory.mkdir()
+            changed_directories = runner.file_digests(root, ["backend"])
+            self.assertNotEqual(changed_directories, changed_name)
+            empty_directory.rmdir()
+            self.assertEqual(runner.file_digests(root, ["backend"]), changed_name)
+
+            (nested / "added.py").write_text("value = 3\n", encoding="utf-8")
+            changed_membership = runner.file_digests(root, ["backend"])
+            self.assertNotEqual(changed_membership, changed_name)
+            (nested / "added.py").unlink()
+            self.assertEqual(runner.file_digests(root, ["backend"]), changed_name)
+
+    def test_directory_invalidation_digest_binds_executable_bits(self):
+        """Include executable metadata for files when the platform exposes it.
+
+        Args: self owns the test case; a temporary candidate tree is created.
+        Returns: None after asserting a chmod change alters the digest.
+        Raises: AssertionError when the executable state does not affect hashing.
+        Side effects: Writes/chmods one temporary file only; no DB or network.
+        """
+        with tempfile.TemporaryDirectory(prefix="directory modes ") as directory:
+            root = Path(directory)
+            backend = root / "backend"
+            backend.mkdir()
+            script = backend / "run.py"
+            script.write_text("print('fixture')\n", encoding="utf-8")
+            original = runner.file_digests(root, ["backend"])
+
+            script.chmod(stat.S_IMODE(script.stat().st_mode) | stat.S_IXUSR)
+            if not script.stat().st_mode & stat.S_IXUSR:
+                self.skipTest("This platform does not expose executable mode bits")
+            self.assertNotEqual(runner.file_digests(root, ["backend"]), original)
+
+    def test_directory_invalidation_digest_rejects_nested_symlinks(self):
+        """Reject in-tree and escaping symlinks anywhere under an input directory.
+
+        Args: self owns the test case; temporary targets remain outside production.
+        Returns: None after each link is rejected.
+        Raises: AssertionError when a link is accepted; permission-limited Windows
+            hosts skip when they cannot create symbolic links.
+        Side effects: Creates temporary files and symlinks only; no DB/network.
+        """
+        with tempfile.TemporaryDirectory(prefix="directory links ") as directory:
+            root = Path(directory)
+            nested = root / "backend" / "apps" / "sample"
+            nested.mkdir(parents=True)
+            inside_target = nested / "target.py"
+            inside_target.write_text("inside\n", encoding="utf-8")
+            outside_target = root / "outside.py"
+            outside_target.write_text("outside\n", encoding="utf-8")
+
+            runner.file_digests(root, ["backend"])
+            for name, target in (("inside-link.py", inside_target), ("escape-link.py", outside_target)):
+                link = nested / name
+                try:
+                    link.symlink_to(target)
+                except OSError as error:
+                    if os.name == "nt" and (
+                        isinstance(error, PermissionError) or getattr(error, "winerror", None) == 1314
+                    ):
+                        self.skipTest("Windows does not permit symlink creation for this user")
+                    raise
+                with self.subTest(link=name), self.assertRaises(ValueError):
+                    runner.file_digests(root, ["backend"])
+                link.unlink()
+
+    def test_directory_invalidation_digest_rejects_special_files(self):
+        """Reject non-regular filesystem entries within a directory input.
+
+        Args: self owns the test case; a temporary candidate directory is created.
+        Returns: None after the platform-specific FIFO rejection assertion.
+        Raises: AssertionError if a FIFO is accepted; unsupported hosts skip.
+        Side effects: Creates a temporary FIFO only; no DB or network access.
+        """
+        if not hasattr(os, "mkfifo"):
+            self.skipTest("This platform cannot create FIFO special files")
+        with tempfile.TemporaryDirectory(prefix="directory special ") as directory:
+            root = Path(directory)
+            backend = root / "backend"
+            backend.mkdir()
+            os.mkfifo(backend / "pipe")
+            with self.assertRaises(ValueError):
+                runner.file_digests(root, ["backend"])
 
     def setUp(self):
         """Create a disposable Git repository with one exact candidate commit.

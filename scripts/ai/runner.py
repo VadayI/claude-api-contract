@@ -408,18 +408,55 @@ def export_candidate(repository: Path, candidate: str, target: Path) -> None:
         raise ValueError(f"Candidate archive failed: {stderr.splitlines()[0][:200] if stderr else 'Git error'}")
 
 
+def _validate_invalidation_path(root: Path, path: Path, name: str) -> None:
+    """Reject linked, escaping, or out-of-root components in an input path.
+
+    Args:
+        root: Isolated candidate export used as the containment boundary.
+        path: Candidate-relative path assembled beneath ``root``.
+        name: Validated display path included in errors.
+
+    Returns:
+        None when every existing component is an unlinked path inside root.
+
+    Raises:
+        ValueError: If ``path`` is outside root or any existing component is a
+            symlink, junction, or resolves outside the candidate export.
+        OSError: If path metadata cannot be inspected.
+
+    Side effects:
+        Reads filesystem path metadata only; no writes, subprocesses, databases,
+        or network access.
+    """
+    try:
+        relative = path.relative_to(root)
+    except ValueError as error:
+        raise ValueError(f"Invalid invalidation input: {name}") from error
+
+    root_resolved = root.resolve()
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink() or current.is_junction():
+            raise ValueError(f"Invalid invalidation input: {name}")
+        if not current.resolve().is_relative_to(root_resolved):
+            raise ValueError(f"Invalid invalidation input: {name}")
+
+
 def file_digests(root: Path, names: list[str]) -> dict[str, dict[str, object]]:
-    """Digest explicit invalidation files from the isolated candidate.
+    """Digest explicit invalidation files and directory trees in a candidate.
 
     Args:
         root: Isolated exact-candidate export.
         names: Validated candidate-relative paths.
 
     Returns:
-        Mapping to explicit presence plus SHA-256 for each present input.
+        Mapping to explicit presence plus SHA-256 for each present input. Files
+        retain their content-only digest; directories use a deterministic tree
+        manifest digest.
 
     Raises:
-        ValueError: If a path is linked, escapes, or names a directory.
+        ValueError: If a path is linked, escapes, or contains a special file.
         OSError: If a present input cannot be read.
 
     Side effects:
@@ -428,13 +465,72 @@ def file_digests(root: Path, names: list[str]) -> dict[str, dict[str, object]]:
     result: dict[str, dict[str, object]] = {}
     for name in names:
         path = root.joinpath(*safe_relative(name).parts)
-        if path.is_symlink() or path.is_dir() or path.exists() and not path.resolve().is_relative_to(root.resolve()):
-            raise ValueError(f"Invalid invalidation input: {name}")
-        result[name] = (
-            {"present": True, "sha256": digest_bytes(path.read_bytes())}
-            if path.is_file() else {"present": False}
-        )
+        _validate_invalidation_path(root, path, name)
+        if path.is_dir():
+            result[name] = {"present": True, "sha256": _directory_digest(root, path)}
+        elif path.exists():
+            if not stat.S_ISREG(path.lstat().st_mode):
+                raise ValueError(f"Invalid invalidation input: {name}")
+            result[name] = {"present": True, "sha256": digest_bytes(path.read_bytes())}
+        else:
+            result[name] = {"present": False}
     return result
+
+
+def _directory_digest(root: Path, directory: Path) -> str:
+    """Hash every entry in a candidate directory using a canonical manifest.
+
+    Args:
+        root: Isolated candidate export containing the directory input.
+        directory: Existing candidate-relative directory to digest recursively.
+
+    Returns:
+        SHA-256 digest over sorted relative entry paths, entry types, file
+        content digests, and executable bits for regular files.
+
+    Raises:
+        ValueError: If any directory ancestor or descendant is a symlink,
+            junction, escaping path, or special file.
+        OSError: If entry metadata or regular-file content cannot be read.
+
+    Side effects:
+        Reads candidate filesystem metadata and contents only; no writes,
+        subprocesses, databases, or network access.
+    """
+    relative_directory = directory.relative_to(root)
+    _validate_invalidation_path(root, directory, relative_directory.as_posix())
+    root_resolved = root.resolve()
+
+    manifest: list[dict[str, str | bool]] = []
+    pending = [directory]
+    while pending:
+        current_directory = pending.pop()
+        for entry in sorted(current_directory.iterdir(), key=lambda item: item.name):
+            relative = entry.relative_to(directory).as_posix()
+            if entry.is_symlink() or entry.is_junction():
+                raise ValueError(f"Invalid invalidation input: {relative}")
+            if not entry.resolve().is_relative_to(root_resolved):
+                raise ValueError(f"Invalid invalidation input: {relative}")
+
+            mode = entry.lstat().st_mode
+            if stat.S_ISDIR(mode):
+                manifest.append({"path": relative + "/", "type": "directory"})
+                pending.append(entry)
+            elif stat.S_ISREG(mode):
+                manifest.append(
+                    {
+                        "path": relative,
+                        "type": "file",
+                        "sha256": digest_bytes(entry.read_bytes()),
+                        "executable": bool(mode & 0o111),
+                    }
+                )
+            else:
+                raise ValueError(f"Invalid invalidation input: {relative}")
+
+    manifest.sort(key=lambda item: str(item["path"]))
+    encoded = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return digest_bytes(encoded)
 
 
 def runner_digests() -> dict[str, str]:
