@@ -28,8 +28,9 @@ security:
 ### Credential validation defaults
 
 - Model auth email inputs with TypeSpec `@format("email")` so generated clients and schema-based tests do not treat arbitrary strings as valid credentials.
-- Require a non-empty password for login (`@minLength(1)`) and at least 8 characters for registration (`@minLength(8)`). A derived project may set a stricter registration policy when its requirements call for it.
-- Keep the generated OpenAPI schema aligned with the backend serializer validation; the backend must not reject a request that the published request schema declares valid.
+- Require a non-empty password for login (`@minLength(1)`) and at least 8 characters for registration (`@minLength(8)`). Reject NUL characters in both password fields because common framework serializers do not accept them.
+- A derived project may apply contextual registration checks such as user similarity or common/breached-password blocklists. Return the documented validation error for these checks; do not encode character-class requirements as a generic password rule.
+- Keep the generated OpenAPI schema aligned with portable backend serializer validation. A derived backend's contextual policy may reject a schema-shaped registration request with the documented 400 response.
 
 ## Service-to-service flow (D5 — primary client profile)
 

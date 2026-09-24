@@ -3,6 +3,12 @@
 All notable contract changes are documented here. Format derived from `oasdiff changelog`.
 Breaking changes are flagged and require a MAJOR version bump (@.claude/rules/breaking-changes.md).
 
+## [2.0.0] - 2026-09-24
+
+### Changed (breaking)
+- Auth request passwords now explicitly reject NUL characters. The v1.0.0 schema allowed these strings while common Django serializers reject them.
+- Registration keeps the reusable 8-character minimum. Derived services may apply contextual checks such as user similarity or common-password blocklists and return the documented 400 validation response.
+
 ## [v0.1.1] — 2026-06-07
 
 > Semver classification: **patch** — no paths, schemas, operationIds, required fields, or response shapes changed.

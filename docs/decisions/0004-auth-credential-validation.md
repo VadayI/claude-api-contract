@@ -18,3 +18,7 @@ The reusable auth request schemas accepted any string for email and password. Ba
 - TypeSpec remains the source of truth and the OpenAPI output must be regenerated.
 - This tightens request validation and is a breaking contract change. A release that includes it requires a MAJOR version bump.
 - Backends consuming the updated contract must implement compatible serializer validation.
+
+## Amendment — v2.0.0 NUL handling and contextual validators
+
+The first hosted Django conformance run on v1.0.0 found that Schemathesis generated a login password containing a NUL character, which Django rejected although the schema allowed it. The v2.0.0 schema prohibits NUL in login and registration passwords. Registration keeps its reusable minimum of 8 characters; contextual checks such as blocklists and user similarity may still reject a schema-shaped value with the documented 400 validation response. The Django conformance runner allows that response for registration while continuing to validate its error schema.

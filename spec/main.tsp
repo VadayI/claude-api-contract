@@ -12,7 +12,7 @@ using OpenAPI;
 @service(#{ title: "Claude API Contract" })
 @doc("REST API contract for the Claude ecosystem: standardized list/error envelopes, JWT user-flow and OAuth2 client-credentials service-flow auth, and a blog-style articles resource. Single source of truth, consumed by claude-django and claude-react-mui.")
 @info(#{
-  version: "1.0.0",
+  version: "2.0.0",
   contact: #{
     name: "claude-api-contract",
     url: "https://github.com/VadayI/claude-api-contract",

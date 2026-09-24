@@ -43,8 +43,9 @@ model RegisterRequest {
   @format("email")
   email: string;
 
-  @doc("Plain-text password (transport-encrypted), at least 8 characters long.")
+  @doc("Plain-text password (transport-encrypted), at least 8 characters long and without NUL characters.")
   @minLength(8)
+  @pattern("^[^\\u0000]*$", "Password must not contain NUL characters.")
   password: string;
 
   @doc("Optional display name.")
@@ -68,8 +69,9 @@ model LoginRequest {
   @format("email")
   email: string;
 
-  @doc("Plain-text password (transport-encrypted).")
+  @doc("Plain-text password (transport-encrypted), without NUL characters.")
   @minLength(1)
+  @pattern("^[^\\u0000]*$", "Password must not contain NUL characters.")
   password: string;
 }
 
