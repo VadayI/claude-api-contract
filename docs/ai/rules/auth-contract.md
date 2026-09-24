@@ -30,8 +30,9 @@ security:
 Apply these defaults when scaffolding the reusable auth contract for a new project:
 
 - Model auth email inputs with TypeSpec `@format("email")` so clients and schema-based tests only treat syntactically valid addresses as valid credentials.
-- Require login passwords to be non-empty (`@minLength(1)`) and registration passwords to be at least 8 characters (`@minLength(8)`). A derived project may strengthen its registration policy to meet its own requirements.
-- Keep the OpenAPI request schema aligned with backend serializer validation. The backend should not reject a request the published schema declares valid.
+- Require login passwords to be non-empty (`@minLength(1)`) and registration passwords to be at least 8 characters (`@minLength(8)`). Reject NUL characters in both fields because common framework serializers cannot safely accept them.
+- Do not encode character-class requirements as a generic password rule. A derived project may apply contextual registration checks such as user similarity or common/breached-password blocklists and return the documented 400 validation response.
+- Keep portable backend validation aligned with the OpenAPI request schema. For contextual registration policy, keep the 400 error envelope in the contract and configure conformance to expect that status for registration while validating the response schema.
 - Treat any stricter request constraint as a contract change and classify its compatibility impact before release.
 
 ## Service-to-service flow (D5 — primary client profile)
