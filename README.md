@@ -1,5 +1,35 @@
 # claude-api-contract
 
+Derived projects select `local` or `github` CI before their first push with
+`python scripts/ai/ci_mode.py --target . --mode local --apply` (or `github`).
+Local mode creates manual-only workflows; GitHub mode activates the same exact
+runner catalog on automatic events. See `docs/ai/workflows/bootstrap.md` for
+the ownership-safe switch and repository setup order.
+
+If a repository was copied with GitHub “Use this template”, the CI selector
+detects copied `contract-ci.yml`, `contract-policy.yml`, and
+`scheduled-audit.yml` automatic workflows and stops without writes. Review
+and remove those copied workflow files before using the selector. The GitHub copy can
+trigger Actions before this local check runs; changing the source repository's
+template setting or workflow architecture is needed to close that initial
+bypass.
+
+Git hooks use `AI_PYTHON` when set, otherwise `python`, and require Python 3.13+.
+`pre-commit` examines staged bytes; `pre-push` checks each branch ref against an
+exact base. New branches require a current local tracking ref matching remote
+`main`; an unknown baseline stops the push. npm prepare preserves an existing
+foreign `core.hooksPath` and reports that manual chaining is needed. Hooks can
+be bypassed locally, so reviewed candidate results and remote policy remain
+necessary.
+
+Claude PreToolUse checks structured edit payloads and recognized `apply_patch`
+headers for direct edits of generated `openapi.yml`; malformed payloads fail
+closed. This is early feedback, not complete coverage of arbitrary shell
+writes. `SessionStart` runs the detector only. There is no automatic Stop or
+SessionEnd formatter, push, or merge; finish with an explicit handoff, knowing
+an interrupted session may skip end events. A trusted Codex tool-hook surface
+has not been verified for this pilot; Git/CI checks are the portable controls.
+
 **Single source of truth for a REST API contract.** TypeSpec в†’ a canonical, bundled `openapi.yml` (OpenAPI 3.1), linted (Spectral), mocked (Prism), and breaking-change gated (oasdiff). Two repositories consume it in parallel вЂ” `claude-django` (backend, validates its implementation against the contract) and `claude-react-mui` (frontend, generates TS types + a mock). Neither generates the contract; both pin a version.
 
 This is the third Claude Code configuration template in the set, alongside [`claude-django`](https://github.com/VadayI/claude-django) and [`claude-react-mui`](https://github.com/VadayI/claude-react-mui). It keeps their philosophy: agents / rules / skills / commands, WSL2, PR-only, context in git.

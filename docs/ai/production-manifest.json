@@ -309,7 +309,7 @@
     ".claude/settings.json": {
       "legacy_sha256": "8085d685c9500bfaf4459b7a31bade60e8aa8f152ebb9b589d06574a23044582",
       "ownership": "mixed",
-      "sha256": "907b53e94998539dcfb737172d7edcdb24654d65f88f8d56846aabf8a2df1ecd"
+      "sha256": "5fe28929e0c226c3a1a24fc87f26923940050cd21c3e00d2857ceca2545aa3ae"
     },
     ".claude/skills/contract-versioning/SKILL.md": {
       "legacy_sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131",
@@ -391,12 +391,12 @@
     ".husky/pre-commit": {
       "legacy_sha256": "110254a981c5993d86f882e99746520951b96ef9c1705acf675c59349e823fed",
       "ownership": "template",
-      "sha256": "110254a981c5993d86f882e99746520951b96ef9c1705acf675c59349e823fed"
+      "sha256": "d988faf1c9d5c0ca0f4f0810ccd1b419c2670df4ca7a9726dff829227e6d12d8"
     },
     ".husky/pre-push": {
       "legacy_sha256": "41b5d914e65954efeaac128e8a90d2f2c652aaac7edf225fb67fa38dd1083a80",
       "ownership": "template",
-      "sha256": "41b5d914e65954efeaac128e8a90d2f2c652aaac7edf225fb67fa38dd1083a80"
+      "sha256": "837402bc7de3fe8d0a1fb5b1c0384d195a823b3b8f7113a8fd65fbac0ccabff3"
     },
     ".mcp.json": {
       "legacy_sha256": "44f4b5134c66693a37a39d7799164e87659f5fb6bb23f08ebeb6f13d1b106c18",
@@ -433,7 +433,7 @@
     },
     "README.md": {
       "ownership": "project",
-      "sha256": "2a3d4dc70157f5a4619ee422d2709d5a146b9ed7027f62ad4a07ef77c8e02ed7"
+      "sha256": "7a31dd954ecd2a74214ecaba7e40ab053995442b2b3cf7c64510e47243d7cb76"
     },
     "commitlint.config.mjs": {
       "legacy_sha256": "9d49c285742196f12ad0e43490041281e05ae12c8958ea61606a4b254cc7bb2f",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "053a06b97dac8cc701ed9215e1fd60c4e1dffcc405829557f8d4696694ff2db0"
+      "sha256": "445c5732de3565e6f56138582c2292ad0e381545cbbc219f4a95d24cfb946e4f"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -643,7 +643,7 @@
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
-      "sha256": "abd16546928407b1fb248b8ab30a9d6d7d4cefe76089278566d5e7524116c28e"
+      "sha256": "0c8683fd7c1ef2d584765be21a934d1f4e96a0a792ae32f1ce0b804f4554ca15"
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
@@ -725,12 +725,16 @@
     "package.json": {
       "legacy_sha256": "3f99fdf5fcdb0a9d1e9d5df0272bd6fcdd149e3904b15fc6ec02d765ce67a4db",
       "ownership": "mixed",
-      "sha256": "b39f21eaf1efff01799d6817a4cdc4c6d6924108f39a2325b762320a554a13ef"
+      "sha256": "292b2fe18be5e30170972d4369012e60217323a2beab6aa0511cd8b5f40c81d6"
     },
     "scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
       "ownership": "template",
       "sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9"
+    },
+    "scripts/ai/ci_mode.py": {
+      "ownership": "template",
+      "sha256": "6097d5584cd0f4b5375ae1f77edbf1c9d9c114a665ae308633a8d724b397f285"
     },
     "scripts/ai/contract_policy.py": {
       "ownership": "template",
@@ -755,6 +759,10 @@
       "ownership": "template",
       "sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13"
     },
+    "scripts/ai/git_hooks.py": {
+      "ownership": "template",
+      "sha256": "e7115e695d48d3aeddb6b36969a8e16fed78228db853442f30bcd74d5a6279d3"
+    },
     "scripts/ai/launch.ps1": {
       "legacy_sha256": "e7164d6a9c89d1caf284735cc0c5f97bb898f20384d2a75b119b5124215be0ae",
       "ownership": "template",
@@ -774,6 +782,10 @@
       "legacy_sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc",
       "ownership": "template",
       "sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc"
+    },
+    "scripts/ai/prepare_husky.py": {
+      "ownership": "template",
+      "sha256": "5cc3b71c53fbe2928fc92909623f169af4a59ad95b0be00bc26e9b1543a5d1c8"
     },
     "scripts/ai/production.py": {
       "ownership": "template",
@@ -873,7 +885,7 @@
     "scripts/policy/block_protected_edits.sh": {
       "legacy_sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c",
       "ownership": "template",
-      "sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c"
+      "sha256": "d9291980b243c792b0c2942353a7d15cab233f3347b50746accdb1b6880ce83c"
     },
     "scripts/policy/check_command_gate.sh": {
       "legacy_sha256": "51a77214bdfcc5524d2c7587c309993ed183605b8562cfe94b83d8cf2256db3a",
@@ -884,6 +896,10 @@
       "legacy_sha256": "1bf13b0a0630797d9ec9250a5c1bf8d15071cb8de948631ac88e8b142bed062a",
       "ownership": "template",
       "sha256": "1bf13b0a0630797d9ec9250a5c1bf8d15071cb8de948631ac88e8b142bed062a"
+    },
+    "scripts/policy/claude_edit_guard.mjs": {
+      "ownership": "template",
+      "sha256": "72044af2174c64664c084a3b05573129ab2bbf7df9e618b4b698be7cf2754f04"
     },
     "scripts/sandbox.sh": {
       "legacy_sha256": "d9eaf179ab5a70cdfa5a7723c678b1b0fd29d2cccf3ad4772cba8178327ea7f4",
@@ -1123,6 +1139,14 @@
       "ownership": "template",
       "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
     },
+    "templates/.github/workflows/contract-audit.yml": {
+      "ownership": "template",
+      "sha256": "fbd2082e513d39a68c7f23947d1ab0c7ecbe24eff5ee4bb22051e939cc82e408"
+    },
+    "templates/.github/workflows/contract-checks.yml": {
+      "ownership": "template",
+      "sha256": "df6560235b836038ecde6863c341b9b37cba4c078a4389d948a6f67e5da5a3c2"
+    },
     "templates/PROJECT.md": {
       "legacy_sha256": "4a0a39f54f9479585b55594aab05a372d195e782882e59382c8bb0eeea4c3dbb",
       "ownership": "template",
@@ -1147,7 +1171,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "d94e72da484ff97283cb7aa4e5cacb47cad285d01e935680515eebaebdf4c410"
+      "sha256": "2f2c1f567f26b49581557b634ee420530586b949848a2c0bff70d21f9860dcf5"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",
@@ -1186,9 +1210,13 @@
       "ownership": "template",
       "sha256": "3a076b32960342fe39e5d0a958e088e4eeda84398f6bd86635ce447a79111e81"
     },
+    "tests/test_git_hooks.py": {
+      "ownership": "template",
+      "sha256": "d205d579869fb8b5e7e96fc500d2f513f23d97e8c7681742fd3084fb3b8e494b"
+    },
     "tests/test_production.py": {
       "ownership": "template",
-      "sha256": "dc75d52dbfc82047fb97173680d69d9bd616267aad819f8e8afe27cc82a19e75"
+      "sha256": "35e77f563ce877f9ba726395178d620680def40b7f1f18ade95e71b4f8c4df7a"
     },
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",

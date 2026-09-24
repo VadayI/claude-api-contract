@@ -521,6 +521,15 @@
       "legacy_sha256": "fd86b3d15f8ae0c9f01b82b5e8e5ecaedc0dc96c947a671407a2061134f4b24d",
       "ownership": "template"
     },
+    "scripts/ai/ci_mode.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/git_hooks.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/prepare_husky.py": {
+      "ownership": "template"
+    },
     "scripts/ai/detector.py": {
       "ownership": "template"
     },
@@ -624,6 +633,9 @@
     },
     "scripts/policy/block_protected_edits.sh": {
       "legacy_sha256": "fdb0763ce0a3fb54289d5761418c3cc8b0656dfcb018302bd2cb98c7f89a511c",
+      "ownership": "template"
+    },
+    "scripts/policy/claude_edit_guard.mjs": {
       "ownership": "template"
     },
     "scripts/policy/check_command_gate.sh": {
@@ -839,6 +851,12 @@
     "templates/ai/checks/workflow-inventory.json": {
       "ownership": "template"
     },
+    "templates/.github/workflows/contract-checks.yml": {
+      "ownership": "template"
+    },
+    "templates/.github/workflows/contract-audit.yml": {
+      "ownership": "template"
+    },
     "templates/ai/production-inputs.json": {
       "ownership": "template"
     },
@@ -872,6 +890,9 @@
       "ownership": "template"
     },
     "tests/test_production.py": {
+      "ownership": "template"
+    },
+    "tests/test_git_hooks.py": {
       "ownership": "template"
     },
     "tspconfig.yaml": {
