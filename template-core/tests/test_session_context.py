@@ -278,6 +278,18 @@ class SessionContextTests(unittest.TestCase):
         snap = session_context.build_report(project)["latest"]["snapshot"]
         self.assertEqual(snap["relevant_paths"], ["src/app.py"])
 
+    def test_language_preference_is_shown_and_conflict_is_a_finding(self):
+        """Codex sees the persisted language; differing legacy/shared files are reported."""
+        rule = "# Output language\n\nAlways respond in {}. Use it everywhere.\n"
+        self.write(".claude/rules/output-language.md", rule.format("Українська"))
+        report = session_context.build_report(self.repo)
+        self.assertEqual((report["language"]["status"], report["language"]["language"]),
+                         ("legacy", "Українська"))
+        self.assertIn("Claude-only legacy file; migrate:", session_context.render(report))
+        self.write("docs/ai/overrides/output-language.md", rule.format("Polski"))
+        findings = session_context.build_report(self.repo)["findings"]
+        self.assertTrue(any(item.startswith("Output language:") for item in findings), findings)
+
     def test_union_merge_attributes_are_rejected(self):
         """merge=union on handoff or session records is reported as a finding."""
         self.write(".gitattributes", "docs/HANDOFF.md merge=union\ndocs/sessions/*.md merge=union\n")

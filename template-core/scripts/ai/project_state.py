@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import sys
 
 from core_paths import contained
@@ -27,6 +28,17 @@ RUNTIME_STATE = {
 }
 CATEGORIES = {"project": PROJECT_STATE, "runtime": RUNTIME_STATE}
 LEGACY_DIRECTORY = ".claude/memory"
+# Preferencja języka: kanoniczna dla obu runtime'ów, legacy tylko dla Claude.
+LANGUAGE_CANONICAL = "docs/ai/overrides/output-language.md"
+LANGUAGE_LEGACY = ".claude/rules/output-language.md"
+LANGUAGE_POINTER = (
+    "# Output language (moved)\n\n"
+    "The project language preference lives in `docs/ai/overrides/output-language.md`,\n"
+    "which Claude and Codex read through AGENTS.md. Read and follow that file. Do not\n"
+    "edit this pointer; `python scripts/ai/project_state.py --root . --language`\n"
+    "reports the state.\n"
+)
+LANGUAGE_PATTERN = re.compile(r"Always respond in ([^.\n{}]+?)\.")
 
 
 def artifact_relative_paths(name: str, category: str = "project") -> tuple[str, str]:
@@ -358,6 +370,141 @@ def migrate_runtime(root: Path) -> dict:
     return apply_migration(root, ("runtime",))
 
 
+def _language_text(path: Path) -> str | None:
+    """Read one language preference file with normalized newlines.
+
+    Args:
+        path: Canonical or legacy language path produced by :func:`contained`.
+    Returns:
+        UTF-8 text with ``\\r\\n`` normalized to ``\\n``, or ``None`` if absent.
+    Raises:
+        ValueError: If the path is a directory.
+        OSError/UnicodeError: If the file cannot be read as UTF-8.
+    Side effects:
+        Reads one file; no writes, network or database.
+    """
+    if not path.exists():
+        return None
+    if not path.is_file():
+        raise ValueError(f"Language preference is not a file: {path}")
+    return path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
+
+
+def language_state(root: Path) -> dict:
+    """Describe the project output-language preference and its migration state.
+
+    Args:
+        root: Repository root.
+    Returns:
+        ``{"status", "canonical", "legacy", "legacy_kind", "language", "source"}``.
+        Status is ``none`` (no preference), ``canonical`` (only the shared file
+        or a pointer beside it), ``legacy`` (only the Claude-specific file),
+        ``identical`` (both hold the same preference), ``conflict`` (they
+        differ) or ``pointer-only`` (a pointer without its canonical file).
+        ``language`` is the native name parsed from the effective file, or
+        ``None`` when absent or still a template placeholder.
+    Raises:
+        ValueError: For linked or non-file paths.
+        OSError/UnicodeError: If an existing file cannot be read.
+    Side effects:
+        Reads at most the two allowlisted files; no writes, network or database.
+    Business rules:
+        The shared file is authoritative once present; a legacy copy with a
+        different preference is a conflict for a human, never resolved by mtime.
+    """
+    root = target_root(root)
+    canonical_path = contained(root, LANGUAGE_CANONICAL)
+    legacy_path = contained(root, LANGUAGE_LEGACY)
+    canonical, legacy = _language_text(canonical_path), _language_text(legacy_path)
+    legacy_kind = None if legacy is None else ("pointer" if legacy == LANGUAGE_POINTER else "preference")
+    if canonical is None and legacy_kind is None:
+        status = "none"
+    elif canonical is None:
+        status = "pointer-only" if legacy_kind == "pointer" else "legacy"
+    elif legacy_kind in (None, "pointer"):
+        status = "canonical"
+    else:
+        status = "identical" if legacy == canonical else "conflict"
+    effective, source = ((canonical, LANGUAGE_CANONICAL) if canonical is not None else
+                         (legacy, LANGUAGE_LEGACY) if legacy_kind == "preference" else (None, None))
+    match = LANGUAGE_PATTERN.search(effective or "")
+    return {"status": status, "canonical": LANGUAGE_CANONICAL if canonical is not None else None,
+            "legacy": LANGUAGE_LEGACY if legacy is not None else None, "legacy_kind": legacy_kind,
+            "language": match.group(1).strip() if match else None, "source": source}
+
+
+def _replace_file(path: Path, text: str) -> None:
+    """Atomically replace one existing file with LF text.
+
+    Args:
+        path: Existing contained file.
+        text: New UTF-8 content.
+    Returns:
+        None after ``os.replace`` has swapped the fully written temporary file.
+    Raises:
+        OSError: If writing or replacing fails; the original stays intact.
+    Side effects:
+        Creates and removes a sibling temporary file; no network or database.
+    """
+    temporary = path.with_name(path.name + ".tmp-p07")
+    with open(temporary, "x", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+        handle.flush()
+        os.fsync(handle.fileno())
+    try:
+        os.replace(temporary, path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def migrate_language(root: Path, apply: bool = False, keep_shared: bool = False) -> dict:
+    """Preview or apply the move of a legacy language preference to the shared file.
+
+    Args:
+        root: Repository root.
+        apply: ``False`` for a read-only preview, ``True`` to write.
+        keep_shared: Resolve a ``conflict`` in favour of the shared file, which
+            the set-language procedure has just written from the user's current
+            choice; the legacy preference is then replaced with the pointer.
+    Returns:
+        ``{"before": state, "actions": [...], "after": state}``; actions are
+        ``create-canonical`` and/or ``replace-legacy-with-pointer``.
+    Raises:
+        OSError: If a write fails (the legacy preference is replaced only after
+            the canonical copy is verified).
+        ValueError: For linked or non-file paths.
+    Side effects:
+        With ``apply``: creates ``docs/ai/overrides/output-language.md``
+        exclusively and replaces ``.claude/rules/output-language.md`` with a
+        pointer, so exactly one writable preference remains. Preview reads only.
+    Business rules:
+        Without ``keep_shared`` a conflict or a pointer without its canonical
+        file is reported and nothing is written; repeating a completed
+        migration changes nothing. The legacy text is never copied over an
+        existing shared file.
+    """
+    root = target_root(root)
+    before = language_state(root)
+    actions = []
+    if before["status"] == "legacy":
+        actions = ["create-canonical", "replace-legacy-with-pointer"]
+    elif before["status"] == "identical" or (before["status"] == "conflict" and keep_shared):
+        actions = ["replace-legacy-with-pointer"]
+    if apply and actions:
+        canonical = contained(root, LANGUAGE_CANONICAL)
+        legacy = contained(root, LANGUAGE_LEGACY)
+        if "create-canonical" in actions:
+            _create_file(canonical, legacy.read_bytes())
+        # Wskaźnik zastępuje legacy dopiero po potwierdzeniu identycznej treści kanonicznej
+        # (albo po jawnym wyborze pliku wspólnego przy konflikcie).
+        if before["status"] != "conflict" and _language_text(canonical) != _language_text(legacy):
+            raise OSError(f"Canonical language preference differs from legacy: {canonical}")
+        _replace_file(legacy, LANGUAGE_POINTER)
+    return {"before": before, "actions": actions,
+            "after": language_state(root) if apply else before}
+
+
 def _relative_posix(root: Path, path: Path) -> str:
     """Render a contained path relative to the validated root in POSIX form.
 
@@ -381,9 +528,13 @@ def main() -> int:
         ``--migrate-runtime`` (runtime records only), ``--resolve NAME`` (print
         the readable path chosen by the fallback rule) or ``--writable NAME``
         (print the canonical write path, refusing while a legacy copy remains).
+        ``--language`` previews the output-language preference move and, with
+        ``--apply``, performs it; ``--keep-shared`` additionally resolves a
+        conflict in favour of the shared file.
     Returns:
         0 when there are no conflicts/invalid/unknown artifacts (or the path was
-        printed), 1 when any conflict, invalid or unknown artifact remains, and
+        printed), 1 when any conflict, invalid or unknown artifact remains (for
+        ``--language``: a conflict or a pointer without its canonical file), and
         2 for unsafe paths, conflicts in path resolution, or I/O errors.
     Raises:
         None; expected path and content errors are converted to exit codes.
@@ -406,10 +557,25 @@ def main() -> int:
     operation.add_argument("--writable", metavar="NAME")
     parser.add_argument("--category", choices=tuple(CATEGORIES), default="project",
                         help="artifact category for --resolve/--writable")
+    parser.add_argument("--language", action="store_true",
+                        help="preview (or with --apply migrate) the output-language preference")
+    parser.add_argument("--keep-shared", action="store_true",
+                        help="with --language --apply: resolve a conflict in favour of the shared file")
     args = parser.parse_args()
     if sys.version_info < (3, 13):
         parser.error("Python 3.13+ is required")
+    if args.language and (args.migrate_runtime or args.resolve or args.writable):
+        parser.error("--language combines only with --apply")
+    if args.keep_shared and not (args.language and args.apply):
+        parser.error("--keep-shared requires --language --apply")
+    # Windows: potok ma kodowanie ANSI, a JSON zawiera nazwy języków (np. cyrylicę).
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     try:
+        if args.language:
+            report = migrate_language(args.root, args.apply, args.keep_shared)
+            print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+            return 1 if report["after"]["status"] in ("conflict", "pointer-only") else 0
         if args.resolve or args.writable:
             root = target_root(args.root)
             if args.resolve:

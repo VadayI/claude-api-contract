@@ -249,5 +249,78 @@ class ProjectStateTests(unittest.TestCase):
         self.assertIn('"notes.md"', out)
 
 
+    def write_language(self, relative: str, native: str, newline: str = "\n") -> Path:
+        """Write a filled output-language rule fixture and return its path.
+
+        Args:
+            relative: Root-relative destination (canonical or legacy path).
+            native: Native language name placed in the rule text.
+            newline: Line ending used for the fixture (Windows editors use CRLF).
+        Returns:
+            The written path beneath the disposable root.
+        Side effects:
+            Creates test directories/files only; no database, Git or network.
+        """
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        text = f"# Output language\n\nAlways respond in {native}. Use {native} for explanations.\n"
+        path.write_bytes(text.replace("\n", newline).encode("utf-8"))
+        return path
+
+    def test_language_migration_moves_legacy_preference_once(self):
+        """Preview is read-only; apply creates the shared file and leaves a pointer."""
+        legacy = self.write_language(project_state.LANGUAGE_LEGACY, "Українська", "\r\n")
+        original = legacy.read_bytes()
+
+        preview = project_state.migrate_language(self.root)
+        self.assertEqual(preview["before"]["status"], "legacy")
+        self.assertEqual(preview["before"]["language"], "Українська")
+        self.assertEqual(preview["actions"], ["create-canonical", "replace-legacy-with-pointer"])
+        self.assertEqual(legacy.read_bytes(), original)
+        self.assertFalse((self.root / project_state.LANGUAGE_CANONICAL).exists())
+
+        report = project_state.migrate_language(self.root, apply=True)
+        canonical = self.root / project_state.LANGUAGE_CANONICAL
+        self.assertEqual(canonical.read_bytes(), original)
+        self.assertEqual(legacy.read_text(encoding="utf-8"), project_state.LANGUAGE_POINTER)
+        self.assertEqual((report["after"]["status"], report["after"]["language"],
+                          report["after"]["source"]),
+                         ("canonical", "Українська", project_state.LANGUAGE_CANONICAL))
+        repeat = project_state.migrate_language(self.root, apply=True)
+        self.assertEqual(repeat["actions"], [])
+        self.assertEqual(canonical.read_bytes(), original)
+
+    def test_language_identical_conflict_pointer_only_and_placeholder(self):
+        """Identical copies migrate; conflicts and orphan pointers are never written."""
+        self.write_language(project_state.LANGUAGE_LEGACY, "Polski")
+        self.write_language(project_state.LANGUAGE_CANONICAL, "Polski")
+        self.assertEqual(project_state.migrate_language(self.root, apply=True)["after"]["status"], "canonical")
+
+        legacy = self.write_language(project_state.LANGUAGE_LEGACY, "English")
+        before = legacy.read_bytes()
+        report = project_state.migrate_language(self.root, apply=True)
+        self.assertEqual((report["after"]["status"], report["actions"]), ("conflict", []))
+        self.assertEqual(legacy.read_bytes(), before)
+        self.assertEqual(report["after"]["language"], "Polski")
+
+        self.assertEqual(self.run_cli("--language", "--keep-shared")[0], 2)
+        resolved = project_state.migrate_language(self.root, apply=True, keep_shared=True)
+        self.assertEqual((resolved["actions"], resolved["after"]["status"], resolved["after"]["language"]),
+                         (["replace-legacy-with-pointer"], "canonical", "Polski"))
+        self.assertEqual(legacy.read_text(encoding="utf-8"), project_state.LANGUAGE_POINTER)
+
+        (self.root / project_state.LANGUAGE_CANONICAL).unlink()
+        legacy.write_text(project_state.LANGUAGE_POINTER, encoding="utf-8")
+        self.assertEqual(project_state.language_state(self.root)["status"], "pointer-only")
+        code, out, _ = self.run_cli("--language", "--apply")
+        self.assertEqual(code, 1, out)
+
+        legacy.unlink()
+        self.write_language(project_state.LANGUAGE_CANONICAL, "{LANGUAGE_NATIVE}")
+        self.assertEqual(project_state.language_state(self.root)["language"], None)
+        code, out, _ = self.run_cli("--language")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.run_cli("--language", "--resolve", "routes.json")[0], 2)
+
 if __name__ == "__main__":
     unittest.main()

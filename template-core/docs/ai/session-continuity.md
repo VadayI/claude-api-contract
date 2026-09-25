@@ -50,7 +50,9 @@ The command prints, in a bounded form:
 
 - Git branch, HEAD, the number of changed paths and upstream ahead/behind. It
   does not fetch, so the upstream numbers reflect the last fetch.
-- The project settings summary.
+- The project settings summary and the persisted output language
+  (`docs/ai/overrides/output-language.md`, or the Claude-only legacy file with
+  its migration command).
 - The resolved documentation map.
 - The newest session record present in the working tree (by its UTC
   identifier, whichever branch it was written on — merged records belong to
@@ -154,6 +156,7 @@ Every record in the directory is validated, not only the newest one.
   uncommitted edits to it;
 - commits after the newest record that change relevant paths;
 - `merge=union` on a continuity path;
+- a conflict between the shared and the legacy language preference;
 - Git being unavailable.
 
 ## Evidence boundary
@@ -162,3 +165,39 @@ Every record in the directory is validated, not only the newest one.
 of the plan's continuity criterion. A real Claude → Codex → Claude sequence on
 another machine is a runtime acceptance run. It is recorded separately and
 stays NOT_VERIFIED until it has actually been executed.
+
+## Runtime acceptance run
+
+Use a disposable branch of a template or derived project whose `--check`
+passes. Do not paste chat history into later sessions: each session starts
+without the previous chat.
+
+1. **Claude, machine A.** Start through the launcher. Ask for a small
+   documented change, for example a line in a feature README, then wrap-up.
+   Expect a record with `agent: claude`, a commit and `--check` PASS.
+2. **Codex, machine B**, a fresh clone without `.ai-runtime`, first prompt
+   "continue the project". Without further hints, the session states:
+   - the purpose (from the mapped README or brief);
+   - the architecture document;
+   - one current ADR;
+   - the branch and the revision of the latest record;
+   - its Checks and Limitations;
+   - its Next step;
+   - the persisted output language.
+
+   Codex then does that next step and wraps up with an `agent: codex` record.
+3. **Claude again, machine A**, after `git pull`. Expect the same facts, now
+   from the Codex record, and the snapshot shows no unrecorded commits.
+4. **Parallel sessions.** Two sessions on different branches each commit a
+   record, then merge. Expect two record files, no conflict in them, and the
+   handoff merged by content.
+
+Record in `runtime-compatibility.md`:
+
+- runtime versions and OS;
+- which of the listed facts each session produced unprompted;
+- the record paths and commits;
+- the `--check` results.
+
+Record only observed behaviour; no transcripts or secrets. Any fact the agent
+needed a hint for is a failure of that item, not a PASS.

@@ -74,7 +74,7 @@
     ".claude/agents/happy-path-author.md": {
       "legacy_sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e",
       "ownership": "template",
-      "sha256": "ec13d183fd8aaf49f015211cd996fa0d1fc5c052403e6ce0d7fcd8bfc16232ec"
+      "sha256": "0471ea3acf38d2544e791f5f6ff5adf66114a7f510e56df3bc5f7eca029d144d"
     },
     ".claude/agents/mock-validator.md": {
       "legacy_sha256": "fdf80526713c52b2f5d71c18ee8e3bcafefb13ece08b72341577531b2d061ddb",
@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "f685e15523bb3bf937d0533efe1be1e9b054b5259864f4c4839d8e37833180b7"
+      "sha256": "0fb9d65085b2156920befc9ca296d4e7cb7b5f932078671f949ecc4f3ccb33d0"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "3ebebc85f36a10918e71a1dc0bc6cb58c9d795d0b494c78377369771f2a0a3b3"
+      "sha256": "824fb6edea3429547f8084aa0c1ba186109e612dc2467e380d73e5fb8a31ad37"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -529,7 +529,7 @@
     },
     "docs/ai/project-state-migration.md": {
       "ownership": "template",
-      "sha256": "1eaace66f40fa7a61cfe4cf325a66c2b36199bfd042c3e4e91fae0fed9a42b06"
+      "sha256": "53db1648c3e7559c09489645e98d1872a466ff4a3bd2a30175e7399dba5a8091"
     },
     "docs/ai/react-runner.md": {
       "ownership": "template",
@@ -643,7 +643,7 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "d5dc1461cb2b629a3d3d763d2a4c6c7673b6b64b39a2371dd5af43fd509e1339"
+      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
     },
     "docs/ai/workflows/audit.md": {
       "ownership": "template",
@@ -663,7 +663,7 @@
     },
     "docs/ai/workflows/set-language.md": {
       "ownership": "template",
-      "sha256": "8f601b57f90fa117437912f99bca94c72f8d1dd71e42202039503337b6718298"
+      "sha256": "4c228bfee3e09bd589ab59391090f0c3b655ced993d22bf91e5261c421763834"
     },
     "docs/ai/workflows/template-sync.md": {
       "ownership": "template",
@@ -801,7 +801,7 @@
     },
     "scripts/ai/project_state.py": {
       "ownership": "template",
-      "sha256": "cf84a85c1816646f529ea8adbdcedc1fd502750b7d6ee65fb528c0d0c5a8ce94"
+      "sha256": "aad2453cd9289ef1bf92aee6374d7ebbc658c80952596c3b29bd69428b6683b9"
     },
     "scripts/ai/react_gate.py": {
       "ownership": "template",
@@ -827,7 +827,7 @@
     },
     "scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "100880347b1a47baca2becf8b63473f196d3549437fb465a45745b793a81ffe2"
+      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
     },
     "scripts/ai/test_react_gate.py": {
       "ownership": "template",
@@ -964,7 +964,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "3eb2f8df6bde0e206c25bd07e8a16a1eaca1341a1a74e9638f9054e64852f55a"
+      "sha256": "85e04141361fd77b0d7614915e8fd2366cb841fe2e78148ddcbb080d257a58bd"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -993,7 +993,7 @@
     },
     "template-core/docs/ai/project-state-migration.md": {
       "ownership": "template",
-      "sha256": "1eaace66f40fa7a61cfe4cf325a66c2b36199bfd042c3e4e91fae0fed9a42b06"
+      "sha256": "53db1648c3e7559c09489645e98d1872a466ff4a3bd2a30175e7399dba5a8091"
     },
     "template-core/docs/ai/runner.md": {
       "ownership": "template",
@@ -1011,7 +1011,7 @@
     },
     "template-core/docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "d5dc1461cb2b629a3d3d763d2a4c6c7673b6b64b39a2371dd5af43fd509e1339"
+      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
     },
     "template-core/scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
@@ -1073,7 +1073,7 @@
     },
     "template-core/scripts/ai/project_state.py": {
       "ownership": "template",
-      "sha256": "cf84a85c1816646f529ea8adbdcedc1fd502750b7d6ee65fb528c0d0c5a8ce94"
+      "sha256": "aad2453cd9289ef1bf92aee6374d7ebbc658c80952596c3b29bd69428b6683b9"
     },
     "template-core/scripts/ai/readiness.py": {
       "legacy_sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381",
@@ -1095,7 +1095,7 @@
     },
     "template-core/scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "100880347b1a47baca2becf8b63473f196d3549437fb465a45745b793a81ffe2"
+      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
     },
     "template-core/templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -1163,7 +1163,7 @@
     },
     "template-core/tests/test_project_state.py": {
       "ownership": "template",
-      "sha256": "01c3bdc26839787146e469ebf12afdea43e064493c8100ed2905a40e8d511712"
+      "sha256": "bfa5161bf8b2e996b746e880a53a27c9549ce02b37a20ae11b90ce139799b370"
     },
     "template-core/tests/test_readiness.py": {
       "legacy_sha256": "1d194dcfba30d4ddb43abeb8da51fe31da15ff1f208d4a509c35c91ace50fd65",
@@ -1181,7 +1181,7 @@
     },
     "template-core/tests/test_session_context.py": {
       "ownership": "template",
-      "sha256": "c2ba36ad933e3c990a9e94c4b3fb1b3d3da6e1a7cd6e94143cc5e390198a6775"
+      "sha256": "1e5f4f0d44a7eae774db038ebaa17832265c604d4f1b64e6e31784334d3a035b"
     },
     "templates/.github/workflows/contract-audit.yml": {
       "ownership": "template",

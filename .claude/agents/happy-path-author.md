@@ -100,6 +100,6 @@ If §8 already exists, replace it in full — do not append a second §8.
 - **Business language only.** No HTTP verbs, status codes, or JSON in the step description column. Those belong in `docs/api/INDEX.md` and `docs/verify/`.
 - **Do not duplicate INDEX.md.** This doc is journey-oriented (sequences of actions), not endpoint-indexed. Link to `docs/api/INDEX.md` for per-endpoint detail.
 - **Idempotent writes.** Always overwrite `docs/api/HAPPY-PATHS.md` from scratch; for `PROJECT.md` §8, replace if it already exists.
-- Output language follows `.claude/rules/output-language.md` if present; identifiers and paths stay English.
+- Output language follows `docs/ai/overrides/output-language.md` (legacy `.claude/rules/output-language.md` until migrated) if present; identifiers and paths stay English.
 
 > **Living plan.** After your phase, append one line to the active `docs/plans/NNNN-*.md` Execution log (@.claude/rules/living-plan.md).

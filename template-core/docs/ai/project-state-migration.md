@@ -16,6 +16,7 @@ known artifacts until a project completes migration.
 | `template-sync.json` | `docs/project-state/template-lineage.json` | Project lineage |
 | `env-detect.json` | `.ai-runtime/env-detect.json` | Machine-local stack probe |
 | `command-log.jsonl` | `.ai-runtime/command-log.jsonl` | Machine-local runtime |
+| `.claude/rules/output-language.md` | `docs/ai/overrides/output-language.md` | Project language preference (see below) |
 
 `.ai-runtime/environment.json` is reserved for the shared detector report
 (`python scripts/ai/detector.py --repository . --write`, schema version 1). Stack
@@ -78,9 +79,30 @@ Session records, the handoff and the documentation map are described in
 `session-continuity.md`; `scripts/ai/session_context.py` reads project settings
 through the same resolver.
 
+## Output-language preference
+
+The shared preference `docs/ai/overrides/output-language.md` is read by Claude
+and Codex through AGENTS.md; the older `.claude/rules/output-language.md` was
+visible to Claude only. Review, then apply:
+
+```sh
+python scripts/ai/project_state.py --root . --language
+python scripts/ai/project_state.py --root . --language --apply
+```
+
+Apply creates the shared file exclusively from the legacy bytes, verifies it,
+and only then replaces the legacy file with a fixed pointer to the shared file.
+A legacy CLAUDE.md import of the old path therefore keeps working and there is
+exactly one writable preference. When both files hold different preferences the
+command writes nothing and exits 1: reconcile from the user's current choice
+through the set-language procedure, which writes that choice to the shared file
+and then runs `--language --apply --keep-shared` to replace the legacy file with
+the pointer. A pointer without the shared file also exits 1. Repeating a completed migration changes nothing. New preferences are written
+only to the shared file. `session_context.py` prints the effective language.
+
 ## Ownership after migration
 
-`docs/project-state/**` and `.ai-runtime/**` are project-owned or machine-local:
+`docs/project-state/**`, `docs/ai/overrides/**` and `.ai-runtime/**` are project-owned or machine-local:
 template installers and seed inventories must not deliver, overwrite or remove
 them, and `.ai-runtime/` stays gitignored. Legacy `.claude/memory/**` entries in
 `.gitignore` remain during the transition so an unmigrated checkout keeps its

@@ -489,6 +489,13 @@ def build_report(root: Path) -> dict:
         "maturity": _field(project, "maturity", "stage"),
         "template": _field(project, "template", "kind"),
     }
+    language = project_state.language_state(root)
+    report["language"] = language
+    if language["status"] == "conflict":
+        findings.append(f"Output language: {project_state.LANGUAGE_LEGACY} differs from "
+                        f"{project_state.LANGUAGE_CANONICAL}; reconcile from the user's current choice")
+    elif language["status"] == "pointer-only":
+        findings.append(f"Output language: pointer without {project_state.LANGUAGE_CANONICAL}")
     documentation = documentation_map(root, project)
     report["documentation"] = list(documentation.values())
     if not any(documentation[key]["kind"] == "file" and not documentation[key].get("empty")
@@ -555,6 +562,29 @@ def _excerpt(text: str, limit: int = MAX_EXCERPT_LINES) -> list[str]:
     return lines[:limit] + (["…"] if len(lines) > limit else [])
 
 
+def _language_line(language: dict) -> str:
+    """Describe the persisted output-language preference in one line.
+
+    Args:
+        language: Output of :func:`project_state.language_state`.
+    Returns:
+        A line naming the language and its file, the migration command for an
+        unmigrated Claude-only file, or the conflict to reconcile.
+    Side effects:
+        None.
+    """
+    name = language["language"] or "(unparsed)"
+    migrate = "python scripts/ai/project_state.py --root . --language --apply"
+    return {
+        "none": "Output language: not persisted (honour the session choice; set-language when needed)",
+        "canonical": f"Output language: {name} — {language['source']}",
+        "identical": f"Output language: {name} — {language['source']} (legacy copy identical; migrate: {migrate})",
+        "legacy": f"Output language: {name} — {language['source']} (Claude-only legacy file; migrate: {migrate})",
+        "conflict": "Output language: CONFLICT between the shared and the legacy file (see findings)",
+        "pointer-only": "Output language: legacy pointer without the shared file (see findings)",
+    }[language["status"]]
+
+
 def render(report: dict) -> str:
     """Render the report as compact text for an agent's first context read.
 
@@ -581,6 +611,7 @@ def render(report: dict) -> str:
     out.append("Project settings: absent (CI choice not recorded)" if project is None else
                f"Project settings: {project['path']} — template={project['template']}, "
                f"ci={project['ci']}, maturity={project['maturity']}")
+    out.append(_language_line(report["language"]))
     out.append("Documentation map:")
     for entry in report["documentation"]:
         detail = entry["kind"]
