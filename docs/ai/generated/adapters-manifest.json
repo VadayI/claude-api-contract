@@ -178,17 +178,17 @@
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "069a27cd0b6ea978bf3134b1e2e1643e41fe4ae2b0070b8f540036768f248614"
+      "sha256": "dab1784a4be58ec54d7a6151e469008a575be63edd68658946e1efbe1ac95718"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "452f78f510f14e51ed44dec96884aaa28a419bd33d3cb30e291cff4ea4787a4f"
+      "sha256": "dfbea32d08d22269289be14ac11144250fbcc39bd438944c2686a007df92e386"
     }
   },
   "generator": "family-core",
   "schema_version": 1,
   "sources": {
-    "AGENTS.md": "aa343e674a84a03348a282f9113dd50cf1d547ca887cc5cef85419812750bc37",
+    "AGENTS.md": "5043c37340b171610c25f6898058a54b89cee0d28c51373eeb3a5c47d8738e07",
     "docs/ai/catalog.json": "f543b08af0542febb599085ae482e6320493fa2c4d60b51de51a72e0f9d66cd0",
     "docs/ai/roles/contract-reviewer.md": "e08b7ab9daabbbcab8a1a641a358f66d01fa44229754aa509303faa7b198e95d",
     "docs/ai/roles/tsp-author.md": "0f759da6d71705058bfa9828bac9a0216df416cb439e7d2547e63dd8f7edc318",
@@ -198,14 +198,14 @@
     "docs/ai/rules/contract-first.md": "4f2055a6845c939a5763079b81a49b471b06bb8f535c16fcea469b6aba0b2c9f",
     "docs/ai/rules/deploy.md": "4eb255d7eb46f57cbe0350e8cf090692f1a1a073d276a0ad9b2e2f727b6c82df",
     "docs/ai/rules/endpoint-surface.md": "ba51cb912db2ccb18895b3c89c95c52b453c6190d20de1354e2512587dc27792",
-    "docs/ai/rules/environment.md": "eb1350b5ea587eadf15e1bc66bb491e9a2e95805cabf973a2406cf6802e078bb",
+    "docs/ai/rules/environment.md": "036d8a3222bb40aede6acc7716a16f19b4307ec095438c8db444b86fcf1daca3",
     "docs/ai/rules/examples-validation.md": "6953007dfa20ecc0cfe6f2f170a3ae9a9da6899a46a6a3d13235ccc8f81489b2",
     "docs/ai/rules/git-operations.md": "fabab4b6eb28267d58eb66c453f9440e8789717483e167ba03448b1a7678c275",
-    "docs/ai/rules/living-plan.md": "162ed419da61246343e78b3db512bf3ca95277cb2324973280a57b9851a02ce7",
+    "docs/ai/rules/living-plan.md": "4bc56623e4a3e47bdb817e7462d4503454ca855b12ff7907c80bfd82a3cc7ed7",
     "docs/ai/rules/mcp-stack.md": "f95c283a700b2f8b1dfefc5bc357fc2e3ef0476c517029b5cfb74de7ea0c1cb3",
     "docs/ai/rules/no-stubs.md": "92056a5215e9bfb1bd4e50cfe82ecc080e95a9a2cd3b79d161307c9be3a39bc5",
     "docs/ai/rules/node-commands.md": "fb2fdf15133a3b538ec4099fe71bfc1370808b48b06c9656a45205eb487d3150",
-    "docs/ai/rules/preflight.md": "ad4608d4e7474e4e31882f03d932427e5f6386123563d9cd9e23aaa7fc307c11",
+    "docs/ai/rules/preflight.md": "71580829890006fd9725495b32b2fe44453d922f3b9ede339c4484bb4f1750ec",
     "docs/ai/rules/prism-mock.md": "9d41147b9d4bca8c56288f8e0be5b4621ef0fc28db921272974028a380b3c991",
     "docs/ai/rules/project-maturity.md": "09b66e9748308c4864f5312e6158cbdb2fb56ac6369e68dac3dd9753b4fc8eb4",
     "docs/ai/rules/spectral-style.md": "f0a3797168aeba3be4d40c27251572892f098cbb8bd4a39648e0981701915512",
@@ -216,11 +216,11 @@
     "docs/ai/workflows/audit.md": "fa92f0a9de29732f127e4b617ddfdc793187bc0db6b4cd3609c2950d3a81ebad",
     "docs/ai/workflows/bootstrap.md": "b46cbaf6cb0874df6837e86ca7dba0f474e6d8a5cc9a62b6341df9483fd61bf0",
     "docs/ai/workflows/doctor.md": "9a6a7ef572902fa38d9ef885a80d872e4965f1330b1451a34617e383274fcdb6",
-    "docs/ai/workflows/handoff.md": "e5a054a2a160528a62b1da7df12067593217c4cec5778ab73744f161cedc3b4c",
+    "docs/ai/workflows/handoff.md": "a638b752f64b82ee81852bad27d9210c05c28c4c9ce33711728cdd2765434a0c",
     "docs/ai/workflows/set-language.md": "8f601b57f90fa117437912f99bca94c72f8d1dd71e42202039503337b6718298",
     "docs/ai/workflows/template-sync.md": "a50c009ca632000d024a31544f06f6554dbd30402d550c7b1d1610044cf77ab8",
     "docs/ai/workflows/update-from-template.md": "055ee34d39e1ce3925e057548b3c79f29ba5d1a7b20e6b0128dc8dc2cad89af1",
     "docs/ai/workflows/verify.md": "4165d5ba8462ac6715067ea9dddb9cb1edf4e26a77ee493a1302e625bddc31c8",
-    "docs/ai/workflows/wrap-up.md": "121e7fa55c7f33d890759f38bd4337323d519f4e3f825533d068da0bb0abd582"
+    "docs/ai/workflows/wrap-up.md": "6bcd99dd810b24259e392e348b7aa7e1de4935a2a760109ce39959e9d5ad840b"
   }
 }

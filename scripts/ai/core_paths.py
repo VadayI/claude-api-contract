@@ -4,12 +4,14 @@ import hashlib
 from pathlib import Path
 
 
-def contained(root: Path, name: str) -> Path:
-    """Resolve a regular relative destination without traversing symbolic links.
+def contained_entry(root: Path, name: str) -> Path:
+    """Resolve a relative file or directory entry without traversing links.
 
-    Args: root is the installation directory; name is a manifest-relative path.
-    Returns: A contained path, which need not exist yet.
-    Raises: ValueError for absolute paths, traversal, symlinks or directories.
+    Args: root is the project directory; name is a root-relative path that may
+        name a file, a directory (for example an ADR folder) or a future entry.
+    Returns: The contained path, which need not exist yet.
+    Raises: ValueError for absolute paths, traversal, symlinks/junctions or an
+        entry that resolves outside root.
     Side effects: Filesystem metadata reads only; no database or network access.
     """
     relative = Path(name)
@@ -20,7 +22,21 @@ def contained(root: Path, name: str) -> Path:
         path = path / part
         if path.is_symlink() or path.is_junction():
             raise ValueError(f"Linked path: {name}")
-    if not path.resolve().is_relative_to(root.resolve()) or path.is_dir():
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError(f"Invalid destination: {name}")
+    return path
+
+
+def contained(root: Path, name: str) -> Path:
+    """Resolve a regular relative destination without traversing symbolic links.
+
+    Args: root is the installation directory; name is a manifest-relative path.
+    Returns: A contained path, which need not exist yet.
+    Raises: ValueError for absolute paths, traversal, symlinks or directories.
+    Side effects: Filesystem metadata reads only; no database or network access.
+    """
+    path = contained_entry(root, name)
+    if path.is_dir():
         raise ValueError(f"Invalid destination: {name}")
     return path
 

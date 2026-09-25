@@ -25,9 +25,12 @@ necessary.
 Claude PreToolUse checks structured edit payloads and recognized `apply_patch`
 headers for direct edits of generated `openapi.yml`; malformed payloads fail
 closed. This is early feedback, not complete coverage of arbitrary shell
-writes. `SessionStart` runs the detector only. There is no automatic Stop or
-SessionEnd formatter, push, or merge; finish with an explicit handoff, knowing
-an interrupted session may skip end events. A trusted Codex tool-hook surface
+writes. `SessionStart` runs the detectors and prints the shared session context
+(`scripts/ai/session_context.py`: Git state, documentation map, latest session
+record); Codex runs the same command from AGENTS.md. There is no automatic Stop or
+SessionEnd formatter, push, or merge; finish with an explicit handoff that writes
+a `docs/sessions/` record (docs/ai/session-continuity.md), knowing an interrupted
+session may skip end events. A trusted Codex tool-hook surface
 has not been verified for this pilot; Git/CI checks are the portable controls.
 
 **Single source of truth for a REST API contract.** TypeSpec в†’ a canonical, bundled `openapi.yml` (OpenAPI 3.1), linted (Spectral), mocked (Prism), and breaking-change gated (oasdiff). Two repositories consume it in parallel вЂ” `claude-django` (backend, validates its implementation against the contract) and `claude-react-mui` (frontend, generates TS types + a mock). Neither generates the contract; both pin a version.

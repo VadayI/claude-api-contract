@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "5dce1edccf95b61956804a9fdce00d1da57a393efaae14c8d9b13c68cd2e7a50"
+      "sha256": "be7d371d791ea422a39cf05747a0cf729d93faff07f8124c1fb53b0f9ac4835e"
     },
     "core.json": {
       "ownership": "template",
@@ -35,7 +35,7 @@
     },
     "docs/ai/project-state-migration.md": {
       "ownership": "template",
-      "sha256": "85e6448775e013f5005a148369aa12c2a7a7557c81ac1bc0ebcd24b390cf846c"
+      "sha256": "1eaace66f40fa7a61cfe4cf325a66c2b36199bfd042c3e4e91fae0fed9a42b06"
     },
     "docs/ai/runner.md": {
       "ownership": "template",
@@ -43,11 +43,15 @@
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
-      "sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07"
+      "sha256": "1731ecc8e459f8990c1ea50e1212f61d60e5b074852102e83e6d577913fe5f9f"
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "0096e8d2b75422cce6cca4c00e3f96025b5eacad0204992cd47572d5f4ddc625"
+      "sha256": "586a7c7932a4b7224461141c4c2705a388ae2bbefe050e4915051f3508977019"
+    },
+    "docs/ai/session-continuity.md": {
+      "ownership": "template",
+      "sha256": "d5dc1461cb2b629a3d3d763d2a4c6c7673b6b64b39a2371dd5af43fd509e1339"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -59,7 +63,7 @@
     },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
-      "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
+      "sha256": "5a54248283648face770a5a4b12af16e55bd77baedf9add4beac8689a73e84ae"
     },
     "scripts/ai/core_sync.py": {
       "ownership": "template",
@@ -115,7 +119,11 @@
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
-      "sha256": "067c08b0e2a69c8ea285d226be9adbc2b8150f9fb11883489a18908a82c2b046"
+      "sha256": "d95efdd34565129a77efa1c1870d2a776a657b9edcacbbbd402c75aa5fa9d075"
+    },
+    "scripts/ai/session_context.py": {
+      "ownership": "template",
+      "sha256": "100880347b1a47baca2becf8b63473f196d3549437fb465a45745b793a81ffe2"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -191,7 +199,11 @@
     },
     "tests/test_schema.py": {
       "ownership": "template",
-      "sha256": "54ceb7698de564a60fc6ffab12d9f96be5a5b7479d5a54b9727489591e428d4b"
+      "sha256": "ae515e7b51801c2623ee894d9d0b2e49746a1746f99b3dbfb8385cf985c29ea4"
+    },
+    "tests/test_session_context.py": {
+      "ownership": "template",
+      "sha256": "c2ba36ad933e3c990a9e94c4b3fb1b3d3da6e1a7cd6e94143cc5e390198a6775"
     }
   },
   "phase": "P07-in-progress",

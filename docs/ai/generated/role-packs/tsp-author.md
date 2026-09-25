@@ -327,7 +327,7 @@ Both gates are **active** (severity error). A derived project not yet ready to c
 <!-- END SOURCE docs/ai/rules/endpoint-surface.md -->
 
 
-<!-- SOURCE docs/ai/rules/environment.md SHA256 eb1350b5ea587eadf15e1bc66bb491e9a2e95805cabf973a2406cf6802e078bb -->
+<!-- SOURCE docs/ai/rules/environment.md SHA256 036d8a3222bb40aede6acc7716a16f19b4307ec095438c8db444b86fcf1daca3 -->
 
 # Environment specification (source of truth)
 
@@ -388,7 +388,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/environment.md -->
 
@@ -447,7 +447,7 @@ Authorized commit/push/PR proceed with exact task-owned paths after real checks.
 <!-- END SOURCE docs/ai/rules/git-operations.md -->
 
 
-<!-- SOURCE docs/ai/rules/living-plan.md SHA256 162ed419da61246343e78b3db512bf3ca95277cb2324973280a57b9851a02ce7 -->
+<!-- SOURCE docs/ai/rules/living-plan.md SHA256 4bc56623e4a3e47bdb817e7462d4503454ca855b12ff7907c80bfd82a3cc7ed7 -->
 
 # Living plan (execution log per feature)
 
@@ -465,7 +465,7 @@ Non-trivial work gets a plan file `docs/plans/NNNN-<slug>.md` that lives and bre
 - Create a reviewable plan before nontrivial changes when needed; an already-authorized plan remains authorized across sessions.
 - After finishing a phase, each agent appends a one-line confirmation to the **Execution log** via an `Edit` append — never a full-file rewrite (concurrent phases must not clobber each other):
   > `phase done: tsp-author — spec/articles.tsp + openapi.yml recompiled`
-- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into `docs/WORKLOG.md` and refreshes `docs/HANDOFF.md`.
+- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into the session record (`docs/sessions/`) and refreshes `docs/HANDOFF.md`.
 
 <!-- END SOURCE docs/ai/rules/living-plan.md -->
 
@@ -621,7 +621,7 @@ Class B is an upstream-only classification: spec/examples/OpenAPI/registries/loc
 <!-- END SOURCE docs/ai/rules/node-commands.md -->
 
 
-<!-- SOURCE docs/ai/rules/preflight.md SHA256 ad4608d4e7474e4e31882f03d932427e5f6386123563d9cd9e23aaa7fc307c11 -->
+<!-- SOURCE docs/ai/rules/preflight.md SHA256 71580829890006fd9725495b32b2fe44453d922f3b9ede339c4484bb4f1750ec -->
 
 # Project-kickoff preflight (hard gate)
 
@@ -652,7 +652,7 @@ If a CRITICAL item is missing, STOP — do not start the feature pipeline. Repor
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/preflight.md -->
 

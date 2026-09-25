@@ -13,6 +13,12 @@ WORKFLOWS = ("contract-checks.yml", "contract-audit.yml")
 LEGACY_AUTO = ("contract-ci.yml", "contract-policy.yml", "scheduled-audit.yml")
 PROJECT = "docs/project-state/project.json"
 RECEIPT = "docs/ai/ci-workflow-receipt.json"
+# Jawna mapa ról dokumentacji nowego projektu kontraktu (docs/ai/session-continuity.md).
+DOCUMENTATION = {"readme": "README.md", "project": "PROJECT.md",
+                 "architecture": "docs/ai/rules/contract-first.md",
+                 "decisions": "docs/decisions", "handoff": "docs/HANDOFF.md",
+                 "sessions": "docs/sessions", "backlog": "docs/todo.md",
+                 "lessons": "docs/lessons.md", "worklog": "docs/WORKLOG.md"}
 EVENTS = {
     "contract-checks.yml": ("  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n"
                             "  merge_group:\n  workflow_dispatch:\n    inputs:\n      base:\n"
@@ -68,7 +74,9 @@ def project_text(target: Path, mode: str) -> str:
     Raises: ValueError for invalid mode or unsupported existing metadata.
     Side effects: Reads project.json if present; no writes, DB, or network.
     Business rule: Fresh maturity is conservatively experiment; the artifact
-        location is known, while contract pin/readiness remain unresolved.
+        location is known, while contract pin/readiness remain unresolved. A
+        fresh file names the actual documentation paths; an existing map,
+        including an empty one, is never rewritten.
     """
     if mode not in {"local", "github"}:
         raise ValueError("CI mode must be local or github")
@@ -83,7 +91,7 @@ def project_text(target: Path, mode: str) -> str:
                   "orchestration": {"coordinator_read": "reported_files_only"},
                   "maturity": {"stage": "experiment"},
                   "contract": {"source": "repo_pin", "artifact": "openapi.yml"},
-                  "documentation": {}, "features": [], "deployment": {}}
+                  "documentation": dict(DOCUMENTATION), "features": [], "deployment": {}}
     config["ci"]["execution"] = mode
     return json.dumps(config, indent=2, sort_keys=True) + "\n"
 

@@ -111,6 +111,20 @@ class SchemaTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "floor"):
             schema.project_links(self.project, self.root)
 
+    def test_documentation_directories_allowed_but_artifact_must_be_file(self):
+        """ADR/session directories are valid map entries; a directory artifact is not."""
+        (self.root / "docs/decisions").mkdir(parents=True)
+        self.project["documentation"] = {"decisions": "docs/decisions", "sessions": "docs/sessions"}
+        schema.project_links(self.project, self.root)
+        self.project["contract"]["artifact"] = "docs/decisions"
+        with self.assertRaisesRegex(ValueError, "Invalid destination"):
+            schema.project_links(self.project, self.root)
+        self.project["contract"]["artifact"] = "vendor/openapi.yml"
+        for unsafe in (".ai-runtime/sessions", ".npmrc", "config/secrets.json", "docs/settings.json"):
+            self.project["documentation"]["sessions"] = unsafe
+            with self.subTest(path=unsafe), self.assertRaises(ValueError):
+                schema.project_links(self.project, self.root)
+
 
 if __name__ == "__main__":
     unittest.main()

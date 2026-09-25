@@ -7,7 +7,9 @@ delivery decision is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md).
 Integrated so far: P04 production structure, P05 detector/exact-candidate runner
 ([runner.md](docs/ai/runner.md)), P06 CI mode/hooks and the P09 readiness
 resolver (delivered, no agent entry point yet). The P07 project-state migration
-([project-state-migration.md](docs/ai/project-state-migration.md)) is in progress.
+([project-state-migration.md](docs/ai/project-state-migration.md)) and session
+continuity ([session-continuity.md](docs/ai/session-continuity.md): start context,
+documentation map, per-session records) are in progress.
 The 55-step workflow inventory is the static P05 record of the upstream
 workflows at that time; it is not re-derived from current workflow files.
 
@@ -28,6 +30,7 @@ dependency to a React, Django or contract application.
 ```text
 python -m unittest discover -s template-core/tests -p "test_*.py"
 python template-core/scripts/ai/detector.py --repository .
+python template-core/scripts/ai/session_context.py --root . --check
 python template-core/scripts/ai/runner.py --repository . --candidate FULL_SHA --base FULL_SHA --catalog template-core/templates/ai/checks/contract.json --output .ai-runtime/results/full.json
 python template-core/scripts/ai/readiness.py profile.json
 python template-core/scripts/ai/readiness.py profile.json --evidence evidence.json

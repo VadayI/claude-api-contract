@@ -29,7 +29,9 @@ path and, for `repo_pin`, an explicit pin. URLs cannot contain credentials, quer
 parameters or fragments. A digest is a declared identity until the integrity runner
 verifies it. This schema does not fetch URLs or certify reachability. Artifact and
 documentation paths may refer to future files, but cannot traverse outside the
-project or through links. P06 materializes an explicit CI choice in project
+project or through links. The artifact is a file; documentation entries may also
+name directories (ADRs, session records). The documentation roles and their
+defaults are defined in `session-continuity.md`. P06 materializes an explicit CI choice in project
 settings. P07 migrates legacy settings and registries with the procedures in
 `project-state-migration.md`; installing these schemas does not create or
 overwrite project settings.

@@ -74,6 +74,10 @@ conflict refuses to write and names both paths; it never creates a second copy
 beside the legacy file. Project registries are never migrated by a writer — a
 human runs `--apply` after reviewing the preview.
 
+Session records, the handoff and the documentation map are described in
+`session-continuity.md`; `scripts/ai/session_context.py` reads project settings
+through the same resolver.
+
 ## Ownership after migration
 
 `docs/project-state/**` and `.ai-runtime/**` are project-owned or machine-local:

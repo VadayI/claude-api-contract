@@ -69,8 +69,11 @@ not proof of a completed role session. Local prompts/role packs are the fallback
 when native custom-role activation is unavailable.
 
 Source Claude settings no longer pin a model, auto-register optional marketplaces
-or run a Stop formatter. The compatible SessionStart only runs the existing
-detector; it cannot remove index.lock, create env or install packages. Shared
-detector/runner (P05), runtime hooks/CI (P06), shared memory (P07), automatic Git
-recovery (P08), all-role transfer (P12) and end-to-end derived acceptance (P13)
-remain separate criteria. Existing registries keep their legacy paths until P07.
+or run a Stop formatter. The compatible SessionStart runs the shared detector,
+the stack probe and prints the session context; it cannot remove index.lock,
+create env or install packages. Shared detector/runner (P05) and runtime
+hooks/CI (P06) are delivered; P07 adds the project-state resolver/migration and
+session continuity (project-state-migration.md, session-continuity.md). Automatic Git recovery
+(P08), all-role transfer (P12) and end-to-end derived acceptance (P13) remain
+separate criteria. Registries resolve `docs/project-state/` first and fall back
+to legacy `.claude/memory/` until `project_state.py --apply` migrates them.
