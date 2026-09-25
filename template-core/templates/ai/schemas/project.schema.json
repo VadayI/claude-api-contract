@@ -55,6 +55,14 @@
         "merge_policy": {
           "type": "string",
           "const": "user_command"
+        },
+        "merge_method": {
+          "type": "string",
+          "enum": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
         }
       }
     },

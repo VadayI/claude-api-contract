@@ -178,11 +178,11 @@
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "dab1784a4be58ec54d7a6151e469008a575be63edd68658946e1efbe1ac95718"
+      "sha256": "e1b37ded52356fc20bcb867c48c2f979416aea74f3c6c34db42f18102b919973"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "dfbea32d08d22269289be14ac11144250fbcc39bd438944c2686a007df92e386"
+      "sha256": "2cdd2b94eb1b27c16a4567a20ce80f5c5ef1481da071d47272acf67386fbf402"
     }
   },
   "generator": "family-core",
@@ -200,7 +200,7 @@
     "docs/ai/rules/endpoint-surface.md": "ba51cb912db2ccb18895b3c89c95c52b453c6190d20de1354e2512587dc27792",
     "docs/ai/rules/environment.md": "036d8a3222bb40aede6acc7716a16f19b4307ec095438c8db444b86fcf1daca3",
     "docs/ai/rules/examples-validation.md": "6953007dfa20ecc0cfe6f2f170a3ae9a9da6899a46a6a3d13235ccc8f81489b2",
-    "docs/ai/rules/git-operations.md": "fabab4b6eb28267d58eb66c453f9440e8789717483e167ba03448b1a7678c275",
+    "docs/ai/rules/git-operations.md": "96cedc13a769a0cb2980e66edbaef407c43d3f519ec1065fedb3e3f4c4cd0bfa",
     "docs/ai/rules/living-plan.md": "4bc56623e4a3e47bdb817e7462d4503454ca855b12ff7907c80bfd82a3cc7ed7",
     "docs/ai/rules/mcp-stack.md": "f95c283a700b2f8b1dfefc5bc357fc2e3ef0476c517029b5cfb74de7ea0c1cb3",
     "docs/ai/rules/no-stubs.md": "92056a5215e9bfb1bd4e50cfe82ecc080e95a9a2cd3b79d161307c9be3a39bc5",
@@ -221,6 +221,6 @@
     "docs/ai/workflows/template-sync.md": "a50c009ca632000d024a31544f06f6554dbd30402d550c7b1d1610044cf77ab8",
     "docs/ai/workflows/update-from-template.md": "055ee34d39e1ce3925e057548b3c79f29ba5d1a7b20e6b0128dc8dc2cad89af1",
     "docs/ai/workflows/verify.md": "4165d5ba8462ac6715067ea9dddb9cb1edf4e26a77ee493a1302e625bddc31c8",
-    "docs/ai/workflows/wrap-up.md": "6bcd99dd810b24259e392e348b7aa7e1de4935a2a760109ce39959e9d5ad840b"
+    "docs/ai/workflows/wrap-up.md": "abe9a73a51992b1792dc62cddbeeefe23d99b9bea88d2438c1b07120eceb3fff"
   }
 }

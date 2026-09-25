@@ -8,6 +8,10 @@
       "ownership": "template",
       "sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9"
     },
+    "docs/ai/git-lifecycle.md": {
+      "ownership": "template",
+      "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
+    },
     "docs/ai/launchers.md": {
       "ownership": "template",
       "sha256": "9320603d3ee350b66baa4f6f252fb88c3fde29c13d93974b7f63c591838c94a0"
@@ -38,7 +42,7 @@
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "586a7c7932a4b7224461141c4c2705a388ae2bbefe050e4915051f3508977019"
+      "sha256": "9407e77c2d272fcc397bff349b6c89c6729673820c97647476e87e00589dba6a"
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
@@ -67,6 +71,10 @@
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
       "sha256": "0bbff439ade45e6732b32f2e808add1513290b158a409c5c64c84d6159d5ed13"
+    },
+    "scripts/ai/git_lifecycle.py": {
+      "ownership": "template",
+      "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
     },
     "scripts/ai/launch.ps1": {
       "ownership": "template",
@@ -142,7 +150,7 @@
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
-      "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
+      "sha256": "0bf6611fd243a4b14a4441d1674df2c25bc1f80a3605b06d2369db33adb1f0bd"
     },
     "templates/ai/schemas/run-context.schema.json": {
       "ownership": "template",
@@ -152,7 +160,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "85e04141361fd77b0d7614915e8fd2366cb841fe2e78148ddcbb080d257a58bd",
+  "source_manifest_digest": "d6ee07d8ec7037a04af840c1a5940ccab4fa916033fe137145bfebbe28215264",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"

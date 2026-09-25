@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "be7d371d791ea422a39cf05747a0cf729d93faff07f8124c1fb53b0f9ac4835e"
+      "sha256": "cf82ba5ab1b24dcb67b5c5a2f4a8913b6b7811f92b70f5b7f7051e49bcc25b5e"
     },
     "core.json": {
       "ownership": "template",
@@ -16,6 +16,10 @@
     "docs/ai/decisions/0001-portable-family-core.md": {
       "ownership": "template",
       "sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9"
+    },
+    "docs/ai/git-lifecycle.md": {
+      "ownership": "template",
+      "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
@@ -47,7 +51,7 @@
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "586a7c7932a4b7224461141c4c2705a388ae2bbefe050e4915051f3508977019"
+      "sha256": "9407e77c2d272fcc397bff349b6c89c6729673820c97647476e87e00589dba6a"
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
@@ -79,7 +83,11 @@
     },
     "scripts/ai/generate_core.py": {
       "ownership": "template",
-      "sha256": "85cb2c826ea50c1b3f6c14c89463ada953193ed863ea26b0a1aff126c0943ceb"
+      "sha256": "e87822d5319dfa6a77d8d344ff191998fbe384f58c983a83ba0cb453bac7fecd"
+    },
+    "scripts/ai/git_lifecycle.py": {
+      "ownership": "template",
+      "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -159,11 +167,15 @@
     },
     "templates/ai/schemas/project.schema.json": {
       "ownership": "template",
-      "sha256": "85be8ee2bbf035f1be351775747134794be1fb707094134ffa7d571c29fe11e6"
+      "sha256": "0bf6611fd243a4b14a4441d1674df2c25bc1f80a3605b06d2369db33adb1f0bd"
     },
     "templates/ai/schemas/run-context.schema.json": {
       "ownership": "template",
       "sha256": "5f5a84216b5a8aca8d64c49704bb88b1413f6e506c3c81bf2f8dcdc05e863383"
+    },
+    "tests/fake_gh.py": {
+      "ownership": "template",
+      "sha256": "666d2ad96561db12ea7d14bdd07f411dd36128da4c98e991f92e35ec0205f57e"
     },
     "tests/test_adapters.py": {
       "ownership": "template",
@@ -176,6 +188,10 @@
     "tests/test_core_sync.py": {
       "ownership": "template",
       "sha256": "2bd718d229d4ffba9e66cb3ee016f413bd4dfb036daa0609766bfd54fc44714f"
+    },
+    "tests/test_git_lifecycle.py": {
+      "ownership": "template",
+      "sha256": "1a58595e415dc57225afd075ca83944fec722b3faba8f6f562ef9d978d0840f0"
     },
     "tests/test_launch.py": {
       "ownership": "template",
@@ -206,6 +222,6 @@
       "sha256": "1e5f4f0d44a7eae774db038ebaa17832265c604d4f1b64e6e31784334d3a035b"
     }
   },
-  "phase": "P07-in-progress",
+  "phase": "P08-in-progress",
   "schema_version": 1
 }

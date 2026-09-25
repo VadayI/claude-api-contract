@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-25 — P08 Git lifecycle (development core)
+
+Branch `feat/p08-git-lifecycle` from `main`; draft PR pending (the user publishes). Nothing is merged (D01).
+
+- Finalize with `python scripts/ai/git_lifecycle.py`: `inspect --fetch` → `commit --path …` → `verify` → `share --title … --body-file …` → on the user's command `merge --pr N --expect-head SHA` → `cleanup` (docs/ai/git-lifecycle.md). Exit 3 means incomplete/not verified; read the reported state.
+- This session: `docs/sessions/20260925T100942Z-claude-711334.md` (task, checks, limitations, next step).
+- Next: publish and review; merge the contract P08 PR first, then repin Django/React to the integrated core. Windows and real-GitHub runs of the CLI are NOT_VERIFIED.
+
 ## 2026-09-25 — P07 shared output-language preference (development core)
 
 Branch `feat/p07-shared-memory` (draft PR #66); commit `f8e3162` on top of `e4c4f56`. Nothing is merged (D01).

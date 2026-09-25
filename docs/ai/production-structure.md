@@ -73,7 +73,8 @@ or run a Stop formatter. The compatible SessionStart runs the shared detector,
 the stack probe and prints the session context; it cannot remove index.lock,
 create env or install packages. Shared detector/runner (P05) and runtime
 hooks/CI (P06) are delivered; P07 adds the project-state resolver/migration and
-session continuity (project-state-migration.md, session-continuity.md). Automatic Git recovery
-(P08), all-role transfer (P12) and end-to-end derived acceptance (P13) remain
+session continuity (project-state-migration.md, session-continuity.md). P08 adds the
+Git lifecycle CLI (git-lifecycle.md) used by wrap-up; its Windows and real-GitHub
+acceptance, all-role transfer (P12) and end-to-end derived acceptance (P13) remain
 separate criteria. Registries resolve `docs/project-state/` first and fall back
 to legacy `.claude/memory/` until `project_state.py --apply` migrates them.
