@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-25 — P07 shared output-language preference (development core)
+
+Branch `feat/p07-shared-memory` (draft PR #66); commit `f8e3162` on top of `e4c4f56`. Nothing is merged (D01).
+
+- Output language: `python scripts/ai/project_state.py --root . --language` reports it; `--apply` moves a legacy `.claude/rules/output-language.md` to `docs/ai/overrides/output-language.md` (pointer left behind). Runtime acceptance run: docs/ai/session-continuity.md.
+- This session: `docs/sessions/20260925T081415Z-claude-4c52cf.md` (task, checks, limitations, next step).
+- Next: The user publishes (`PUBLISH-P07-2026-09-24.ps1` Status → Push → UpdatePrs → Checks). Merge #65 → #66 only on the user's command. The runtime acceptance run follows docs/ai/session-continuity.md.
+
 ## 2026-09-25 — P07 session continuity (development core)
 
 Branch `feat/p07-shared-memory` (draft PR #66); commit `6fb703a` on top of `0e3f4cd`. Nothing is merged (D01).
