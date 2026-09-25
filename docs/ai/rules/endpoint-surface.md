@@ -27,17 +27,17 @@ Many-to-many: a page may `consume` several operations (a detail+edit page consum
 
 ## Where each surface lives (page-map is separate — ADR 0010)
 
-- `resource` / `system` endpoints live in the canonical `openapi.yml` `paths:` (as today) and carry `@extension("x-surface", "...")` in TypeSpec → emitted as `x-surface` on the operation. They are also recorded in `.claude/memory/endpoints.json` with a `surface` field.
-- **`page` entries are NOT in `openapi.yml` `paths:`.** A browser route is not an HTTP API operation, so it stays out of the REST contract — Prism/oasdiff/Spectral see only `/api/v1/*`. The page-map is its own committed artifact: `.claude/memory/pages.json` (optionally surfaced for humans as an `x-pages` block in `docs/api/INDEX.md`). Each page references the API operations it consumes by `operationId`.
+- `resource` / `system` endpoints live in the canonical `openapi.yml` `paths:` (as today) and carry `@extension("x-surface", "...")` in TypeSpec → emitted as `x-surface` on the operation. They are also recorded in `docs/project-state/endpoints.json` with a `surface` field.
+- **`page` entries are NOT in `openapi.yml` `paths:`.** A browser route is not an HTTP API operation, so it stays out of the REST contract — Prism/oasdiff/Spectral see only `/api/v1/*`. The page-map is its own committed artifact: `docs/project-state/pages.json` (optionally surfaced for humans as an `x-pages` block in `docs/api/INDEX.md`). Each page references the API operations it consumes by `operationId`.
 
 ## Registry shapes
 
-`.claude/memory/endpoints.json` — each entry gains `surface`:
+`docs/project-state/endpoints.json` (legacy `.claude/memory/endpoints.json` until migrated — docs/ai/project-state-migration.md) — each entry gains `surface`:
 ```
 { "method": "GET", "path": "/api/v1/articles", "...": "...", "surface": "resource" }
 ```
 
-`.claude/memory/pages.json` — the page-map:
+`docs/project-state/pages.json` — the page-map:
 ```
 [ { "route": "/articles/{id}", "name": "Article detail", "surface": "page",
     "consumes": ["getArticle"], "auth": "bearer", "notes": "..." } ]

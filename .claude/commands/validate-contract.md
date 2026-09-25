@@ -12,7 +12,7 @@ node scripts/log-cmd.mjs /validate-contract "$ARGUMENTS"
 
 ## Steps
 
-0. **Runtime gate.** Read `.claude/memory/env-detect.json`. If missing → `NO_ENV_DETECT` (run `node scripts/detect-env.mjs`). If `node_supported == false` → STOP, install Node 20.19+.
+0. **Runtime gate.** Read `.ai-runtime/env-detect.json`. If missing → `NO_ENV_DETECT` (run `node scripts/detect-env.mjs`). If `node_supported == false` → STOP, install Node 20.19+.
 
 1. **Recompile + drift.** Delegate to `tsp-author` or run directly:
    ```bash
@@ -37,7 +37,7 @@ node scripts/log-cmd.mjs /validate-contract "$ARGUMENTS"
    ```bash
    npm run check:endpoints
    ```
-   RED → route to `api-architect`: every operation in `openapi.yml` must have an entry in `.claude/memory/endpoints.json` (@.claude/rules/verification.md).
+   RED → route to `api-architect`: every operation in `openapi.yml` must have an entry in `docs/project-state/endpoints.json` (@.claude/rules/verification.md).
 
 5. **Report** a pass/fail checklist. On all-green, suggest `/breaking-check` then `/create-pr`.
 

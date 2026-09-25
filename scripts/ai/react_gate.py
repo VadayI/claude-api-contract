@@ -19,6 +19,9 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import project_state  # noqa: E402  (ten sam katalog scripts/ai; jedyny resolver stanu projektu)
+
 
 NOT_VERIFIED = 75
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -326,12 +329,15 @@ def policy(kind: str, root: Path, context_path: Path, base_root: Path) -> int:
         print(f"react.plan-sync: {source_count} src/e2e files changed without docs/plans/*.md", file=sys.stderr)
         return 1
     if kind == "routes":
-        registry = root / ".claude/memory/routes.json"
+        # Canonical docs/project-state/routes.json albo legacy .claude/memory/routes.json
+        # do czasu migracji; dwie różne kopie w eksporcie kandydata to błąd, nie wybór.
+        registry = project_state.resolve_state(root, "routes.json")
         if registry.is_file():
             json.loads(registry.read_text(encoding="utf-8"))
         if "src/app/router.tsx" not in changed:
             return 0
-        satisfied = ".claude/memory/routes.json" in changed and any(
+        registry_paths = set(project_state.artifact_relative_paths("routes.json"))
+        satisfied = bool(registry_paths & changed) and any(
             name.startswith("docs/verify/") and name.endswith(".md") for name in changed
         )
         if not satisfied:

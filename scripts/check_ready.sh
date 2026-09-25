@@ -9,7 +9,7 @@
 #   1. npm run validate      — compile + TypeSpec drift + Spectral lint + examples
 #   2. check_mock.sh         — Prism smoke (boots mock, exercises all endpoints)
 #   3. check_breaking.sh     — oasdiff ERR gate (SKIP on first release is a pass)
-#   4. Artifacts present     — openapi.yml + .claude/memory/endpoints.json (non-empty)
+#   4. Artifacts present     — openapi.yml + endpoints registry (docs/project-state/, legacy .claude/memory/) non-empty
 #   4b. Registry coverage    — npm run check:endpoints (every openapi.yml operation is in endpoints.json)
 #   5. Auth paths present    — /api/v1/auth/login, /api/v1/auth/refresh, /api/v1/auth/token
 #
@@ -72,8 +72,16 @@ else
   fail "openapi.yml missing. Run: npm run api:compile && npm run api:bundle"
 fi
 
-# .claude/memory/endpoints.json present and non-empty (contains at least one endpoint object)
-ENDPOINTS_JSON=".claude/memory/endpoints.json"
+# Endpoints registry present and non-empty (contains at least one endpoint object).
+# Ścieżka przez jedyny resolver: docs/project-state/ albo legacy .claude/memory/ do
+# czasu migracji; konflikt kopii lub brak Pythona 3.13+ = NOT_VERIFIED (fail).
+AI_PY="${AI_PYTHON:-python}"
+if ENDPOINTS_JSON="$("$AI_PY" scripts/ai/project_state.py --root . --resolve endpoints.json 2>&1)"; then
+  :
+else
+  fail "NOT_VERIFIED: cannot resolve the endpoints registry ($ENDPOINTS_JSON). Python 3.13+ (AI_PYTHON) and scripts/ai/project_state.py are required."
+  ENDPOINTS_JSON="docs/project-state/endpoints.json"
+fi
 if [[ ! -f "$ENDPOINTS_JSON" ]]; then
   fail "$ENDPOINTS_JSON missing. The api-architect agent must record endpoints before the contract is ready."
 elif ! grep -q '"method"' "$ENDPOINTS_JSON"; then

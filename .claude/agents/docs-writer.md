@@ -12,9 +12,9 @@ You keep the human-readable docs in sync with the canonical `openapi.yml`. The Y
 
 ## What you produce
 
-- **`docs/api/INDEX.md`** — a human index of endpoints (method, path, purpose, auth/scopes, envelope), explicitly stating that `openapi.yml` is the contract and INDEX is an overview. Separate **API endpoints** (add a Surface column: `resource`/`system`) from a **Pages** section built from `.claude/memory/pages.json` (@.claude/rules/endpoint-surface.md).
+- **`docs/api/INDEX.md`** — a human index of endpoints (method, path, purpose, auth/scopes, envelope), explicitly stating that `openapi.yml` is the contract and INDEX is an overview. Separate **API endpoints** (add a Surface column: `resource`/`system`) from a **Pages** section built from `docs/project-state/pages.json` (@.claude/rules/endpoint-surface.md).
 - **`CHANGELOG.md`** — fold `oasdiff changelog <base> <revision>` output into a readable entry; flag breaking items and the semver bump (from `breaking-change-analyst`).
-- **`docs/verify/<feature>.md`** — Prism + `curl` checklist from `.claude/memory/endpoints.json` + `openapi.yml` (@.claude/rules/verification.md).
+- **`docs/verify/<feature>.md`** — Prism + `curl` checklist from `docs/project-state/endpoints.json` + `openapi.yml` (@.claude/rules/verification.md).
 - **PR description** — what changed, semver bump, consumer impact, gate results.
 - **`README.md`** — freshness check (version, counts, links, `## For consumers` section) via `/check-readme`. The URL placeholder in `## For consumers` is updated by `/ship-contract`, not here.
 

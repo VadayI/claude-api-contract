@@ -19,10 +19,39 @@ PROJECT_STATE = {
     "template-sync.json": "docs/project-state/template-lineage.json",
 }
 RUNTIME_STATE = {
-    "env-detect.json": ".ai-runtime/environment.json",
+    # Raport stack-specyficznego probe'a (detect-env.mjs / detect-env.py) zachowuje
+    # własny schemat; .ai-runtime/environment.json jest zarezerwowany dla raportu
+    # wspólnego detektora (scripts/ai/detector.py --write).
+    "env-detect.json": ".ai-runtime/env-detect.json",
     "command-log.jsonl": ".ai-runtime/command-log.jsonl",
 }
+CATEGORIES = {"project": PROJECT_STATE, "runtime": RUNTIME_STATE}
 LEGACY_DIRECTORY = ".claude/memory"
+
+
+def artifact_relative_paths(name: str, category: str = "project") -> tuple[str, str]:
+    """Return canonical and legacy root-relative POSIX paths for one artifact.
+
+    Args:
+        name: Allowlisted artifact basename, such as ``routes.json``.
+        category: ``project`` for versioned state or ``runtime`` for local state.
+    Returns:
+        A pair ``(canonical, legacy)`` suitable for comparing against Git
+        changed-file lists, which are always root-relative POSIX strings.
+    Raises:
+        ValueError: If the category or artifact is not in the explicit migration map.
+    Side effects:
+        None; no filesystem, database, subprocess, or network access.
+    Business rules:
+        Policy gates accept either spelling while a project may be unmigrated,
+        but never a third location.
+    """
+    mapping = CATEGORIES.get(category)
+    if mapping is None:
+        raise ValueError(f"Unknown state category: {category}")
+    if name not in mapping:
+        raise ValueError(f"Unknown {category} state artifact: {name}")
+    return mapping[name], f"{LEGACY_DIRECTORY}/{name}"
 
 
 def artifact_paths(root: Path, name: str, category: str = "project") -> tuple[Path, Path]:
@@ -42,16 +71,9 @@ def artifact_paths(root: Path, name: str, category: str = "project") -> tuple[Pa
     Business rules:
         Unknown legacy files are never assigned a destination automatically.
     """
-    if category == "project":
-        mapping = PROJECT_STATE
-    elif category == "runtime":
-        mapping = RUNTIME_STATE
-    else:
-        raise ValueError(f"Unknown state category: {category}")
-    if name not in mapping:
-        raise ValueError(f"Unknown {category} state artifact: {name}")
+    canonical, legacy = artifact_relative_paths(name, category)
     root = target_root(root)
-    return contained(root, mapping[name]), contained(root, f"{LEGACY_DIRECTORY}/{name}")
+    return contained(root, canonical), contained(root, legacy)
 
 
 def resolve_state(root: Path, name: str, category: str = "project") -> Path:
@@ -164,17 +186,39 @@ def _legacy_directory(root: Path) -> Path:
     return path
 
 
-def plan_migration(root: Path) -> dict:
+def _selected_categories(categories: tuple[str, ...] | None) -> tuple[str, ...]:
+    """Validate the requested migration categories in their canonical order.
+
+    Args:
+        categories: Optional subset of ``project``/``runtime``; ``None`` selects both.
+    Returns:
+        The selected category names ordered ``project`` then ``runtime``.
+    Raises:
+        ValueError: If a name is outside the explicit category map.
+    Side effects:
+        None.
+    """
+    selected = tuple(CATEGORIES) if categories is None else tuple(categories)
+    unknown = [name for name in selected if name not in CATEGORIES]
+    if unknown:
+        raise ValueError(f"Unknown state category: {unknown[0]}")
+    return tuple(name for name in CATEGORIES if name in selected)
+
+
+def plan_migration(root: Path, categories: tuple[str, ...] | None = None) -> dict:
     """Inspect all allowlisted legacy artifacts without changing the repository.
 
     Args:
         root: Repository root whose ``.claude/memory`` directory is inspected.
+        categories: Optional subset of ``project``/``runtime`` artifacts to plan;
+            the default inspects both. Unknown legacy names are always reported.
     Returns:
         A deterministic report with artifact actions, conflicts, unknown names,
         and invalid artifact details; file contents are never included.
     Raises:
         OSError: If a selected path cannot be inspected or read.
-        ValueError: If the root or one of the allowlisted paths traverses a link.
+        ValueError: If the root or one of the allowlisted paths traverses a link,
+            or a category name is unknown.
     Side effects:
         Reads only the explicitly allowlisted artifacts and directory entry names.
         Performs no writes, database access, subprocess calls, or network access.
@@ -191,7 +235,8 @@ def plan_migration(root: Path) -> dict:
         report["unknown"] = sorted(item.name for item in legacy_dir.iterdir()
                                    if item.name not in known)
 
-    for category, artifacts in (("project", PROJECT_STATE), ("runtime", RUNTIME_STATE)):
+    for category in _selected_categories(categories):
+        artifacts = CATEGORIES[category]
         for name in sorted(artifacts):
             canonical, legacy = artifact_paths(root, name, category)
             if not legacy.exists():
@@ -251,18 +296,21 @@ def _create_file(path: Path, content: bytes) -> None:
         raise
 
 
-def apply_migration(root: Path) -> dict:
+def apply_migration(root: Path, categories: tuple[str, ...] | None = None) -> dict:
     """Copy nonconflicting verified legacy state to canonical locations.
 
     Args:
         root: Repository root to migrate.
+        categories: Optional subset of ``project``/``runtime`` artifacts to move;
+            the default migrates both categories.
     Returns:
-        The post-migration report. Conflicting, invalid and unknown data are
-        reported; valid canonical files are created and identical legacy copies
-        are removed.
+        The post-migration report for the selected categories. Conflicting,
+        invalid and unknown data are reported; valid canonical files are created
+        and legacy copies are removed only after byte equality is confirmed.
     Raises:
         OSError: If a source changes, a destination appears, or a write fails.
-        ValueError: If a path is unsafe or a source changes after preflight.
+        ValueError: If a path is unsafe, a category is unknown, or a source
+            changes after preflight.
     Side effects:
         Creates canonical files under ``docs/project-state`` or ``.ai-runtime``
         and removes a legacy file only after byte equality with its canonical
@@ -274,7 +322,7 @@ def apply_migration(root: Path) -> dict:
         canonical path.
     """
     root = target_root(root)
-    before = plan_migration(root)
+    before = plan_migration(root, categories)
     for action in before["actions"]:
         if action["status"] not in {"copy", "identical"}:
             continue
@@ -285,35 +333,102 @@ def apply_migration(root: Path) -> dict:
             _create_file(canonical, source)
         if canonical.read_bytes() == source and legacy.read_bytes() == source:
             legacy.unlink()
-    return plan_migration(root)
+    return plan_migration(root, categories)
+
+
+def migrate_runtime(root: Path) -> dict:
+    """Move only machine-local runtime records before a runtime writer runs.
+
+    Args:
+        root: Repository root whose legacy runtime files should move.
+    Returns:
+        The post-migration report restricted to the ``runtime`` category.
+    Raises:
+        OSError: If a runtime file cannot be read, created, or removed.
+        ValueError: If a path is unsafe or the root traverses a link.
+    Side effects:
+        Same as :func:`apply_migration` for ``.ai-runtime`` artifacts only;
+        project registries and unknown files are never touched.
+    Business rules:
+        Runtime writers (detector hooks, command loggers) may migrate their own
+        gitignored records automatically because they are disposable; a runtime
+        conflict is still reported and the writer must refuse instead of
+        creating a second copy.
+    """
+    return apply_migration(root, ("runtime",))
+
+
+def _relative_posix(root: Path, path: Path) -> str:
+    """Render a contained path relative to the validated root in POSIX form.
+
+    Args:
+        root: Validated repository root.
+        path: A path produced by :func:`artifact_paths` beneath ``root``.
+    Returns:
+        The root-relative path with forward slashes for shell and Node callers.
+    Side effects:
+        None.
+    """
+    return path.relative_to(root).as_posix()
 
 
 def main() -> int:
     """Preview or apply allowlisted shared-state migration for a project.
 
     Args:
-        CLI options select a repository root and optional ``--apply`` operation.
+        CLI options select a repository root and exactly one operation: the
+        default read-only preview, ``--apply`` (both categories),
+        ``--migrate-runtime`` (runtime records only), ``--resolve NAME`` (print
+        the readable path chosen by the fallback rule) or ``--writable NAME``
+        (print the canonical write path, refusing while a legacy copy remains).
     Returns:
-        0 when there are no conflicts/invalid artifacts, 1 when any conflict or
-        invalid artifact remains, and 2 for unsafe paths or I/O errors.
+        0 when there are no conflicts/invalid/unknown artifacts (or the path was
+        printed), 1 when any conflict, invalid or unknown artifact remains, and
+        2 for unsafe paths, conflicts in path resolution, or I/O errors.
     Raises:
         None; expected path and content errors are converted to exit codes.
     Side effects:
-        Preview is read-only. ``--apply`` creates canonical copies for safe
-        artifacts but never deletes legacy files or writes a database.
+        Preview and path resolution are read-only. ``--apply`` and
+        ``--migrate-runtime`` create canonical copies for safe artifacts and
+        remove a legacy file only after confirming identical bytes. No database,
+        subprocess, or network access occurs.
     Business rules:
         A conflict is never resolved by timestamp or by automatic overwrite.
+        Shell and Node consumers call ``--resolve``/``--writable`` so that the
+        fallback rule has exactly one implementation.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--apply", action="store_true")
+    operation = parser.add_mutually_exclusive_group()
+    operation.add_argument("--apply", action="store_true")
+    operation.add_argument("--migrate-runtime", action="store_true")
+    operation.add_argument("--resolve", metavar="NAME")
+    operation.add_argument("--writable", metavar="NAME")
+    parser.add_argument("--category", choices=tuple(CATEGORIES), default="project",
+                        help="artifact category for --resolve/--writable")
     args = parser.parse_args()
     if sys.version_info < (3, 13):
         parser.error("Python 3.13+ is required")
     try:
-        report = apply_migration(args.root) if args.apply else plan_migration(args.root)
+        if args.resolve or args.writable:
+            root = target_root(args.root)
+            if args.resolve:
+                path = resolve_state(root, args.resolve, args.category)
+            else:
+                path = writable_state_path(root, args.writable, args.category)
+            print(_relative_posix(root, path))
+            return 0
+        if args.apply:
+            report = apply_migration(args.root)
+        elif args.migrate_runtime:
+            report = migrate_runtime(args.root)
+        else:
+            report = plan_migration(args.root)
         print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
-        return 1 if report["conflicts"] or report["invalid"] or report["unknown"] else 0
+        # Nieznane pliki legacy nie blokują writera runtime: on rusza tylko swoje rekordy.
+        blocking = report["conflicts"] or report["invalid"] or (
+            report["unknown"] and not args.migrate_runtime)
+        return 1 if blocking else 0
     except (OSError, ValueError) as error:
         print(f"Project state migration error: {error}", file=sys.stderr)
         return 2

@@ -2,7 +2,7 @@
 
 Defines the **expected local environment** for a `claude-api-contract` project. `/doctor` checks the live machine against this and proposes fixes.
 
-> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.claude/memory/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
+> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.ai-runtime/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
 
 ## Scope 1 — System tools
 
@@ -18,7 +18,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 | **oasdiff** | on PATH (breaking-change gate) | `oasdiff --version` |
 | Docker (OPTIONAL) | only for containerized Prism / proxy parity | `docker info` |
 
-`.claude/memory/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session. **Never hand-write it** to skip a blocker.
+`.ai-runtime/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session (SessionStart runs `scripts/session-start.sh`, which also refreshes the shared detector report `.ai-runtime/environment.json` via `python scripts/ai/detector.py --repository . --write`). A legacy `.claude/memory/env-detect.json` is moved to `.ai-runtime/` automatically; two differing copies are reported, never merged. **Never hand-write either file** to skip a blocker.
 
 ## Scope 2 — Claude config & access
 

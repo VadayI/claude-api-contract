@@ -18,7 +18,7 @@ You turn the project brief and endpoint registry into plain-language business us
 ## Inputs (read in order)
 
 1. `PROJECT.md` — §1 Purpose (who consumes the API), §2 Resources (the resource set), §3 Auth profile (user-flow D1 / service-flow D5).
-2. `.claude/memory/endpoints.json` — endpoint registry: `operationId`, `path`, `method`, `auth`, `scopes`, `statuses`, `notes`. Empty or absent means no contract exists yet.
+2. `docs/project-state/endpoints.json` — endpoint registry: `operationId`, `path`, `method`, `auth`, `scopes`, `statuses`, `notes`. Empty or absent means no contract exists yet.
 3. `openapi.yml` — optional; read if present for additional operation details.
 4. `$ARGUMENTS` — optional scope: a resource or feature name to limit which journeys to generate.
 

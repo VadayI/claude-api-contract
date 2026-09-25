@@ -6,12 +6,14 @@
 # Two modes:
 #   Default (Class A — always safe, fully regenerable):
 #     node_modules/  tsp-output/  .tsp/
-#     .claude/memory/env-detect.json  .claude/memory/command-log.jsonl
+#     .ai-runtime/  (shared detector + stack probe reports, command log, runner results)
+#     legacy .claude/memory/env-detect.json  .claude/memory/command-log.jsonl
 #
 #   --reset-to-clone (Class A + Class B — brings the working copy to fresh-clone
 #     state; DESTRUCTIVE — deletes spec/, examples/, openapi.yml and local artifacts):
 #     LOCAL/  spec/  examples/  openapi.yml  docs/decisions/0002–0004
-#     .claude/memory/endpoints.json  .env  .claude/settings.local.json
+#     docs/project-state/endpoints.json + pages.json (legacy .claude/memory/ copies too)
+#     .env  .claude/settings.local.json
 #     (docs/decisions: 0002–0004 = demo-contract ADRs removed here; 0005–0008 are template infra, kept like 0001)
 #     Requires confirmation (--yes to skip).
 #
@@ -78,6 +80,7 @@ fi
 remove node_modules
 remove tsp-output
 remove .tsp
+remove .ai-runtime
 remove .claude/memory/env-detect.json
 remove .claude/memory/command-log.jsonl
 
@@ -94,7 +97,7 @@ if [[ "$RESET_TO_CLONE" == true ]]; then
   echo "[clean]    docs/decisions/0002–0004 ← demo-contract ADRs (0005–0008 = template infra, kept)"
   echo "[clean]    .env            ← local secrets"
   echo "[clean]    .claude/settings.local.json"
-  echo "[clean]    .claude/memory/endpoints.json"
+  echo "[clean]    docs/project-state/endpoints.json + pages.json (and legacy .claude/memory/ copies)"
   echo "[clean]"
   echo "[clean]    After this, the working copy matches a fresh git clone."
   echo "[clean]    This is IRREVERSIBLE (unless you have git stash / backup)."
@@ -118,7 +121,10 @@ if [[ "$RESET_TO_CLONE" == true ]]; then
   remove openapi.yml
   remove .env
   remove .claude/settings.local.json
+  remove docs/project-state/endpoints.json
+  remove docs/project-state/pages.json
   remove .claude/memory/endpoints.json
+  remove .claude/memory/pages.json
   remove docs/decisions/0002-contract-first-source-of-truth.md
   remove docs/decisions/0003-auth-bearer-jwt-refresh-in-body.md
   remove docs/decisions/0004-version-prefix-auth-paths.md
@@ -135,6 +141,6 @@ else
   if [[ "$RESET_TO_CLONE" == false ]]; then
     echo "[clean] Regenerable with: npm ci  (node_modules)"
     echo "[clean]                   npm run api:compile && npm run api:bundle  (tsp-output, openapi.yml)"
-    echo "[clean]                   SessionStart hook  (env-detect.json)"
+    echo "[clean]                   SessionStart hook  (.ai-runtime/environment.json, env-detect.json)"
   fi
 fi

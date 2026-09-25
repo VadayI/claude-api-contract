@@ -19,7 +19,7 @@ Optional `<procedure arguments>`: `--dry-run` and/or a project slug. If slug emp
 ```bash
 node -e '
 const fs=require("fs"); const cp=require("child_process");
-if(!fs.existsSync(".claude/memory/env-detect.json")){console.log("NO_ENV_DETECT");process.exit(0)}
+if(!fs.existsSync(".ai-runtime/env-detect.json")){console.log("NO_ENV_DETECT");process.exit(0)}
 const hasGit=fs.existsSync(".git");
 const hasSpec=fs.existsSync("spec/main.tsp");
 let hasRemote=false; try{hasRemote=cp.execSync("gh repo view --json nameWithOwner",{stdio:["pipe","pipe","pipe"]}).length>0}catch{}

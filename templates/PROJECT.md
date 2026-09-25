@@ -10,7 +10,7 @@
 
 ## 2. Resources & surfaces
 <List the resources and their endpoints (method + path + purpose + auth/scopes + surface: `resource` | `system` — @.claude/rules/endpoint-surface.md).>
-<Frontend pages: the SPA routes (page-map in `.claude/memory/pages.json`) and which operations each consumes. `system` endpoints (e.g. S2S `/api/v1/auth/token`) get no page.>
+<Frontend pages: the SPA routes (page-map in `docs/project-state/pages.json`) and which operations each consumes. `system` endpoints (e.g. S2S `/api/v1/auth/token`) get no page.>
 
 ## 3. Auth profile
 - User-flow (D1): register / login / refresh / logout — Bearer/JWT, refresh in body (D2).
@@ -36,7 +36,7 @@
 - [ ] `npm run validate` green (TypeSpec drift · Spectral lint · example validation)
 - [ ] `npm run breaking` classified; semver bump stated in the PR description
 - [ ] Prism mock smoke passes (`npm run mock`)
-- [ ] `.claude/memory/endpoints.json` complete and up-to-date
+- [ ] `docs/project-state/endpoints.json` complete and up-to-date
 - [ ] `docs/api/INDEX.md` reflects all new/changed endpoints
 - [ ] PR open, contract-reviewer passed, no hand-edited `openapi.yml`
 

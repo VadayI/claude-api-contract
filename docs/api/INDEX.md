@@ -1,6 +1,6 @@
 # API index (human overview)
 
-> The contract is `openapi.yml` (OpenAPI 3.1). This index is a human-readable overview that points at it; it is not the source of truth. Every API endpoint carries a **surface** (@.claude/rules/endpoint-surface.md): `resource` (frontend-facing API) or `system` (machinery the browser never calls). Frontend **pages** are a separate map (`.claude/memory/pages.json`), not API endpoints.
+> The contract is `openapi.yml` (OpenAPI 3.1). This index is a human-readable overview that points at it; it is not the source of truth. Every API endpoint carries a **surface** (@.claude/rules/endpoint-surface.md): `resource` (frontend-facing API) or `system` (machinery the browser never calls). Frontend **pages** are a separate map (`docs/project-state/pages.json`), not API endpoints.
 
 ## API — Auth
 | Method + path | Security | Surface | Purpose |
@@ -17,7 +17,7 @@
 | GET /api/v1/\<r\> | list\<R\> | bearerAuth | resource | list | 200,401,403,429 |
 
 ## Pages (frontend route map)
-> From `.claude/memory/pages.json`. The SPA scaffolds a page/route per row; a page never targets a `system` operation.
+> From `docs/project-state/pages.json`. The SPA scaffolds a page/route per row; a page never targets a `system` operation.
 
 | Route | Page | Auth | Consumes (operationId) |
 |---|---|---|---|

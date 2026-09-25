@@ -58,7 +58,7 @@ jobs:
           python template-core/scripts/ai/generate_core.py --check
           python scripts/ai/core_sync.py --local-source --check
           python scripts/ai/production.py --check
-          python -m unittest discover -s tests -p test_production.py
+          python -m unittest discover -s tests -p 'test_*.py'
           python -m unittest discover -s template-core/tests -p 'test_*.py'
 
       - name: Install dependencies
@@ -126,7 +126,7 @@ jobs:
 
       # --- Verification: endpoints registry coverage (verification.md) ---
       # Доповнює 5 гейтів (не канонічна п'ятірка). Кожна операція (method, path)
-      # в openapi.yml має запис у .claude/memory/endpoints.json. State-перевірка,
+      # в openapi.yml має запис у docs/project-state/endpoints.json (legacy .claude/memory/ до міграції). State-перевірка,
       # не diff-scoped: не фаєрить на зміни лише моделей/описів — лише на
       # незареєстрований ендпоінт.
       - name: Verify — Endpoints registry coverage

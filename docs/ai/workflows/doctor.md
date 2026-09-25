@@ -19,7 +19,7 @@ Optional `<procedure arguments>`: a scope — `system`, `claude`, `project`, `gi
 
 0. **Language:** honor the existing session choice and docs/ai/overrides/output-language.md (legacy output-language rule remains readable). Use the local set-language procedure only when needed; never rewrite CLAUDE imports.
 
-0.5. **Runtime gate.** Read `.claude/memory/env-detect.json` (produced by an explicit detector command or compatible hook).
+0.5. **Runtime gate.** Read `.ai-runtime/env-detect.json` (produced by `node scripts/detect-env.mjs` or the SessionStart hook; `python scripts/ai/detector.py --repository . --write` refreshes the shared report `.ai-runtime/environment.json`). A leftover `.claude/memory/env-detect.json` is migrated by the probe itself; report a conflict between the two instead of choosing one.
    - Missing → `NO_ENV_DETECT`: run `node scripts/detect-env.mjs` once; if it fails, install Node 20.19+. Never fabricate the file.
    - `platform_tier == "unsupported"` → `UNSUPPORTED_PLATFORM` (hard STOP): native Windows without `bash`/`git`, or an unrunnable runner. Install Git for Windows (Git Bash) or WSL2, then relaunch.
    - `platform_tier == "best-effort"` → native Windows via Git Bash: proceed, but WARN that there is no OS-level sandbox (`sandbox_available == false`) and recommend WSL2 for sandbox/Docker parity.

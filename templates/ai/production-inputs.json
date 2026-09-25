@@ -913,6 +913,9 @@
     "tspconfig.yaml": {
       "legacy_sha256": "bec634f891f0e159a4284d1cbd1cd3f4d5665ca229a625cf9bf2c974ad0ab9cc",
       "ownership": "mixed"
+    },
+    "scripts/runtime-state.mjs": {
+      "ownership": "template"
     }
   },
   "schema_version": 1

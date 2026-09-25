@@ -107,6 +107,36 @@ class ReactGateTests(unittest.TestCase):
             self.assertEqual(react_gate.policy("routes", candidate, failing, base), 1)
             self.assertEqual(react_gate.policy("guides", candidate, failing, base), 1)
 
+    def test_routes_policy_reads_canonical_registry_and_rejects_split_copies(self):
+        """The routes gate accepts docs/project-state and fails closed on conflicting copies.
+
+        No arguments/return. Writes disposable candidate/base/context fixtures only;
+        no subprocess, Git, DB, environment mutation, or network access.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            base = root / "base"
+            candidate = root / "candidate"
+            base.mkdir()
+            candidate.mkdir()
+            canonical = candidate / "docs/project-state/routes.json"
+            canonical.parent.mkdir(parents=True)
+            canonical.write_text("[]", encoding="utf-8")
+            migrated = context(root / "migrated.json", [
+                "docs/project-state/routes.json", "docs/verify/router.md", "src/app/router.tsx",
+            ])
+            self.assertEqual(react_gate.policy("routes", candidate, migrated, base), 0)
+            stale_path = context(root / "stale.json", [
+                ".claude/memory/routes.json", "docs/verify/router.md", "src/app/router.tsx",
+            ])
+            # Legacy spelling in the changed manifest still counts while a project migrates.
+            self.assertEqual(react_gate.policy("routes", candidate, stale_path, base), 0)
+            legacy = candidate / ".claude/memory/routes.json"
+            legacy.parent.mkdir(parents=True)
+            legacy.write_text("[{}]", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Conflicting state copies"):
+                react_gate.policy("routes", candidate, migrated, base)
+
     def test_context_digest_tampering_is_rejected(self):
         """Reject any changed-file mutation not covered by the exact context digest.
 

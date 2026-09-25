@@ -64,5 +64,8 @@ preserve customization. Never reseed CLAUDE imports or copy entire directories
 over an existing project. Record the CI choice before any first push with
 `python scripts/ai/ci_mode.py --target . --mode local|github --apply`; never
 infer it from copied workflows, and never activate automatic triggers without it.
-Persistent `.claude/memory` registries remain readable until P07; do not create a
-second writable registry. Local `set-language` honors existing language choices.
+Project state lives in `docs/project-state/` (registries, page-map, lineage) and
+machine-local records in gitignored `.ai-runtime/`; legacy `.claude/memory` copies
+stay readable until `python scripts/ai/project_state.py --root . --apply` migrates
+them (docs/ai/project-state-migration.md). Never create a second writable copy.
+Local `set-language` honors existing language choices.

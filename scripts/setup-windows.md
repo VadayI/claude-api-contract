@@ -44,7 +44,7 @@ npm run validate            # compile + drift + lint + examples + endpoints regi
 node scripts/detect-env.mjs
 ```
 
-Expect `platform=windows ... BEST-EFFORT` and, in `.claude/memory/env-detect.json`,
+Expect `platform=windows ... BEST-EFFORT` and, in `.ai-runtime/env-detect.json`,
 `"platform_tier": "best-effort"` with `"sandbox_available": false`. If it reports
 `unsupported`, then `bash` or `git` is not on PATH — reinstall Git for Windows and reopen Git Bash.
 

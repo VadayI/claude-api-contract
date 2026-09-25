@@ -4,7 +4,7 @@ Before any contract work on a new project, verify the inputs and access exist. S
 
 ## Runtime gate (FIRST, hard STOP)
 
-Read `.claude/memory/env-detect.json` (produced by an explicit node scripts/detect-env.mjs run or the compatible legacy hook).
+Read `.ai-runtime/env-detect.json` (produced by an explicit `node scripts/detect-env.mjs` run or the SessionStart hook `scripts/session-start.sh`; the shared detector report `.ai-runtime/environment.json` is refreshed alongside).
 
 - **Missing** → `NO_ENV_DETECT`: STOP. The runtime is unverified. Run `node scripts/detect-env.mjs` once manually; if that fails, install Node 20.19+. Never hand-write the file.
 - **`platform_tier == "unsupported"`** → `UNSUPPORTED_PLATFORM`: hard STOP. Native Windows without a POSIX `bash`/`git` on PATH, or a runner we cannot execute the bash gates on. Install Git for Windows (Git Bash) or WSL2 Ubuntu, then relaunch.

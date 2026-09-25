@@ -191,7 +191,7 @@ ba в†’ api-architect в†’ tsp-author в†’ [contract-reviewer | brea
 
 > These 5 are the canonical contract-integrity gates (always on, every maturity stage). Two more layers complement them:
 >
-> - **Process gates** вЂ” `contract-policy.yml` (PR-scoped, diff-aware): no bare TODO/FIXME in contract artifacts (a documented `STUB:` is allowed), an ADR alongside any `.oasdiff-ignore.txt` change, a CHANGELOG `[Unreleased]` fragment on contract changes, and README в†” `package.json` version coherence. Plus a supplementary **endpoints-registry coverage** check in `contract-ci.yml` вЂ” every `openapi.yml` path is recorded in `.claude/memory/endpoints.json` (`npm run check:endpoints`).
+> - **Process gates** вЂ” `contract-policy.yml` (PR-scoped, diff-aware): no bare TODO/FIXME in contract artifacts (a documented `STUB:` is allowed), an ADR alongside any `.oasdiff-ignore.txt` change, a CHANGELOG `[Unreleased]` fragment on contract changes, and README в†” `package.json` version coherence. Plus a supplementary **endpoints-registry coverage** check in `contract-ci.yml` вЂ” every `openapi.yml` path is recorded in `docs/project-state/endpoints.json` (`npm run check:endpoints`).
 > - **Local Claude Code hooks** вЂ” `.claude/settings.json` (run in the CLI, not CI): hard-block direct edits to the generated `openapi.yml`, gate `/release` + `/ship-contract` on cheap preconditions (`/create-pr` is advisory), and nudge the living-plan execution log. A weekly **`scheduled-audit`** workflow reports STUB/TODO inventory, version drift, and gate health.
 
 ## Local git hooks (optional)
@@ -234,7 +234,7 @@ http://<IP>:<PORT>
 
 **Backend** (`claude-django`): vendor `openapi.yml`, run your `check_contract_sync.sh` gate in CI, write a `contract.lock.json` (`repo` + `version` + `sha256`).
 
-**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses). Scaffold pages **only** for the `page` routes in `.claude/memory/pages.json` вЂ” never for `system` endpoints like `/api/v1/auth/token` (@.claude/rules/endpoint-surface.md).
+**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses). Scaffold pages **only** for the `page` routes in `docs/project-state/pages.json` вЂ” never for `system` endpoints like `/api/v1/auth/token` (@.claude/rules/endpoint-surface.md).
 
 ## Structure
 

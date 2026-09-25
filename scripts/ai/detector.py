@@ -10,6 +10,9 @@ import subprocess
 import sys
 
 
+# Kanoniczna, ignorowana przez Git lokalizacja raportu wspólnego detektora;
+# stack-specyficzne probe'y piszą osobno do .ai-runtime/env-detect.json.
+REPORT_PATH = ".ai-runtime/environment.json"
 TOOLS = {
     "git": ["git", "--version"],
     "node": ["node", "--version"],
@@ -169,6 +172,29 @@ def report(repository: Path | None = None) -> dict[str, object]:
     return result
 
 
+def report_path(repository: Path) -> Path:
+    """Return the canonical gitignored report location for one repository.
+
+    Args:
+        repository: Project root that owns the ``.ai-runtime`` directory.
+
+    Returns:
+        ``<repository>/.ai-runtime/environment.json`` without creating it.
+
+    Raises:
+        ValueError: If ``.ai-runtime`` or the report path is a symlink or junction.
+
+    Side effects:
+        Reads filesystem metadata only; no writes, database, network, or Git use.
+    """
+    path = repository
+    for part in Path(REPORT_PATH).parts:
+        path = path / part
+        if path.is_symlink() or path.is_junction():
+            raise ValueError(f"Linked runtime report path: {path}")
+    return path
+
+
 def main() -> int:
     """Print or write one explicit detector report.
 
@@ -177,18 +203,30 @@ def main() -> int:
 
     Side effects:
         Performs the probes documented by :func:`report`; optionally writes one
-        UTF-8 JSON file. No database, network, trust, or Git state is changed.
+        UTF-8 JSON file, either to ``--output`` or, with ``--write``, to the
+        repository's canonical ``.ai-runtime/environment.json``. No database,
+        network, trust, or Git state is changed.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path)
-    parser.add_argument("--output", type=Path)
+    output = parser.add_mutually_exclusive_group()
+    output.add_argument("--output", type=Path)
+    output.add_argument("--write", action="store_true",
+                        help=f"write the report to <repository>/{REPORT_PATH}")
     args = parser.parse_args()
     if sys.version_info < (3, 13):
         parser.error("Python 3.13+ is required")
+    if args.write and args.repository is None:
+        parser.error("--write requires --repository")
     document = json.dumps(report(args.repository), sort_keys=True, indent=2) + "\n"
-    if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(document, encoding="utf-8", newline="\n")
+    try:
+        destination = report_path(args.repository) if args.write else args.output
+    except ValueError as error:
+        print(f"detector: {error}", file=sys.stderr)
+        return 2
+    if destination:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(document, encoding="utf-8", newline="\n")
     else:
         print(document, end="")
     return 0

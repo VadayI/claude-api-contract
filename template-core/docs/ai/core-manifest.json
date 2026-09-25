@@ -35,7 +35,7 @@
     },
     "docs/ai/project-state-migration.md": {
       "ownership": "template",
-      "sha256": "43a3094f503d8861822a8e65fab58b7389bfeb3f81c06192a8eb148f72935129"
+      "sha256": "85e6448775e013f5005a148369aa12c2a7a7557c81ac1bc0ebcd24b390cf846c"
     },
     "docs/ai/runner.md": {
       "ownership": "template",
@@ -67,7 +67,7 @@
     },
     "scripts/ai/detector.py": {
       "ownership": "template",
-      "sha256": "c62a0c431e75d6c3b6e0aa81cde9f4ae39ea5c0b960cd0d35f8fe469d6ee1975"
+      "sha256": "276cef7afbb076c5aa6860ad60b5f63a09e4cac1e14ffb31c5eddde91f201dcd"
     },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
@@ -99,7 +99,7 @@
     },
     "scripts/ai/project_state.py": {
       "ownership": "template",
-      "sha256": "186eb9da593da4e8a372f5222b0f2c7d7891cb996cb00c82fffb2ee2869cecfa"
+      "sha256": "cf84a85c1816646f529ea8adbdcedc1fd502750b7d6ee65fb528c0d0c5a8ce94"
     },
     "scripts/ai/readiness.py": {
       "ownership": "template",
@@ -179,7 +179,7 @@
     },
     "tests/test_project_state.py": {
       "ownership": "template",
-      "sha256": "a04836f8cc8e58448c5113c7055f0f9d02963edd89232ac7ae85809fac9f094a"
+      "sha256": "01c3bdc26839787146e469ebf12afdea43e064493c8100ed2905a40e8d511712"
     },
     "tests/test_readiness.py": {
       "ownership": "template",
@@ -187,7 +187,7 @@
     },
     "tests/test_runner.py": {
       "ownership": "template",
-      "sha256": "6df4da9ee5db7a063483f8120aedd9257bbc3861a58a3536374270c41d8c5a5e"
+      "sha256": "eabadf8ecef080684792cf1866324e0b5b1d4d51f37864d6c94b24f58de9db57"
     },
     "tests/test_schema.py": {
       "ownership": "template",

@@ -90,7 +90,8 @@ class ProjectStateTests(unittest.TestCase):
         self.assertFalse(runtime.exists())
         self.assertEqual((self.root / "docs/project-state/routes.json").read_text(encoding="utf-8"),
                          '[{"path":"/home"}]\n')
-        self.assertEqual((self.root / ".ai-runtime/environment.json").read_bytes(), runtime_bytes)
+        self.assertEqual((self.root / ".ai-runtime/env-detect.json").read_bytes(), runtime_bytes)
+        self.assertFalse((self.root / ".ai-runtime/environment.json").exists())
         self.assertEqual(project_state.apply_migration(self.root)["actions"], [])
 
     def test_apply_removes_identical_duplicate_after_reviewed_migration(self):
@@ -144,6 +145,108 @@ class ProjectStateTests(unittest.TestCase):
         self.assertEqual(len(report["invalid"]), 1)
         self.assertTrue(legacy.exists())
         self.assertFalse((self.root / ".ai-runtime/command-log.jsonl").exists())
+
+    def test_runtime_migration_leaves_project_registries_and_unknown_files(self):
+        """A runtime writer moves only its own disposable records."""
+        registry = self.write_legacy("routes.json", "[]\n")
+        unknown = self.write_legacy("notes.md", "keep\n")
+        self.write_legacy("command-log.jsonl", '{"ts":"1","cmd":"/x","args":""}\n')
+
+        report = project_state.migrate_runtime(self.root)
+
+        self.assertEqual(report["actions"], [])
+        self.assertEqual(report["unknown"], ["notes.md"])
+        self.assertTrue(registry.exists())
+        self.assertTrue(unknown.exists())
+        self.assertFalse((self.root / ".claude/memory/command-log.jsonl").exists())
+        self.assertEqual((self.root / ".ai-runtime/command-log.jsonl").read_text(encoding="utf-8"),
+                         '{"ts":"1","cmd":"/x","args":""}\n')
+        self.assertFalse((self.root / "docs/project-state/routes.json").exists())
+        with self.assertRaisesRegex(ValueError, "Unknown state category"):
+            project_state.apply_migration(self.root, ("secrets",))
+
+    def test_runtime_conflict_is_reported_and_blocks_only_that_writer(self):
+        """Differing runtime copies never pick a winner; the writer must refuse."""
+        self.write_legacy("env-detect.json", '{"platform":"old"}\n')
+        canonical = self.root / ".ai-runtime/env-detect.json"
+        canonical.parent.mkdir(parents=True)
+        canonical.write_text('{"platform":"new"}\n', encoding="utf-8")
+
+        report = project_state.migrate_runtime(self.root)
+
+        self.assertEqual([item["artifact"] for item in report["conflicts"]], ["env-detect.json"])
+        self.assertEqual(canonical.read_text(encoding="utf-8"), '{"platform":"new"}\n')
+        with self.assertRaisesRegex(ValueError, "Migrate legacy state"):
+            project_state.writable_state_path(self.root, "env-detect.json", "runtime")
+
+    def run_cli(self, *arguments: str) -> tuple[int, str, str]:
+        """Run the module CLI against the disposable root in a subprocess.
+
+        Args:
+            arguments: CLI options appended after ``--root``.
+        Returns:
+            Exit code, stdout and stderr text.
+        Side effects:
+            Starts one local Python process; no Git, network or database use.
+        """
+        import subprocess
+
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/ai/project_state.py"), "--root", str(self.root), *arguments],
+            capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        return result.returncode, result.stdout, result.stderr
+
+    def test_cli_resolves_readable_and_writable_paths_for_shell_consumers(self):
+        """Shell and Node callers get root-relative POSIX paths from one resolver."""
+        self.write_legacy("endpoints.json", "[]\n")
+
+        code, out, _ = self.run_cli("--resolve", "endpoints.json")
+        self.assertEqual((code, out.strip()), (0, ".claude/memory/endpoints.json"))
+        code, out, _ = self.run_cli("--resolve", "pages.json")
+        self.assertEqual((code, out.strip()), (0, "docs/project-state/pages.json"))
+        code, out, _ = self.run_cli("--resolve", "command-log.jsonl", "--category", "runtime")
+        self.assertEqual((code, out.strip()), (0, ".ai-runtime/command-log.jsonl"))
+        code, _, err = self.run_cli("--writable", "endpoints.json")
+        self.assertEqual(code, 2)
+        self.assertIn("Migrate legacy state", err)
+        code, out, _ = self.run_cli("--writable", "env-detect.json", "--category", "runtime")
+        self.assertEqual((code, out.strip()), (0, ".ai-runtime/env-detect.json"))
+        code, _, err = self.run_cli("--resolve", "custom.json")
+        self.assertEqual(code, 2)
+        self.assertIn("Unknown project state artifact", err)
+
+    def test_interrupted_copy_rolls_back_partial_canonical_and_keeps_legacy(self):
+        """A write failure removes the partial canonical file and leaves legacy intact."""
+        from unittest import mock
+
+        legacy = self.write_legacy("routes.json", '[{"path":"/home"}]\n')
+        canonical = self.root / "docs/project-state/routes.json"
+
+        with mock.patch.object(project_state.os, "fsync", side_effect=OSError("disk full")):
+            with self.assertRaisesRegex(OSError, "disk full"):
+                project_state.apply_migration(self.root)
+
+        self.assertFalse(canonical.exists())
+        self.assertEqual(legacy.read_text(encoding="utf-8"), '[{"path":"/home"}]\n')
+        # Powtórzenie po usunięciu przyczyny kończy migrację bez śladów częściowego zapisu.
+        report = project_state.apply_migration(self.root)
+        self.assertEqual((report["actions"], report["conflicts"]), ([], []))
+        self.assertFalse(legacy.exists())
+        self.assertEqual(canonical.read_text(encoding="utf-8"), '[{"path":"/home"}]\n')
+
+    def test_cli_runtime_migration_ignores_unknown_files_in_exit_code(self):
+        """``--migrate-runtime`` succeeds for a writer even when odd legacy files remain."""
+        self.write_legacy("env-detect.json", '{"platform":"test"}\n')
+        self.write_legacy("notes.md", "keep\n")
+
+        code, out, _ = self.run_cli("--migrate-runtime")
+
+        self.assertEqual(code, 0, out)
+        self.assertTrue((self.root / ".ai-runtime/env-detect.json").exists())
+        code, out, _ = self.run_cli()
+        self.assertEqual(code, 1)
+        self.assertIn('"notes.md"', out)
 
 
 if __name__ == "__main__":
