@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-25 — P07 session continuity (development core)
+
+Branch `feat/p07-shared-memory` (draft PR #66); commit `6fb703a` on top of `0e3f4cd`. Nothing is merged (D01).
+
+- Start every session with `python scripts/ai/session_context.py --root .` (branch/HEAD, settings, documentation map, latest record, snapshot diff; no `.ai-runtime` needed). End with `--new-record --agent <runtime>` and, after the commit, `--check` (docs/ai/session-continuity.md).
+- This session: `docs/sessions/20260925T075805Z-claude-93ac65.md` (task, checks, limitations, next step).
+- Next: The user runs `PUBLISH-P07-2026-09-24.ps1` (Status → Push → UpdatePrs → Checks). Merge #65 → #66 only on the user's command, then repin Django/React to the integrated core; after that, P08.
+
 ## 2026-09-24 — P07 consumer adoption (draft PR #66, development core)
 
 Branch `feat/p07-shared-memory` on top of `fix/p06-contract-consistency` (PR #65).
