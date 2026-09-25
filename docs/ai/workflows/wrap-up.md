@@ -12,8 +12,9 @@
    or hunks, inspect the staged diff and create the logical commit when separable.
 4. Verify candidate/base and available hosted/local results. Push only the reviewed
    task branch without force; create or update its PR rather than duplicating one.
-   Confirm actual remote head and PR state. Full automated exact-candidate runner
-   and G0–G9 recovery remain P05/P08; this procedure does not claim they ran.
+   Confirm actual remote head and PR state. The exact-candidate runner exists
+   (`scripts/ai/runner.py`, bound to pre-push); the G0–G9 state machine and
+   recovery remain P08, and this procedure does not claim they ran.
 5. Report BRANCH_SYNCED / MERGE_PENDING with checks and PR link. Merge requires a
    new explicit command, current head/base/checks and review. No release/deploy.
    After separately authorized merge, cleanup only the proven completed task

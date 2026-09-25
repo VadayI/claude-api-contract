@@ -40,8 +40,9 @@ template hashes permit the known migration; all other local edits conflict.
 No secret path is eligible; `.env.example` is the sole public env exception.
 
 Fresh seed omits active `.github/workflows`; existing project workflows are not
-modified. CI choice and workflow materialization are pending P06 and must be
-resolved before first push. Seed creates no remote, does not stage/push or run
+modified. The CI choice is recorded and the owned workflow materialized only by
+`scripts/ai/ci_mode.py --mode local|github --apply`, which must run before the
+first push. Seed creates no remote, does not stage/push or run
 npm, does not seed private env, and does not clear runtime/project memory.
 The temporary clone is retained with its exact path for review, not blindly
 removed. All supplied files operate without a sibling clone or network plugin.

@@ -61,7 +61,8 @@ when optional MCP is unavailable. Report unavailable capabilities precisely.
 Project notes, configuration, CI/maturity choices, overrides and derived contract
 artifacts are project-owned. Bootstrap/update must use a reviewed manifest and
 preserve customization. Never reseed CLAUDE imports or copy entire directories
-over an existing project. New CI choice/materialization remains P06: before any
-first push, resolve/review the selected policy, never infer it from copied workflows.
+over an existing project. Record the CI choice before any first push with
+`python scripts/ai/ci_mode.py --target . --mode local|github --apply`; never
+infer it from copied workflows, and never activate automatic triggers without it.
 Persistent `.claude/memory` registries remain readable until P07; do not create a
 second writable registry. Local `set-language` honors existing language choices.

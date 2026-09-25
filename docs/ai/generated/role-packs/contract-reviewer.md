@@ -321,7 +321,7 @@ Both gates are **active** (severity error). A derived project not yet ready to c
 <!-- END SOURCE docs/ai/rules/endpoint-surface.md -->
 
 
-<!-- SOURCE docs/ai/rules/environment.md SHA256 c6675ad3c80d00d00df8002a4317c4702ac73fc3b1ed8d84e367b4c05c6d70b9 -->
+<!-- SOURCE docs/ai/rules/environment.md SHA256 bff4158bc561dc299691daff1bc1debc7f40efc9bf5cd6b24c596a7d485d008c -->
 
 # Environment specification (source of truth)
 
@@ -382,7 +382,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. Shared detector/candidate runner and CI choice materialization remain P05/P06. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/environment.md -->
 
@@ -615,7 +615,7 @@ Class B is an upstream-only classification: spec/examples/OpenAPI/registries/loc
 <!-- END SOURCE docs/ai/rules/node-commands.md -->
 
 
-<!-- SOURCE docs/ai/rules/preflight.md SHA256 78c67e2cd0442b2cbab14ce8789bab6f0293abe16fbb452b00bf5b996c4b171d -->
+<!-- SOURCE docs/ai/rules/preflight.md SHA256 9e32de18c60ec7f6e3d34f8b8f6ed0a30d56727dc971972ee2d64128fe8e1953 -->
 
 # Project-kickoff preflight (hard gate)
 
@@ -646,7 +646,7 @@ If a CRITICAL item is missing, STOP — do not start the feature pipeline. Repor
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. Shared detector/candidate runner and CI choice materialization remain P05/P06. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/preflight.md -->
 
