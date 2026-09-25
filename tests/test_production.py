@@ -151,6 +151,51 @@ class ProductionTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "scripts/ai/production.py", "--check"], cwd=self.target, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_fresh_seed_session_continuity(self):
+        """A fresh derived contract records its CI choice, map and a checkable session.
+
+        Args: self owns a disposable derived target.
+        Returns: None after the delivered CLI reports a missing record, creates
+            one and then passes the continuity check on the committed record.
+        Raises: AssertionError if the map, record or check behavior drifts.
+        Side effects: Temporary files, a fixture-local Git repository and
+            Python subprocesses; no database, network or global Git config.
+        """
+        self.install()
+        pending, conflicts = ci_mode.plan(ROOT, self.target, "local")
+        self.assertEqual(conflicts, [])
+        production.apply(self.target, pending)
+        project = json.loads((self.target / ci_mode.PROJECT).read_text(encoding="utf-8"))
+        self.assertEqual(project["documentation"], ci_mode.DOCUMENTATION)
+
+        def run(*args, check=True):
+            """Run one fixture command in the target; return stripped stdout."""
+            result = subprocess.run(args, cwd=self.target, capture_output=True, text=True,
+                                    encoding="utf-8", timeout=60)
+            if check:
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            return result
+
+        run("git", "init", "-q", "--initial-branch=main")
+        run("git", "config", "user.name", "Fixture")
+        run("git", "config", "user.email", "fixture@example.invalid")
+        run("git", "config", "commit.gpgsign", "false")
+        run("git", "add", "--", ".")
+        run("git", "commit", "-q", "-m", "seed")
+        context = [sys.executable, "scripts/ai/session_context.py", "--root", "."]
+        self.assertEqual(run(*context, "--check", check=False).returncode, 1)
+        record = self.target / run(*context, "--new-record", "--agent", "codex").stdout.strip()
+        filled = "\n".join("Fixture fact." if line.startswith("{TODO") else line
+                           for line in record.read_text(encoding="utf-8").splitlines()) + "\n"
+        record.write_text(filled, encoding="utf-8", newline="\n")
+        run("git", "add", "--", record.relative_to(self.target).as_posix())
+        run("git", "commit", "-q", "-m", "session record")
+        report = json.loads(run(*context, "--json", "--check").stdout)
+        entries = {entry["key"]: entry for entry in report["documentation"]}
+        self.assertEqual(entries["architecture"], {"key": "architecture", "kind": "file", "empty": False,
+                                                   "path": "docs/ai/rules/contract-first.md", "source": "map"})
+        self.assertEqual(report["latest"]["fields"]["agent"], "codex")
+
     def test_custom_mixed_conflict_prevents_all_writes(self):
         """Check custom root instructions stop CLI apply before any payload write.
 

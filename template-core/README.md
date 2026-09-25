@@ -1,14 +1,17 @@
-# Family core — development source
+# Family core — versioned source
 
-This directory is the planned shared-core source in the API-contract repository.
-The P09 resolver was developed independently of runtime pilot P03. The measured
-pilot is now accepted with documented runtime limitations. The delivery decision
-is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md). P04 contract
-structure is reviewable, while the P05 exact runner and source-capability capsule
-are documented in [runner.md](docs/ai/runner.md). The complete 55-step inventory
-is machine-mapped; entries without reviewed shared implementations remain
-explicitly `NOT_VERIFIED_PENDING`, so P05 and downstream integration are not yet
-claimed complete.
+This directory is the shared-core source in the API-contract repository. Django
+and React vendor it by exact commit through `scripts/ai/core_sync.py`; the
+contract repository delivers it from the local source by content digest. The
+delivery decision is [ADR 0001](docs/ai/decisions/0001-portable-family-core.md).
+Integrated so far: P04 production structure, P05 detector/exact-candidate runner
+([runner.md](docs/ai/runner.md)), P06 CI mode/hooks and the P09 readiness
+resolver (delivered, no agent entry point yet). The P07 project-state migration
+([project-state-migration.md](docs/ai/project-state-migration.md)) and session
+continuity ([session-continuity.md](docs/ai/session-continuity.md): start context,
+documentation map, per-session records) are in progress.
+The 55-step workflow inventory is the static P05 record of the upstream
+workflows at that time; it is not re-derived from current workflow files.
 
 Project configuration and instruction catalog schemas now have an offline
 standard-library validator; see [machine contracts](docs/ai/schemas.md) for its
@@ -27,6 +30,7 @@ dependency to a React, Django or contract application.
 ```text
 python -m unittest discover -s template-core/tests -p "test_*.py"
 python template-core/scripts/ai/detector.py --repository .
+python template-core/scripts/ai/session_context.py --root . --check
 python template-core/scripts/ai/runner.py --repository . --candidate FULL_SHA --base FULL_SHA --catalog template-core/templates/ai/checks/contract.json --output .ai-runtime/results/full.json
 python template-core/scripts/ai/readiness.py profile.json
 python template-core/scripts/ai/readiness.py profile.json --evidence evidence.json
@@ -98,9 +102,10 @@ Generate/check ownership with `python template-core/scripts/ai/generate_core.py`
 and `--check`. Preview an isolated delivery using
 `python template-core/scripts/ai/install_core.py --target "../core scratch"`;
 add `--apply` to write after a conflict-free preflight. Repeated delivery is empty;
-customized files are preserved through explicit conflicts. This standalone draft
-includes its own README/tests; production project integration and downstream pins
-remain pending P04. No stale file deletion or overwrite-on-conflict is performed.
+customized files are preserved through explicit conflicts. Production project
+integration and downstream pins are handled by each template's `core_sync.py`
+(`--development-pin` for unmerged source, `--integrated-pin` after merge).
+No stale file deletion or overwrite-on-conflict is performed.
 
 Validation: Windows Python 3.14 and Linux Python 3.13 passed all 13 fixtures,
 including the 24-profile matrix. Fresh/repeat Unicode-path delivery also passed.

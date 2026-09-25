@@ -11,6 +11,7 @@ Versions are measured versions, not a claim that every older/newer CLI is suppor
 | Native custom role selection | P03 reviewer passed | NOT_VERIFIED | Use measured separate role launcher fallback; filenames do not prove role activation |
 | Reviewer restrictions | Read/Glob/Grep only | Native read-only sandbox | P03 behavioral canary/read probes; restrictions are not equivalent OS isolation |
 | Hooks | Reviewed invocation hook passed P03 | Trusted hook NOT_VERIFIED | No global trust or approval bypass granted |
+| Session continuity (`session_context.py`) | SessionStart prints context (hook trust as above) | AGENTS.md start step | Linux Python 3.13 fixtures: Claude→Codex→Claude records, clone without `.ai-runtime`, parallel records; real session sequence NOT_VERIFIED |
 | Nested instructions | Runtime-specific | Root vs nested cwd differs | Preserve explicit rule delivery; do not equate Claude paths with Codex nesting |
 | MCP connections below | NOT_VERIFIED in this change | NOT_VERIFIED in this change | No server installation, download or credential read performed |
 | macOS / WSL launchers | NOT_VERIFIED | NOT_VERIFIED | Linux unit fixtures do not establish those platforms |
@@ -30,7 +31,8 @@ project-owned/mixed: the core installer does not replace it.
 | Browser/reference inspection | UI architect, reviewer, tester | Django lists playwright plugin; React routes to available browser tools | Use actual available authorized browser capability | Browser/runtime installation and access to target; no generic token assumed | Available browser automation; inaccessible inspection stays NOT_VERIFIED |
 | Application E2E | tester, readiness | Project test runner | Same project runner | Stack dependencies and browser binaries | No MCP substitution for unexecuted E2E |
 | Process techniques | design/implementation/review roles | Legacy superpowers plugin (different marketplace IDs in Django/contract) | No literal ID translation; canonical local workflows | Optional external plugin must be separately reviewed/authorized | Versioned planning/TDD/debugging/verification procedures; full migration mapping remains P12 |
-| Handoff, wrap-up, template update, auditor | finalization, auditor, template-sync | Contract family-core plugin | Local family core/workflow entry points | Python 3.13+; local versioned procedures | Shared delivery exists; complete plugin-function parity remains P07/P08/P12, not yet claimed |
+| Handoff, wrap-up, template update, auditor | finalization, auditor, template-sync | Contract family-core plugin | Local family core/workflow entry points | Python 3.13+; local versioned procedures | Shared delivery exists; complete plugin-function parity remains P08/P12, not yet claimed |
+| Session continuity (start context, session records) | every session; wrap-up/handoff | SessionStart hook prints `session_context.py`; wrap-up creates a record | AGENTS.md start step and wrap-up/handoff skills run the same CLI | Python 3.13+, Git; no `.ai-runtime` needed | Mechanical fixtures (Claude→Codex→Claude, clone without `.ai-runtime`, parallel records) pass; a real cross-runtime session sequence is NOT_VERIFIED |
 
 ## Optional adapters
 

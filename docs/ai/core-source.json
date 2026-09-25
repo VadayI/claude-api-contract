@@ -10,7 +10,7 @@
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
-      "sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec"
+      "sha256": "9320603d3ee350b66baa4f6f252fb88c3fde29c13d93974b7f63c591838c94a0"
     },
     "docs/ai/legacy/contract-maturity.md": {
       "ownership": "template",
@@ -24,17 +24,25 @@
       "ownership": "template",
       "sha256": "ef8c7663ea70c194ab22e619f98e4ec3907cc8b7968d7885a3410717ede7e499"
     },
+    "docs/ai/project-state-migration.md": {
+      "ownership": "template",
+      "sha256": "53db1648c3e7559c09489645e98d1872a466ff4a3bd2a30175e7399dba5a8091"
+    },
     "docs/ai/runner.md": {
       "ownership": "template",
       "sha256": "54fd4b2948eec015b8099e5e2f1d787adf3344b721bb6ecd7284900cece6fbbd"
     },
     "docs/ai/runtime-compatibility.md": {
       "ownership": "template",
-      "sha256": "5c415860a5f9d2764b59763f9457890d426b223b0bac3e426cc3f1c90db78f07"
+      "sha256": "1731ecc8e459f8990c1ea50e1212f61d60e5b074852102e83e6d577913fe5f9f"
     },
     "docs/ai/schemas.md": {
       "ownership": "template",
-      "sha256": "f546d9c3af1bcf2a02b8506e3c6a6cb66dd557454637d52f0ed04bcaa9164a47"
+      "sha256": "586a7c7932a4b7224461141c4c2705a388ae2bbefe050e4915051f3508977019"
+    },
+    "docs/ai/session-continuity.md": {
+      "ownership": "template",
+      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -46,7 +54,7 @@
     },
     "scripts/ai/core_paths.py": {
       "ownership": "template",
-      "sha256": "4981e75a8737c49e5fd2ee26d17cd09173f374751767b4656048b792a3003773"
+      "sha256": "5a54248283648face770a5a4b12af16e55bd77baedf9add4beac8689a73e84ae"
     },
     "scripts/ai/core_sync.py": {
       "ownership": "template",
@@ -54,7 +62,7 @@
     },
     "scripts/ai/detector.py": {
       "ownership": "template",
-      "sha256": "c62a0c431e75d6c3b6e0aa81cde9f4ae39ea5c0b960cd0d35f8fe469d6ee1975"
+      "sha256": "276cef7afbb076c5aa6860ad60b5f63a09e4cac1e14ffb31c5eddde91f201dcd"
     },
     "scripts/ai/generate_adapters.py": {
       "ownership": "template",
@@ -76,6 +84,10 @@
       "ownership": "template",
       "sha256": "81402423c6ace5ac586954f567d07740d0fa2c668b512fc4a753270ac1f93ebc"
     },
+    "scripts/ai/project_state.py": {
+      "ownership": "template",
+      "sha256": "aad2453cd9289ef1bf92aee6374d7ebbc658c80952596c3b29bd69428b6683b9"
+    },
     "scripts/ai/readiness.py": {
       "ownership": "template",
       "sha256": "ceeb8a761f3dfe8096667234e684f61b664b1dbb47fc0b153dc5fd6266d43381"
@@ -90,7 +102,11 @@
     },
     "scripts/ai/schema.py": {
       "ownership": "template",
-      "sha256": "067c08b0e2a69c8ea285d226be9adbc2b8150f9fb11883489a18908a82c2b046"
+      "sha256": "d95efdd34565129a77efa1c1870d2a776a657b9edcacbbbd402c75aa5fa9d075"
+    },
+    "scripts/ai/session_context.py": {
+      "ownership": "template",
+      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -136,7 +152,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "131f17e9a64b32f0fb1d6f7bf068790163da87e04003a4cdc9673db7ddd27b73",
+  "source_manifest_digest": "85e04141361fd77b0d7614915e8fd2366cb841fe2e78148ddcbb080d257a58bd",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"

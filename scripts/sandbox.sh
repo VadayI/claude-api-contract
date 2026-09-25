@@ -83,7 +83,7 @@ echo "[sandbox] Installing dependencies..."
 bash "$DEST/scripts/install.sh"
 
 # --------------------------------------------------------------------------- #
-# Detect environment (writes .claude/memory/env-detect.json)
+# Detect environment (writes .ai-runtime/env-detect.json)
 # --------------------------------------------------------------------------- #
 echo "[sandbox] Running environment detection..."
 node "$DEST/scripts/detect-env.mjs" 2>/dev/null || true

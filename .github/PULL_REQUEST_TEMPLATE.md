@@ -23,7 +23,7 @@ Iron rule: PR-only, ніколи прямо в `main` (.claude/rules/git-operati
 - [ ] `spec/` і `openapi.yml` закомічено разом (drift-гейт)
 - [ ] Semver bump: `major` / `minor` / `patch`
 - [ ] Обґрунтування bump:
-- [ ] `.claude/memory/endpoints.json` оновлено (registry на кожен ендпоінт)
+- [ ] `docs/project-state/endpoints.json` оновлено (registry на кожен ендпоінт)
 
 ## Гейти (мають бути зелені)
 - [ ] `npm run validate` — compile + TypeSpec drift + Spectral lint + examples

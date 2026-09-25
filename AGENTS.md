@@ -1,7 +1,9 @@
 # Shared contract project instructions
 
-Read `docs/HANDOFF.md`, the active plan and actual Git branch/status/HEAD before
-work. Reconcile stale notes with Git. Read `docs/ai/overrides/output-language.md` when present (otherwise the legacy
+Start with `python scripts/ai/session_context.py --root .`: branch/HEAD, project
+settings, documentation map and the latest session record with its checks and
+next step, without `.ai-runtime`. Then read `docs/HANDOFF.md` and the active plan.
+A snapshot mismatch means inspecting the listed diff, not discarding notes. Read `docs/ai/overrides/output-language.md` when present (otherwise the legacy
 output-language rule); a current explicit user choice takes precedence. Honor the user's language and existing
 authorization; an authorized continuation does not require new planning approval.
 
@@ -64,5 +66,10 @@ preserve customization. Never reseed CLAUDE imports or copy entire directories
 over an existing project. Record the CI choice before any first push with
 `python scripts/ai/ci_mode.py --target . --mode local|github --apply`; never
 infer it from copied workflows, and never activate automatic triggers without it.
-Persistent `.claude/memory` registries remain readable until P07; do not create a
-second writable registry. Local `set-language` honors existing language choices.
+Project state lives in `docs/project-state/` (registries, page-map, lineage) and
+machine-local records in gitignored `.ai-runtime/`; legacy `.claude/memory` copies
+stay readable until `python scripts/ai/project_state.py --root . --apply` migrates
+them (docs/ai/project-state-migration.md). Never create a second writable copy.
+Wrap-up/handoff end with a session record and a passing `session_context.py --check`
+(docs/ai/session-continuity.md); runtime-private memory is not shared context.
+Local `set-language` honors existing language choices.

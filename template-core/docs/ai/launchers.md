@@ -51,9 +51,11 @@ entry points. They do not turn a worker into a coordinator.
 ## Migration status
 
 Existing stack-specific `scripts/claude.*` and Makefile targets are untouched by
-core installation. P04/P12 delivery must replace their legacy env-sourcing behavior
-with explicit, reviewed wiring to this launcher while preserving needed variables.
-Installing the shared files alone does not prove those entry points are migrated.
+core installation. Known legacy wrappers were migrated in P04 to
+`legacy_launch.py` (literal allowlisted dotenv parsing, no shell evaluation);
+customized wrappers conflict before writes and need explicit, reviewed wiring to
+this launcher. Installing the shared files alone does not prove those entry
+points are migrated.
 
 ## Legacy entry-point compatibility
 

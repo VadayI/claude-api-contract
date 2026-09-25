@@ -29,8 +29,12 @@ path and, for `repo_pin`, an explicit pin. URLs cannot contain credentials, quer
 parameters or fragments. A digest is a declared identity until the integrity runner
 verifies it. This schema does not fetch URLs or certify reachability. Artifact and
 documentation paths may refer to future files, but cannot traverse outside the
-project or through links. Project-state creation/migration is a separate P06/P07
-step; installing these schemas does not create or overwrite project settings.
+project or through links. The artifact is a file; documentation entries may also
+name directories (ADRs, session records). The documentation roles and their
+defaults are defined in `session-continuity.md`. P06 materializes an explicit CI choice in project
+settings. P07 migrates legacy settings and registries with the procedures in
+`project-state-migration.md`; installing these schemas does not create or
+overwrite project settings.
 
 Legacy maturity data is checked against the existing P09 resolver's historical
 floors. Saved deployment profiles use that resolver and must match the project's
@@ -53,5 +57,6 @@ and `minimum`, with `$schema`, `title` and `description` annotations. Only JSON
 object/array/string/integer/boolean/null types are supported. Duplicate keys,
 NaN/Infinity, booleans used as integers, and keywords on incompatible types fail.
 
-Check/runner result schemas, launcher integration and downstream delivery remain
-separate P04/P05 work; these contracts alone do not complete family acceptance.
+Check/runner result schemas, launcher integration and downstream delivery are
+integrated (P04/P05/P06); the P07 project-state migration below is in progress.
+These contracts alone do not complete family acceptance (P13).

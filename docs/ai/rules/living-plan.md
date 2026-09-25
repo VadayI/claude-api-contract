@@ -14,4 +14,4 @@ Non-trivial work gets a plan file `docs/plans/NNNN-<slug>.md` that lives and bre
 - Create a reviewable plan before nontrivial changes when needed; an already-authorized plan remains authorized across sessions.
 - After finishing a phase, each agent appends a one-line confirmation to the **Execution log** via an `Edit` append — never a full-file rewrite (concurrent phases must not clobber each other):
   > `phase done: tsp-author — spec/articles.tsp + openapi.yml recompiled`
-- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into `docs/WORKLOG.md` and refreshes `docs/HANDOFF.md`.
+- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into the session record (`docs/sessions/`) and refreshes `docs/HANDOFF.md`.

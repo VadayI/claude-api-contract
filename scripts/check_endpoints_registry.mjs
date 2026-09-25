@@ -5,8 +5,9 @@
  * Contract-completeness + endpoint-surface gate
  * (.claude/rules/verification.md + .claude/rules/endpoint-surface.md).
  *
- * Compares three committed artifacts — openapi.yml, .claude/memory/endpoints.json,
- * and the OPTIONAL .claude/memory/pages.json page-map — and fails (exit 1) on:
+ * Compares three committed artifacts — openapi.yml, the endpoints registry
+ * (docs/project-state/endpoints.json, legacy .claude/memory/endpoints.json until
+ * migrated) and the OPTIONAL pages.json page-map — and fails (exit 1) on:
  *   1. coverage   — an operation in openapi.yml with no registry entry;
  *   2. x-surface  — an operation missing/!valid x-surface (must be resource|system);
  *   3. drift      — a registry entry whose surface != the operation's x-surface;
@@ -19,12 +20,31 @@
  * Run: npm run check:endpoints   (or: node scripts/check_endpoints_registry.mjs)
  */
 
+import { spawnSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 import { parse } from 'yaml';
 
+/**
+ * Ścieżka rejestru przez jedyną implementację reguły fallback
+ * (scripts/ai/project_state.py --resolve): canonical docs/project-state/,
+ * legacy .claude/memory/ do czasu migracji, konflikt kopii = błąd (exit 2).
+ * Brak Pythona 3.13+ to NOT_VERIFIED, nie cichy skip.
+ */
+function resolveProjectState(name) {
+  const python = process.env.AI_PYTHON || 'python';
+  const result = spawnSync(python, ['scripts/ai/project_state.py', '--root', '.', '--resolve', name], {
+    encoding: 'utf8',
+    timeout: 20000,
+  });
+  if (result.error || result.status !== 0) {
+    const detail = (result.stderr || (result.error && result.error.message) || '').trim();
+    console.error(`::error::NOT_VERIFIED — cannot resolve ${name} via ${python} scripts/ai/project_state.py: ${detail || 'Python 3.13+ (AI_PYTHON) is required'}`);
+    process.exit(1);
+  }
+  return result.stdout.trim();
+}
+
 const OPENAPI = 'openapi.yml';
-const REGISTRY = '.claude/memory/endpoints.json';
-const PAGES = '.claude/memory/pages.json';
 const HTTP_METHODS = new Set(['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace']);
 const SURFACES = new Set(['resource', 'system']);
 const key = (m, p) => `${String(m).toUpperCase()} ${p}`;
@@ -58,6 +78,11 @@ if (contractOps.length === 0) {
   console.log('[endpoints-registry] openapi.yml defines no operations — nothing to check.');
   process.exit(0);
 }
+
+// Rejestry rozwiązywane dopiero, gdy kontrakt istnieje: świeży scaffold bez
+// openapi.yml nadal kończy się czystym skipem bez wymogu Pythona.
+const REGISTRY = resolveProjectState('endpoints.json');
+const PAGES = resolveProjectState('pages.json');
 
 // 2) Contract has operations → the registry is required.
 if (!existsSync(REGISTRY)) {

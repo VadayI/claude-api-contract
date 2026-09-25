@@ -7,7 +7,7 @@ import re
 import sys
 from urllib.parse import urlsplit
 
-from core_paths import contained
+from core_paths import contained, contained_entry
 from core_sync import safe_name
 
 KEYWORDS = {"$schema", "title", "description", "type", "const", "enum", "required",
@@ -218,6 +218,9 @@ def project_links(project: dict, root: Path) -> None:
     Args: project passed the project schema; root is the project directory.
     Returns: None. Raises: ValueError for missing contract provenance, unsafe URLs,
         paths, unknown capabilities, altered legacy floors or invalid saved profiles.
+        Documentation entries may name document files or directories (ADRs,
+        session records), never hidden, secret or non-document files; the
+        contract artifact must be a file path.
     Side effects: Path metadata reads only; no URL fetching, writes or database.
     Schema validity alone never establishes the truth of a capability or evidence.
     """
@@ -231,9 +234,14 @@ def project_links(project: dict, root: Path) -> None:
         raise ValueError("Contract URL must be HTTP(S) without credentials, query or fragment")
     if contract["source"] == "repo_pin" and not contract.get("pin"):
         raise ValueError("Repository contract source requires an explicit pin")
-    for name in [contract["artifact"], *project["documentation"].values()]:
-        safe_name(name)
-        contained(root, name)
+    safe_name(contract["artifact"])
+    contained(root, contract["artifact"])
+    # Wpisy mapy dokumentacji mogą wskazywać katalogi (ADR, rekordy sesji), ale nie
+    # pliki ukryte, sekrety ani nie-dokumenty — ta sama reguła co session_context.
+    import session_context
+    for name in project["documentation"].values():
+        session_context.documentation_name(name)
+        contained_entry(root, name)
     if set(project["features"]) - readiness.FEATURES:
         raise ValueError("Unknown feature capability")
     maturity = project["maturity"]

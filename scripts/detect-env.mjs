@@ -1,7 +1,8 @@
 /**
  * scripts/detect-env.mjs
  *
- * Detects the local environment and writes .claude/memory/env-detect.json.
+ * Detects the local environment and writes .ai-runtime/env-detect.json
+ * (legacy .claude/memory/env-detect.json is moved there first; see runtime-state.mjs).
  *
  * Run: node scripts/detect-env.mjs
  *
@@ -15,7 +16,8 @@
  */
 
 import { execSync, spawnSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { runtimeStatePath } from './runtime-state.mjs';
 import { platform } from 'node:os';
 import { cwd, env, execPath, version } from 'node:process';
 
@@ -153,13 +155,14 @@ const result = {
   gh: { authenticated: ghAuthenticated, pat_kind: ghPatKind },
 };
 
-const outDir = '.claude/memory';
-const outFile = `${outDir}/env-detect.json`;
+// Kanoniczny plik runtime; konflikt dwóch różnych kopii jest widoczny, nie nadpisywany.
+let outFile = '.ai-runtime/env-detect.json';
 try {
-  mkdirSync(outDir, { recursive: true });
+  outFile = runtimeStatePath('env-detect.json');
   writeFileSync(outFile, JSON.stringify(result, null, 2) + '\n', 'utf8');
 } catch (err) {
   console.error(`[detect-env] ERROR: could not write ${outFile}: ${err.message}`);
+  process.exitCode = 1;
 }
 
 const tierLabel = {

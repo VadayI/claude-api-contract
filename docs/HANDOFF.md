@@ -2,6 +2,51 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-09-25 — P07 shared output-language preference (development core)
+
+Branch `feat/p07-shared-memory` (draft PR #66); commit `f8e3162` on top of `e4c4f56`. Nothing is merged (D01).
+
+- Output language: `python scripts/ai/project_state.py --root . --language` reports it; `--apply` moves a legacy `.claude/rules/output-language.md` to `docs/ai/overrides/output-language.md` (pointer left behind). Runtime acceptance run: docs/ai/session-continuity.md.
+- This session: `docs/sessions/20260925T081415Z-claude-4c52cf.md` (task, checks, limitations, next step).
+- Next: The user publishes (`PUBLISH-P07-2026-09-24.ps1` Status → Push → UpdatePrs → Checks). Merge #65 → #66 only on the user's command. The runtime acceptance run follows docs/ai/session-continuity.md.
+
+## 2026-09-25 — P07 session continuity (development core)
+
+Branch `feat/p07-shared-memory` (draft PR #66); commit `6fb703a` on top of `0e3f4cd`. Nothing is merged (D01).
+
+- Start every session with `python scripts/ai/session_context.py --root .` (branch/HEAD, settings, documentation map, latest record, snapshot diff; no `.ai-runtime` needed). End with `--new-record --agent <runtime>` and, after the commit, `--check` (docs/ai/session-continuity.md).
+- This session: `docs/sessions/20260925T075805Z-claude-93ac65.md` (task, checks, limitations, next step).
+- Next: The user runs `PUBLISH-P07-2026-09-24.ps1` (Status → Push → UpdatePrs → Checks). Merge #65 → #66 only on the user's command, then repin Django/React to the integrated core; after that, P08.
+
+## 2026-09-24 — P07 consumer adoption (draft PR #66, development core)
+
+Branch `feat/p07-shared-memory` on top of `fix/p06-contract-consistency` (PR #65).
+The P07 core now has consumers; nothing is merged (D01).
+
+- Core (`template-core/scripts/ai/project_state.py`): `--resolve NAME` /
+  `--writable NAME [--category runtime]` print the single fallback rule for shell
+  and Node callers; `--migrate-runtime` / `migrate_runtime()` move only
+  `env-detect.json` + `command-log.jsonl`; `artifact_relative_paths()` serves
+  changed-file gates. Runtime map changed: `env-detect.json →
+  .ai-runtime/env-detect.json`; `.ai-runtime/environment.json` is reserved for the
+  shared detector (`detector.py --repository . --write`).
+- Contract consumers: `scripts/session-start.sh` runs the shared detector and the
+  Node stack probe; `detect-env.mjs`/`log-cmd.mjs` write to `.ai-runtime/` through
+  `scripts/runtime-state.mjs` (legacy runtime copies are moved, conflicts refuse);
+  `check_endpoints_registry.mjs`, `check_ready.sh` and `react_gate.py` resolve
+  registries via `project_state` (`docs/project-state/` first, legacy
+  `.claude/memory/` until migrated, differing copies fail closed); `clean.sh`,
+  `sandbox.sh`, rules/workflows/agents/commands and role packs use the new paths.
+  `contract-ci.yml` now runs every `tests/test_*.py`.
+- Verified on Linux Python 3.13.7 / Node 22: `generate_core`, `core_sync
+  --local-source`, `production`, `generate_adapters` `--check` PASS;
+  `template-core/tests` 101 OK (incl. interrupted-copy rollback); `tests/` 26 OK
+  (runtime-writer fixtures move/identical/conflict + Python↔Node cross-runtime). Not run: the project-data migration of the
+  untracked `.claude/memory/{endpoints,pages}.json` in the main checkout
+  (preview only; `--apply` is a user decision).
+- Next: merge fix PR #65, then this PR (checks run after retarget to `main`);
+  Django/React repin to integrated; P08. Merge only on the user's command.
+
 ## 2026-09-24 — post-P06 consistency
 
 Branch `fix/p06-contract-consistency` on top of `main` `9db26a0` (P06 merged via

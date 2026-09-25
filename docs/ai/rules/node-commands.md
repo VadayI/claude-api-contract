@@ -2,7 +2,7 @@
 
 > **Shell:** use Bash for Bash gates; native Windows uses explicit Git Bash launched from PowerShell. Python tooling also runs directly in PowerShell. Historical OS support is superseded for measured tooling paths by docs/ai/runtime-compatibility.md.
 >
-> **Node 20.19+ is a hard requirement.** It runs the SessionStart env-detection hook, the gate helpers, and the TypeSpec / Spectral / Prism CLIs. Install via `nvm` if missing (`scripts/setup-wsl.sh`). The hook writes `.claude/memory/env-detect.json` with the active shell + node version.
+> **Node 20.19+ is a hard requirement.** It runs the SessionStart env-detection hook, the gate helpers, and the TypeSpec / Spectral / Prism CLIs. Install via `nvm` if missing (`scripts/setup-wsl.sh`). The hook writes `.ai-runtime/env-detect.json` with the active shell + node version.
 
 ## Setup
 
@@ -72,10 +72,10 @@ bash scripts/clean.sh --reset-to-clone --yes  # skip confirmation (CI / scriptin
 ```
 
 Class A (safe to delete any time — fully regenerable): `node_modules/`, `tsp-output/`, `.tsp/`,
-`.claude/memory/env-detect.json`, `.claude/memory/command-log.jsonl`.
+`.ai-runtime/` (detector reports, command log, runner results; legacy `.claude/memory/env-detect.json` and `command-log.jsonl` too).
 
 Class B (only present on the template's own working copy — absent on a fresh clone): `LOCAL/`,
-`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004` (demo-contract ADRs — 0005–0008 are template infra, kept), `.env`, `.claude/memory/endpoints.json`,
+`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004` (demo-contract ADRs — 0005–0008 are template infra, kept), `.env`, `docs/project-state/endpoints.json` + `pages.json` (and legacy `.claude/memory/` copies),
 `.claude/settings.local.json`. See `docs/AUDIT-2026-06-08.md` for the full inventory.
 
 ## Derived-project ownership

@@ -7,12 +7,16 @@
    `docs/ai/rules/node-commands.md` and shared source/core drift checks. A scaffold
    has no contract artifact; report that coverage separately. Missing prerequisites
    are NOT_VERIFIED; never fabricate JSON PASS or use a different revision's CI.
-3. Dispatch the local handoff procedure; update relevant plans/README/CHANGELOG.
+3. Dispatch the local handoff procedure (session record, HANDOFF, transfer of
+   durable facts from runtime-private memory; docs/ai/session-continuity.md);
+   update relevant plans/README/CHANGELOG.
    Format only task-owned files explicitly before final checks. Stage exact files
    or hunks, inspect the staged diff and create the logical commit when separable.
 4. Verify candidate/base and available hosted/local results. Push only the reviewed
    task branch without force; create or update its PR rather than duplicating one.
-   Confirm actual remote head and PR state. The exact-candidate runner exists
+   Confirm actual remote head and PR state. After the commit,
+   `python scripts/ai/session_context.py --root . --check` must PASS so another
+   agent or machine finds the record. The exact-candidate runner exists
    (`scripts/ai/runner.py`, bound to pre-push); the G0–G9 state machine and
    recovery remain P08, and this procedure does not claim they ran.
 5. Report BRANCH_SYNCED / MERGE_PENDING with checks and PR link. Merge requires a

@@ -2,7 +2,7 @@
 
 Do not edit; generated from full canonical sources.
 
-<!-- SOURCE docs/ai/roles/tsp-author.md SHA256 611ba432ea7babe162a3a43aedd2ab486e172f190c22c30e9315383cc7d78445 -->
+<!-- SOURCE docs/ai/roles/tsp-author.md SHA256 0f759da6d71705058bfa9828bac9a0216df416cb439e7d2547e63dd8f7edc318 -->
 # TypeSpec Author
 
 You transcribe the contract `api-architect` designed into `spec/**/*.tsp`, then recompile the canonical `openapi.yml`. You do not redesign the contract — if the spec is ambiguous, send it back up.
@@ -14,7 +14,7 @@ You transcribe the contract `api-architect` designed into `spec/**/*.tsp`, then 
 3. `@route` plural nouns under `/api/v1`; stable `@operationId`; `@doc` on every model/property/operation; `@summary` + tags on operations.
 4. Auth via the shared `bearerAuth` scheme + per-endpoint `security`/scopes (docs/ai/rules/auth-contract.md).
 5. Realistic examples (with `x-faker` where useful) so the mock is meaningful (docs/ai/rules/examples-validation.md).
-6. **Surface**: emit `@extension("x-surface", "resource" | "system")` on every operation (docs/ai/rules/endpoint-surface.md). Page routes are NOT TypeSpec — they live in `.claude/memory/pages.json`.
+6. **Surface**: emit `@extension("x-surface", "resource" | "system")` on every operation (docs/ai/rules/endpoint-surface.md). Page routes are NOT TypeSpec — they live in `docs/project-state/pages.json`.
 
 ## Always recompile
 
@@ -260,7 +260,7 @@ openapi.yml + Dockerfile ──build──► image ──push──► pull ─
 <!-- END SOURCE docs/ai/rules/deploy.md -->
 
 
-<!-- SOURCE docs/ai/rules/endpoint-surface.md SHA256 8f2b93e6b310cc36b740ecb40e0e0503c717fbc0a98165a190a502f27b26189a -->
+<!-- SOURCE docs/ai/rules/endpoint-surface.md SHA256 ba51cb912db2ccb18895b3c89c95c52b453c6190d20de1354e2512587dc27792 -->
 
 # Endpoint surface — page vs resource vs system (frontend-page separation)
 
@@ -291,17 +291,17 @@ Many-to-many: a page may `consume` several operations (a detail+edit page consum
 
 ## Where each surface lives (page-map is separate — ADR 0010)
 
-- `resource` / `system` endpoints live in the canonical `openapi.yml` `paths:` (as today) and carry `@extension("x-surface", "...")` in TypeSpec → emitted as `x-surface` on the operation. They are also recorded in `.claude/memory/endpoints.json` with a `surface` field.
-- **`page` entries are NOT in `openapi.yml` `paths:`.** A browser route is not an HTTP API operation, so it stays out of the REST contract — Prism/oasdiff/Spectral see only `/api/v1/*`. The page-map is its own committed artifact: `.claude/memory/pages.json` (optionally surfaced for humans as an `x-pages` block in `docs/api/INDEX.md`). Each page references the API operations it consumes by `operationId`.
+- `resource` / `system` endpoints live in the canonical `openapi.yml` `paths:` (as today) and carry `@extension("x-surface", "...")` in TypeSpec → emitted as `x-surface` on the operation. They are also recorded in `docs/project-state/endpoints.json` with a `surface` field.
+- **`page` entries are NOT in `openapi.yml` `paths:`.** A browser route is not an HTTP API operation, so it stays out of the REST contract — Prism/oasdiff/Spectral see only `/api/v1/*`. The page-map is its own committed artifact: `docs/project-state/pages.json` (optionally surfaced for humans as an `x-pages` block in `docs/api/INDEX.md`). Each page references the API operations it consumes by `operationId`.
 
 ## Registry shapes
 
-`.claude/memory/endpoints.json` — each entry gains `surface`:
+`docs/project-state/endpoints.json` (legacy `.claude/memory/endpoints.json` until migrated — docs/ai/project-state-migration.md) — each entry gains `surface`:
 ```
 { "method": "GET", "path": "/api/v1/articles", "...": "...", "surface": "resource" }
 ```
 
-`.claude/memory/pages.json` — the page-map:
+`docs/project-state/pages.json` — the page-map:
 ```
 [ { "route": "/articles/{id}", "name": "Article detail", "surface": "page",
     "consumes": ["getArticle"], "auth": "bearer", "notes": "..." } ]
@@ -327,13 +327,13 @@ Both gates are **active** (severity error). A derived project not yet ready to c
 <!-- END SOURCE docs/ai/rules/endpoint-surface.md -->
 
 
-<!-- SOURCE docs/ai/rules/environment.md SHA256 bff4158bc561dc299691daff1bc1debc7f40efc9bf5cd6b24c596a7d485d008c -->
+<!-- SOURCE docs/ai/rules/environment.md SHA256 036d8a3222bb40aede6acc7716a16f19b4307ec095438c8db444b86fcf1daca3 -->
 
 # Environment specification (source of truth)
 
 Defines the **expected local environment** for a `claude-api-contract` project. `/doctor` checks the live machine against this and proposes fixes.
 
-> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.claude/memory/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
+> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.ai-runtime/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
 
 ## Scope 1 — System tools
 
@@ -349,7 +349,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 | **oasdiff** | on PATH (breaking-change gate) | `oasdiff --version` |
 | Docker (OPTIONAL) | only for containerized Prism / proxy parity | `docker info` |
 
-`.claude/memory/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session. **Never hand-write it** to skip a blocker.
+`.ai-runtime/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session (SessionStart runs `scripts/session-start.sh`, which also refreshes the shared detector report `.ai-runtime/environment.json` via `python scripts/ai/detector.py --repository . --write`). A legacy `.claude/memory/env-detect.json` is moved to `.ai-runtime/` automatically; two differing copies are reported, never merged. **Never hand-write either file** to skip a blocker.
 
 ## Scope 2 — Claude config & access
 
@@ -388,7 +388,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/environment.md -->
 
@@ -447,7 +447,7 @@ Authorized commit/push/PR proceed with exact task-owned paths after real checks.
 <!-- END SOURCE docs/ai/rules/git-operations.md -->
 
 
-<!-- SOURCE docs/ai/rules/living-plan.md SHA256 162ed419da61246343e78b3db512bf3ca95277cb2324973280a57b9851a02ce7 -->
+<!-- SOURCE docs/ai/rules/living-plan.md SHA256 4bc56623e4a3e47bdb817e7462d4503454ca855b12ff7907c80bfd82a3cc7ed7 -->
 
 # Living plan (execution log per feature)
 
@@ -465,7 +465,7 @@ Non-trivial work gets a plan file `docs/plans/NNNN-<slug>.md` that lives and bre
 - Create a reviewable plan before nontrivial changes when needed; an already-authorized plan remains authorized across sessions.
 - After finishing a phase, each agent appends a one-line confirmation to the **Execution log** via an `Edit` append — never a full-file rewrite (concurrent phases must not clobber each other):
   > `phase done: tsp-author — spec/articles.tsp + openapi.yml recompiled`
-- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into `docs/WORKLOG.md` and refreshes `docs/HANDOFF.md`.
+- The plan is the single place to see "where we are" mid-feature; `/wrap-up` folds it into the session record (`docs/sessions/`) and refreshes `docs/HANDOFF.md`.
 
 <!-- END SOURCE docs/ai/rules/living-plan.md -->
 
@@ -532,13 +532,13 @@ A `STUB:` is a visible debt, surfaced in review and tracked in the living plan. 
 <!-- END SOURCE docs/ai/rules/no-stubs.md -->
 
 
-<!-- SOURCE docs/ai/rules/node-commands.md SHA256 f4e4e808cdfa72322f127003cbf9064144629b358d84e97b5e369ac30f193abc -->
+<!-- SOURCE docs/ai/rules/node-commands.md SHA256 fb2fdf15133a3b538ec4099fe71bfc1370808b48b06c9656a45205eb487d3150 -->
 
 # Node / toolchain commands
 
 > **Shell:** use Bash for Bash gates; native Windows uses explicit Git Bash launched from PowerShell. Python tooling also runs directly in PowerShell. Historical OS support is superseded for measured tooling paths by docs/ai/runtime-compatibility.md.
 >
-> **Node 20.19+ is a hard requirement.** It runs the SessionStart env-detection hook, the gate helpers, and the TypeSpec / Spectral / Prism CLIs. Install via `nvm` if missing (`scripts/setup-wsl.sh`). The hook writes `.claude/memory/env-detect.json` with the active shell + node version.
+> **Node 20.19+ is a hard requirement.** It runs the SessionStart env-detection hook, the gate helpers, and the TypeSpec / Spectral / Prism CLIs. Install via `nvm` if missing (`scripts/setup-wsl.sh`). The hook writes `.ai-runtime/env-detect.json` with the active shell + node version.
 
 ## Setup
 
@@ -608,10 +608,10 @@ bash scripts/clean.sh --reset-to-clone --yes  # skip confirmation (CI / scriptin
 ```
 
 Class A (safe to delete any time — fully regenerable): `node_modules/`, `tsp-output/`, `.tsp/`,
-`.claude/memory/env-detect.json`, `.claude/memory/command-log.jsonl`.
+`.ai-runtime/` (detector reports, command log, runner results; legacy `.claude/memory/env-detect.json` and `command-log.jsonl` too).
 
 Class B (only present on the template's own working copy — absent on a fresh clone): `LOCAL/`,
-`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004` (demo-contract ADRs — 0005–0008 are template infra, kept), `.env`, `.claude/memory/endpoints.json`,
+`spec/`, `examples/`, `openapi.yml`, `docs/decisions/0002–0004` (demo-contract ADRs — 0005–0008 are template infra, kept), `.env`, `docs/project-state/endpoints.json` + `pages.json` (and legacy `.claude/memory/` copies),
 `.claude/settings.local.json`. See `docs/AUDIT-2026-06-08.md` for the full inventory.
 
 ## Derived-project ownership
@@ -621,7 +621,7 @@ Class B is an upstream-only classification: spec/examples/OpenAPI/registries/loc
 <!-- END SOURCE docs/ai/rules/node-commands.md -->
 
 
-<!-- SOURCE docs/ai/rules/preflight.md SHA256 9e32de18c60ec7f6e3d34f8b8f6ed0a30d56727dc971972ee2d64128fe8e1953 -->
+<!-- SOURCE docs/ai/rules/preflight.md SHA256 71580829890006fd9725495b32b2fe44453d922f3b9ede339c4484bb4f1750ec -->
 
 # Project-kickoff preflight (hard gate)
 
@@ -629,7 +629,7 @@ Before any contract work on a new project, verify the inputs and access exist. S
 
 ## Runtime gate (FIRST, hard STOP)
 
-Read `.claude/memory/env-detect.json` (produced by an explicit node scripts/detect-env.mjs run or the compatible legacy hook).
+Read `.ai-runtime/env-detect.json` (produced by an explicit `node scripts/detect-env.mjs` run or the SessionStart hook `scripts/session-start.sh`; the shared detector report `.ai-runtime/environment.json` is refreshed alongside).
 
 - **Missing** → `NO_ENV_DETECT`: STOP. The runtime is unverified. Run `node scripts/detect-env.mjs` once manually; if that fails, install Node 20.19+. Never hand-write the file.
 - **`platform_tier == "unsupported"`** → `UNSUPPORTED_PLATFORM`: hard STOP. Native Windows without a POSIX `bash`/`git` on PATH, or a runner we cannot execute the bash gates on. Install Git for Windows (Git Bash) or WSL2 Ubuntu, then relaunch.
@@ -652,7 +652,7 @@ If a CRITICAL item is missing, STOP — do not start the feature pipeline. Repor
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
 
 <!-- END SOURCE docs/ai/rules/preflight.md -->
 
@@ -808,7 +808,7 @@ Recompile and bundle (commands: `docs/ai/rules/node-commands.md` or the skill), 
 <!-- END SOURCE docs/ai/rules/typespec-style.md -->
 
 
-<!-- SOURCE docs/ai/rules/verification.md SHA256 74c27d1486ae8fbe7eaee96eaf4ecdbe81041987dedc440678d9f046fa0fedf0 -->
+<!-- SOURCE docs/ai/rules/verification.md SHA256 d0d04e78637292d2661cfa053d30d1b8e354758e1bce683a609be509618d7b22 -->
 
 # Verification handoff (prove the contract works)
 
@@ -816,7 +816,7 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
 
 ## Machine-readable endpoint registry
 
-`api-architect` records each endpoint in `.claude/memory/endpoints.json` (committed — it is the registry, not session-local state). One object per endpoint:
+`api-architect` records each endpoint in `docs/project-state/endpoints.json` (committed — it is the registry, not session-local state; an unmigrated project may still hold it at legacy `.claude/memory/endpoints.json` — read whichever `python scripts/ai/project_state.py --root . --resolve endpoints.json` prints, and migrate with `--apply` before writing). One object per endpoint:
 
 ```
 { "method": "POST", "path": "/api/v1/articles", "tag": "articles",
@@ -825,7 +825,7 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
   "envelope": "single|list", "surface": "resource", "notes": "..." }
 ```
 
-Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `.claude/memory/pages.json` page-map (`docs/ai/rules/endpoint-surface.md`). The contract is incomplete until the registry entry exists.
+Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `docs/project-state/pages.json` page-map (`docs/ai/rules/endpoint-surface.md`). The contract is incomplete until the registry entry exists.
 
 ## Verification doc
 

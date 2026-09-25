@@ -18,6 +18,6 @@ node scripts/log-cmd.mjs /fix-ci "$ARGUMENTS"
    - **Examples** → `mock-validator` (@.claude/rules/examples-validation.md).
    - **Breaking-change** → `breaking-change-analyst`: bump major or add `.oasdiff-ignore.txt` + ADR.
    - **Mock smoke** → `mock-validator`.
-   - **Endpoints registry** → `api-architect`: record the missing operation in `.claude/memory/endpoints.json` (@.claude/rules/verification.md).
+   - **Endpoints registry** → `api-architect`: record the missing operation in `docs/project-state/endpoints.json` (@.claude/rules/verification.md).
 3. Re-run gates locally (`npm run validate`, `npm run breaking`, `npm run check:endpoints`) before pushing the fix.
 4. Report what failed, the fix, and the re-run result.

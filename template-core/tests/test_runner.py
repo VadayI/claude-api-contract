@@ -416,6 +416,31 @@ class RunnerTests(unittest.TestCase):
         self.assertNotIn("must-not-appear", serialized)
         self.assertEqual(document["repository"]["head"], self.candidate)
 
+    def test_detector_write_targets_canonical_runtime_report(self):
+        """``--write`` stores the report under the repository's gitignored runtime dir.
+
+        Args: self owns the fixture. Returns: None. Raises: AssertionError when the
+        canonical path or its JSON differs from the shared report contract.
+        Side effects: Runs one child detector process against the fixture repo and
+        writes `.ai-runtime/environment.json` there; no database or network access.
+        """
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/ai/detector.py"), "--repository", str(self.repo), "--write"],
+            capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, "")
+        written = self.repo / ".ai-runtime" / "environment.json"
+        self.assertEqual(written, detector.report_path(self.repo))
+        document = json.loads(written.read_text(encoding="utf-8"))
+        self.assertEqual(document["schema_version"], 1)
+        self.assertEqual(document["repository"]["head"], self.candidate)
+        without_repo = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/ai/detector.py"), "--write"],
+            capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(without_repo.returncode, 2)
+
     def test_versioned_catalog_and_result_schemas_validate(self):
         """Validate the shipped catalog and one actual result with bundled schemas.
 

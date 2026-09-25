@@ -2,7 +2,7 @@
 
 Defines the **expected local environment** for a `claude-api-contract` project. `/doctor` checks the live machine against this and proposes fixes.
 
-> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.claude/memory/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
+> Philosophy: detect → report → propose → **fix only after the user confirms**. `/doctor` reads `.ai-runtime/env-detect.json`, never auto-fixes risky things, never pushes to `main`, never prints secrets.
 
 ## Scope 1 — System tools
 
@@ -18,7 +18,7 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 | **oasdiff** | on PATH (breaking-change gate) | `oasdiff --version` |
 | Docker (OPTIONAL) | only for containerized Prism / proxy parity | `docker info` |
 
-`.claude/memory/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session. **Never hand-write it** to skip a blocker.
+`.ai-runtime/env-detect.json` is the source of truth for `platform_supported` / `node_supported` / `gh.*`. It is rewritten by `scripts/detect-env.mjs` on every session (SessionStart runs `scripts/session-start.sh`, which also refreshes the shared detector report `.ai-runtime/environment.json` via `python scripts/ai/detector.py --repository . --write`). A legacy `.claude/memory/env-detect.json` is moved to `.ai-runtime/` automatically; two differing copies are reported, never merged. **Never hand-write either file** to skip a blocker.
 
 ## Scope 2 — Claude config & access
 
@@ -57,4 +57,4 @@ Bash on Linux / macOS / WSL2 Ubuntu — the **tested/recommended** path. Native 
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.

@@ -4,7 +4,7 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
 
 ## Machine-readable endpoint registry
 
-`api-architect` records each endpoint in `.claude/memory/endpoints.json` (committed — it is the registry, not session-local state). One object per endpoint:
+`api-architect` records each endpoint in `docs/project-state/endpoints.json` (committed — it is the registry, not session-local state; an unmigrated project may still hold it at legacy `.claude/memory/endpoints.json` — read whichever `python scripts/ai/project_state.py --root . --resolve endpoints.json` prints, and migrate with `--apply` before writing). One object per endpoint:
 
 ```
 { "method": "POST", "path": "/api/v1/articles", "tag": "articles",
@@ -13,7 +13,7 @@ Every pipeline run ends with a verification handoff so a human can confirm the c
   "envelope": "single|list", "surface": "resource", "notes": "..." }
 ```
 
-Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `.claude/memory/pages.json` page-map (`docs/ai/rules/endpoint-surface.md`). The contract is incomplete until the registry entry exists.
+Append/update; never duplicate a `method+path`. Each entry also carries a `surface` (`resource`/`system`); frontend page routes live in the sibling `docs/project-state/pages.json` page-map (`docs/ai/rules/endpoint-surface.md`). The contract is incomplete until the registry entry exists.
 
 ## Verification doc
 

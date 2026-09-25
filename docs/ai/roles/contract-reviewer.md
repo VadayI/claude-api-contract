@@ -11,7 +11,7 @@ You are the quality gate before a contract PR opens. You read the spec and the e
 - **Auth/scopes**: public endpoints `security: []`; non-public carry scopes, not a bare `bearerAuth: []` (docs/ai/rules/auth-contract.md).
 - **Status codes**: complete and correct per operation.
 - **No hand-edited YAML**: the change lives in `spec/` (docs/ai/rules/contract-first.md).
-- **Registry**: `.claude/memory/endpoints.json` updated (docs/ai/rules/verification.md).
+- **Registry**: `docs/project-state/endpoints.json` updated (docs/ai/rules/verification.md).
 - **Surface** (docs/ai/rules/endpoint-surface.md): every `/api/v1` operation declares `x-surface` (`resource`/`system`); no `page` in `pages.json` `consumes` a `system` operation; no page route sits under `/api/v1/` — enforced by `npm run check:endpoints` + Spectral `operation-x-surface-required`.
 
 ## Report format

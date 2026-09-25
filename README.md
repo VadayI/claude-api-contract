@@ -25,9 +25,12 @@ necessary.
 Claude PreToolUse checks structured edit payloads and recognized `apply_patch`
 headers for direct edits of generated `openapi.yml`; malformed payloads fail
 closed. This is early feedback, not complete coverage of arbitrary shell
-writes. `SessionStart` runs the detector only. There is no automatic Stop or
-SessionEnd formatter, push, or merge; finish with an explicit handoff, knowing
-an interrupted session may skip end events. A trusted Codex tool-hook surface
+writes. `SessionStart` runs the detectors and prints the shared session context
+(`scripts/ai/session_context.py`: Git state, documentation map, latest session
+record); Codex runs the same command from AGENTS.md. There is no automatic Stop or
+SessionEnd formatter, push, or merge; finish with an explicit handoff that writes
+a `docs/sessions/` record (docs/ai/session-continuity.md), knowing an interrupted
+session may skip end events. A trusted Codex tool-hook surface
 has not been verified for this pilot; Git/CI checks are the portable controls.
 
 **Single source of truth for a REST API contract.** TypeSpec в†’ a canonical, bundled `openapi.yml` (OpenAPI 3.1), linted (Spectral), mocked (Prism), and breaking-change gated (oasdiff). Two repositories consume it in parallel вЂ” `claude-django` (backend, validates its implementation against the contract) and `claude-react-mui` (frontend, generates TS types + a mock). Neither generates the contract; both pin a version.
@@ -191,7 +194,7 @@ ba в†’ api-architect в†’ tsp-author в†’ [contract-reviewer | brea
 
 > These 5 are the canonical contract-integrity gates (always on, every maturity stage). Two more layers complement them:
 >
-> - **Process gates** вЂ” `contract-policy.yml` (PR-scoped, diff-aware): no bare TODO/FIXME in contract artifacts (a documented `STUB:` is allowed), an ADR alongside any `.oasdiff-ignore.txt` change, a CHANGELOG `[Unreleased]` fragment on contract changes, and README в†” `package.json` version coherence. Plus a supplementary **endpoints-registry coverage** check in `contract-ci.yml` вЂ” every `openapi.yml` path is recorded in `.claude/memory/endpoints.json` (`npm run check:endpoints`).
+> - **Process gates** вЂ” `contract-policy.yml` (PR-scoped, diff-aware): no bare TODO/FIXME in contract artifacts (a documented `STUB:` is allowed), an ADR alongside any `.oasdiff-ignore.txt` change, a CHANGELOG `[Unreleased]` fragment on contract changes, and README в†” `package.json` version coherence. Plus a supplementary **endpoints-registry coverage** check in `contract-ci.yml` вЂ” every `openapi.yml` path is recorded in `docs/project-state/endpoints.json` (`npm run check:endpoints`).
 > - **Local Claude Code hooks** вЂ” `.claude/settings.json` (run in the CLI, not CI): hard-block direct edits to the generated `openapi.yml`, gate `/release` + `/ship-contract` on cheap preconditions (`/create-pr` is advisory), and nudge the living-plan execution log. A weekly **`scheduled-audit`** workflow reports STUB/TODO inventory, version drift, and gate health.
 
 ## Local git hooks (optional)
@@ -234,7 +237,7 @@ http://<IP>:<PORT>
 
 **Backend** (`claude-django`): vendor `openapi.yml`, run your `check_contract_sync.sh` gate in CI, write a `contract.lock.json` (`repo` + `version` + `sha256`).
 
-**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses). Scaffold pages **only** for the `page` routes in `.claude/memory/pages.json` вЂ” never for `system` endpoints like `/api/v1/auth/token` (@.claude/rules/endpoint-surface.md).
+**Frontend** (`claude-react-mui`): generate TS types with `openapi-typescript`, develop against `http://<IP>:<PORT>` (the Prism static mock returns deterministic contract-compliant responses). Scaffold pages **only** for the `page` routes in `docs/project-state/pages.json` вЂ” never for `system` endpoints like `/api/v1/auth/token` (@.claude/rules/endpoint-surface.md).
 
 ## Structure
 

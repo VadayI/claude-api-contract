@@ -4,7 +4,7 @@ Before any contract work on a new project, verify the inputs and access exist. S
 
 ## Runtime gate (FIRST, hard STOP)
 
-Read `.claude/memory/env-detect.json` (produced by an explicit node scripts/detect-env.mjs run or the compatible legacy hook).
+Read `.ai-runtime/env-detect.json` (produced by an explicit `node scripts/detect-env.mjs` run or the SessionStart hook `scripts/session-start.sh`; the shared detector report `.ai-runtime/environment.json` is refreshed alongside).
 
 - **Missing** → `NO_ENV_DETECT`: STOP. The runtime is unverified. Run `node scripts/detect-env.mjs` once manually; if that fails, install Node 20.19+. Never hand-write the file.
 - **`platform_tier == "unsupported"`** → `UNSUPPORTED_PLATFORM`: hard STOP. Native Windows without a POSIX `bash`/`git` on PATH, or a runner we cannot execute the bash gates on. Install Git for Windows (Git Bash) or WSL2 Ubuntu, then relaunch.
@@ -27,4 +27,4 @@ If a CRITICAL item is missing, STOP — do not start the feature pipeline. Repor
 
 ## P04 runtime transition
 
-Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the legacy `detect-env` report stays transitional until the P07 project-state migration. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
+Python 3.13+ stdlib tooling and both Claude/Codex launchers are delivered locally. Optional plugins/MCP are not prerequisites for local procedures: gh/Git provide repository operations and official documentation is the library-reference fallback. Do not grant trust or install plugins automatically. Run detector explicitly and check current tools; stale legacy JSON is not operational evidence. The shared detector and exact-candidate runner (`scripts/ai/detector.py`, `scripts/ai/runner.py`) and the CI choice (`scripts/ai/ci_mode.py`) are delivered; the stack `detect-env` probe writes `.ai-runtime/env-detect.json` beside the shared detector report and is not gate evidence by itself. Native Windows uses PowerShell orchestration and explicit C:/Program Files/Git/bin/bash.exe for Bash commands; platform labels above do not establish sandbox isolation.
