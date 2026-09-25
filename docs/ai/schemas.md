@@ -19,7 +19,8 @@ non-secret input; the validator does not discover or read real env/credential fi
 ## Project configuration
 
 `templates/ai/schemas/project.schema.json` requires explicit template kind/scaffold,
-CI choice, user-command merge policy, reported-file coordinator policy, maturity,
+CI choice, user-command merge policy (with an optional `git.merge_method`: `merge`,
+`squash` or `rebase`, used by the P08 Git lifecycle), reported-file coordinator policy, maturity,
 contract provenance, documentation map, capabilities and saved deployment map.
 There is no default CI selection. Unknown policy keys and enum values fail.
 Project extensions belong in `extensions`; they never grant runtime permissions.

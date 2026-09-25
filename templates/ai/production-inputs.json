@@ -447,6 +447,9 @@
     "docs/ai/session-continuity.md": {
       "ownership": "template"
     },
+    "docs/ai/git-lifecycle.md": {
+      "ownership": "template"
+    },
     "docs/ai/workflows/audit.md": {
       "ownership": "template"
     },
@@ -573,6 +576,9 @@
       "ownership": "template"
     },
     "scripts/ai/session_context.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/git_lifecycle.py": {
       "ownership": "template"
     },
     "scripts/ai/contract_policy.py": {
@@ -731,6 +737,9 @@
     "template-core/docs/ai/session-continuity.md": {
       "ownership": "template"
     },
+    "template-core/docs/ai/git-lifecycle.md": {
+      "ownership": "template"
+    },
     "template-core/scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
       "ownership": "template"
@@ -785,6 +794,9 @@
       "ownership": "template"
     },
     "template-core/scripts/ai/session_context.py": {
+      "ownership": "template"
+    },
+    "template-core/scripts/ai/git_lifecycle.py": {
       "ownership": "template"
     },
     "template-core/scripts/ai/contract_policy.py": {
@@ -858,6 +870,12 @@
       "ownership": "template"
     },
     "template-core/tests/test_session_context.py": {
+      "ownership": "template"
+    },
+    "template-core/tests/fake_gh.py": {
+      "ownership": "template"
+    },
+    "template-core/tests/test_git_lifecycle.py": {
       "ownership": "template"
     },
     "template-core/tests/test_schema.py": {

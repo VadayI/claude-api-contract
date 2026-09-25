@@ -25,4 +25,4 @@
 
 ## Session finalization
 
-Authorized commit/push/PR proceed with exact task-owned paths after real checks. Merge requires a new explicit user command; releases/tags/deploy remain separate. Preserve foreign staged/unstaged/untracked files, refs, stash and worktrees. No automatic stash, reset, clean or force push. Pending PR is MERGE_PENDING.
+Authorized commit/push/PR proceed with exact task-owned paths after real checks, through `python scripts/ai/git_lifecycle.py` (`inspect`, `commit --path`, `verify`, `share`, `merge --pr N --expect-head SHA`, `cleanup`; docs/ai/git-lifecycle.md). Merge requires a new explicit user command; releases/tags/deploy remain separate. Preserve foreign staged/unstaged/untracked files, refs, stash and worktrees. No automatic stash, reset, clean or force push. Pending PR is MERGE_PENDING.
