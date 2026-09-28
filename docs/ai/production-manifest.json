@@ -458,7 +458,7 @@
     },
     "docs/HANDOFF.md": {
       "ownership": "project",
-      "sha256": "7d035d364e4c79856d268c71c7d181fb015fa85033b5f4f483a1451662b9ef52"
+      "sha256": "edff1704b70bc6efd2d11d1972f488e842a4cbc92d4247a08b02dde9427001b2"
     },
     "docs/WORKLOG.md": {
       "ownership": "project",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "42e7d147906f083a2737b43c3c9a41760757f01cb679dd30bb64556ae7a6227a"
+      "sha256": "b1f00ae29f3254cc33ce3e694ca995206e889ab84cf1d5693b7a38d8f209a631"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -651,7 +651,7 @@
     },
     "docs/ai/workflows/audit.md": {
       "ownership": "template",
-      "sha256": "fa92f0a9de29732f127e4b617ddfdc793187bc0db6b4cd3609c2950d3a81ebad"
+      "sha256": "616bbd0c572eb3b21fd98a02d52b28acb7ae41c5fee232b9a0dc139360b25bd4"
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
