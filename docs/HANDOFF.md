@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-10-22 — P08a WSL/ext4 and the D17 working-directory gate
+
+Branch `chore/p08a-wsl-tests` from `main`. Nothing is merged (D01).
+
+- Shared core: `scripts/ai/workdir.py` blocks agent sessions on a Windows drive in WSL without `ALLOW_MNT_SESSION=1`; `session_context` shows the block; move checklist `docs/ai/wsl-ext4-migration.md`. Claude hooks `UserPromptSubmit`/`PreToolUse`; step 0 in doctor/bootstrap/wrap-up.
+- This session: `docs/sessions/20261022T203839Z-claude-5f0a67.md`.
+- Next: publish and merge on command; Django/React repin to the integrated core; then P08b.
+
 ## 2026-10-22 — Q01 quick fixes
 
 Branch `chore/q01-quick-fixes` from `main`. Nothing is merged (D01).
