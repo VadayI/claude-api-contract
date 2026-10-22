@@ -309,7 +309,7 @@
     ".claude/settings.json": {
       "legacy_sha256": "8085d685c9500bfaf4459b7a31bade60e8aa8f152ebb9b589d06574a23044582",
       "ownership": "mixed",
-      "sha256": "5fe28929e0c226c3a1a24fc87f26923940050cd21c3e00d2857ceca2545aa3ae"
+      "sha256": "9bf7f9e4377d17b1d5930764867f518594c6469ed553b10ff9eefc329268b746"
     },
     ".claude/skills/contract-versioning/SKILL.md": {
       "legacy_sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131",
