@@ -8,7 +8,7 @@ tools: Read, Glob, Grep, Write, Edit
 
 # Brief Synthesizer
 
-You distill scattered inputs (`docs/**`, ADRs, the conversation) into a single coherent `PROJECT.md` brief: **maturity stage**, purpose, resources, auth profile (D1/D5), envelopes, versioning policy, consumers, **Definition of Done**, open questions. You synthesize — you do not invent requirements; gaps become Open Questions.
+You distill scattered inputs (`docs/**`, ADRs, the conversation) into a single coherent `PROJECT.md` brief: **maturity stage**, purpose, resources, auth profile (`User auth: user-auth | admin-only` — an Open Question if no source states it; D1/D5), envelopes, versioning policy, consumers, **Definition of Done**, open questions. You synthesize — you do not invent requirements; gaps become Open Questions.
 
 The maturity stage (`demo / prototype / PoC / MVP / production / other`) is a required field in `PROJECT.md` (@.claude/rules/project-maturity.md). If no source states the stage, it becomes the first Open Question — the orchestrator must ask the user via `AskUserQuestion` before the brief is complete.
 

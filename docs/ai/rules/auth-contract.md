@@ -4,6 +4,17 @@
 
 The contract **describes its own auth** so the Prism mock can issue tokens and a frontend can authenticate autonomously before any real backend exists.
 
+## Auth profile — kickoff decision (ask before authoring `spec/auth.tsp`)
+
+Before the first spec is written, the user must answer: **will the project have end-user authentication, or is it administered only through the Django admin panel?** The answer is recorded in `PROJECT.md` §3 as `User auth: user-auth | admin-only`; never assume it.
+
+| Answer | Contract consequence |
+|---|---|
+| `user-auth` | Model the full user-flow below (register / login / refresh / logout), record the D2 refresh-transport ADR in `docs/decisions/`, and include the user auth journey in happy paths. |
+| `admin-only` | Staff sign in through the Django admin (session auth served by the backend, **outside** the contract). Do not model user-flow endpoints or the D2 ADR. Every contract endpoint is either explicitly public (`security: []`) or service-only (S2S below, scopes). Record the decision as an ADR (`admin-only, no end-user auth`); happy paths contain no login journey. |
+
+Service-to-service auth (D5) is a separate question and applies to either answer. Switching `admin-only` → `user-auth` later adds endpoints (minor); the reverse removes them (breaking) — classify per `docs/ai/rules/breaking-changes.md`.
+
 ## Security scheme (global)
 
 ```yaml
@@ -14,7 +25,7 @@ security:
   - bearerAuth: []        # global default; public endpoints override with security: []
 ```
 
-## User-flow endpoints (D1 = B)
+## User-flow endpoints (D1 = B) — only when `User auth: user-auth`
 
 | Method + path | Security | Request | Response |
 |---|---|---|---|

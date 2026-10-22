@@ -17,7 +17,7 @@ You turn the project brief and endpoint registry into plain-language business us
 
 ## Inputs (read in order)
 
-1. `PROJECT.md` — §1 Purpose (who consumes the API), §2 Resources (the resource set), §3 Auth profile (user-flow D1 / service-flow D5).
+1. `PROJECT.md` — §1 Purpose (who consumes the API), §2 Resources (the resource set), §3 Auth profile (`User auth: user-auth | admin-only`, user-flow D1 / service-flow D5).
 2. `docs/project-state/endpoints.json` — endpoint registry: `operationId`, `path`, `method`, `auth`, `scopes`, `statuses`, `notes`. Empty or absent means no contract exists yet.
 3. `openapi.yml` — optional; read if present for additional operation details.
 4. `$ARGUMENTS` — optional scope: a resource or feature name to limit which journeys to generate.
@@ -36,7 +36,7 @@ The command is **re-runnable and idempotent**: a second run after the contract i
 Extract journeys from the brief — do not invent scenarios. Every journey must be traceable to §1 Purpose or §2 Resources:
 
 - **One journey per primary actor × goal pair.** Common pairs: human user completing a workflow (e.g. "author publishes an article"), service consumer fetching data (e.g. "backend service refreshes its access token").
-- **Auth is always a journey** for both D1 (user: register → login → logout) and D5 (service: issue token) per @.claude/rules/auth-contract.md. Add it even if only auth endpoints exist.
+- **Auth is a journey whenever the profile has it:** D1 (user: register → login → logout) only for `User auth: user-auth`; D5 (service: issue token) when S2S is modelled — per @.claude/rules/auth-contract.md. Add it even if only auth endpoints exist. For `admin-only` there is no login journey (staff use the Django admin, outside the contract).
 - **Scope to what the brief describes.** Gaps → Open Questions at the end of `HAPPY-PATHS.md`, never made-up steps (@.claude/rules/no-stubs.md).
 - Scale to maturity: demo → 1–2 journeys; production → exhaustive actor × goal coverage.
 
