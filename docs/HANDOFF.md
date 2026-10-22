@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-10-22 — Q01 quick fixes
+
+Branch `chore/q01-quick-fixes` from `main`. Nothing is merged (D01).
+
+- `.env.example`/`*.example` readable by agents (D16); kickoff question `User auth: user-auth | admin-only` in bootstrap/ba (Q01b). Untracked pre-strip leftovers moved to ignored `LOCAL/` (Q01d).
+- This session: `docs/sessions/20261022T164128Z-claude-680019.md`.
+- Next: publish and merge on command; then P08a (test discipline + WSL/ext4).
+
 ## 2026-09-28 — `/audit` starts with a sync preflight
 
 Branch `chore/audit-sync-preflight` from `main`. Nothing is merged (D01).
