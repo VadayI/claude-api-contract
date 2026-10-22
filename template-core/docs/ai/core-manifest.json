@@ -139,7 +139,7 @@
     },
     "scripts/ai/workdir.py": {
       "ownership": "template",
-      "sha256": "7e3ae28a8d8f5bac885322dfb70aecd4b3bccedf0fcfbc89390478c43b0c012e"
+      "sha256": "c405bac959267d1a405793a8082f3f7c4fc55beff98159de704429b321611c87"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",

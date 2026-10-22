@@ -14,6 +14,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import posixpath
 import re
 import sys
 
@@ -94,7 +95,12 @@ def state(root: Path, environ: dict | None = None, platform: str | None = None,
     """
     environ = os.environ if environ is None else environ
     platform = sys.platform if platform is None else platform
-    path = Path(os.path.abspath(root)).as_posix()
+    # Ścieżka WSL oceniana jest regułami POSIX, także gdy testy działają na Windows
+    # (tam os.path.abspath zamieniłby "/mnt/d/x" na "D:\\mnt\\d\\x").
+    path = Path(root).as_posix()
+    if not path.startswith("/"):
+        path = Path(os.path.abspath(root)).as_posix()
+    path = posixpath.normpath(path)
     fstype = None
     if not platform.startswith("linux"):
         location = "other-os"
