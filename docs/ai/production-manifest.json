@@ -44,7 +44,7 @@
     ".claude/agents/ba.md": {
       "legacy_sha256": "a1eeee212c1023fffae5b01879f367bec0f6bbd87f46c126dda6736a9a95ebef",
       "ownership": "template",
-      "sha256": "a1eeee212c1023fffae5b01879f367bec0f6bbd87f46c126dda6736a9a95ebef"
+      "sha256": "9d99979989950791d307ad6e8fe660c66192f35c55a2ee6a800e51a09282d268"
     },
     ".claude/agents/breaking-change-analyst.md": {
       "legacy_sha256": "d2246a961f0c7bebea4f2a17336ad7d2da44b22220ac2706685d311656ebdca7",
@@ -54,7 +54,7 @@
     ".claude/agents/brief-synthesizer.md": {
       "legacy_sha256": "6263d847fcaf5cc55a1ec73ba5da553c0ca1aa001ab020107a408b6304555eec",
       "ownership": "template",
-      "sha256": "3558d181935851fbbb21ca850ef59b60a5e479bb99f977037a3760a69dbc6f4d"
+      "sha256": "42a459992216d0e00513d27f997d2a2342525d950c974bc58e156e12230e391f"
     },
     ".claude/agents/contract-reviewer.md": {
       "legacy_sha256": "8e19396cca00090bff5101b141e7d39cb559442193b56078f181a0de40469fa7",
@@ -74,7 +74,7 @@
     ".claude/agents/happy-path-author.md": {
       "legacy_sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e",
       "ownership": "template",
-      "sha256": "0471ea3acf38d2544e791f5f6ff5adf66114a7f510e56df3bc5f7eca029d144d"
+      "sha256": "3a1b27ae47e2d4cb0237c7d8c4d2985da9c71f269a0b554fc362896656c7fae3"
     },
     ".claude/agents/mock-validator.md": {
       "legacy_sha256": "fdf80526713c52b2f5d71c18ee8e3bcafefb13ece08b72341577531b2d061ddb",
@@ -485,15 +485,15 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "b1f00ae29f3254cc33ce3e694ca995206e889ab84cf1d5693b7a38d8f209a631"
+      "sha256": "aee0fc4c2ee4c8501b902a85b833739a0403acb032e08792807abeb47787639a"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "e1b37ded52356fc20bcb867c48c2f979416aea74f3c6c34db42f18102b919973"
+      "sha256": "c570b25bee606deca810dd7d630c216767e3e93960ff4789c58759e6fdbcca75"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "2cdd2b94eb1b27c16a4567a20ce80f5c5ef1481da071d47272acf67386fbf402"
+      "sha256": "ab97615219c2b67f1582c41fa68641717124bd807c5c3cc94f2bd183d73d3c2f"
     },
     "docs/ai/git-lifecycle.md": {
       "ownership": "template",
@@ -553,7 +553,7 @@
     },
     "docs/ai/rules/auth-contract.md": {
       "ownership": "template",
-      "sha256": "97aef5c27caa8b8582fc5b77c42c0f6b0357303f0379a1d3f46067a3eebdd431"
+      "sha256": "3cf624b9f1d58328525757419d7356ccc157ee7d9f3452a385807ac73e4925d2"
     },
     "docs/ai/rules/breaking-changes.md": {
       "ownership": "template",
@@ -655,7 +655,7 @@
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
-      "sha256": "b46cbaf6cb0874df6837e86ca7dba0f474e6d8a5cc9a62b6341df9483fd61bf0"
+      "sha256": "804c5cfdfdf633c26b510b08f4c872a6f546a35e592f9ea2846c9bbd9f722e35"
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
@@ -1218,7 +1218,7 @@
     "templates/PROJECT.md": {
       "legacy_sha256": "4a0a39f54f9479585b55594aab05a372d195e782882e59382c8bb0eeea4c3dbb",
       "ownership": "template",
-      "sha256": "4edf78c66a43ba57fec3e29dc5a6cbdd87a0d4352b086387cb8f953435c571c7"
+      "sha256": "f06ab1d9dac723f03c4e746ed5986dfb06da0cde988a26eea13b262566b3d490"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",

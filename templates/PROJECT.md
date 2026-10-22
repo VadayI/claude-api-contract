@@ -13,7 +13,8 @@
 <Frontend pages: the SPA routes (page-map in `docs/project-state/pages.json`) and which operations each consumes. `system` endpoints (e.g. S2S `/api/v1/auth/token`) get no page.>
 
 ## 3. Auth profile
-- User-flow (D1): register / login / refresh / logout — Bearer/JWT, refresh in body (D2).
+- **User auth:** <user-auth | admin-only> <!-- kickoff question: end-user authentication, or administration only via the Django admin panel? see docs/ai/rules/auth-contract.md -->
+- User-flow (D1, only for `user-auth`): register / login / refresh / logout — Bearer/JWT, refresh in body (D2).
 - Service-flow (D5): `POST /api/v1/auth/token` client-credentials + scopes (if S2S).
 
 ## 4. Envelopes

@@ -178,11 +178,11 @@
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
-      "sha256": "e1b37ded52356fc20bcb867c48c2f979416aea74f3c6c34db42f18102b919973"
+      "sha256": "c570b25bee606deca810dd7d630c216767e3e93960ff4789c58759e6fdbcca75"
     },
     "docs/ai/generated/role-packs/tsp-author.md": {
       "ownership": "template",
-      "sha256": "2cdd2b94eb1b27c16a4567a20ce80f5c5ef1481da071d47272acf67386fbf402"
+      "sha256": "ab97615219c2b67f1582c41fa68641717124bd807c5c3cc94f2bd183d73d3c2f"
     }
   },
   "generator": "family-core",
@@ -193,7 +193,7 @@
     "docs/ai/roles/contract-reviewer.md": "e08b7ab9daabbbcab8a1a641a358f66d01fa44229754aa509303faa7b198e95d",
     "docs/ai/roles/tsp-author.md": "0f759da6d71705058bfa9828bac9a0216df416cb439e7d2547e63dd8f7edc318",
     "docs/ai/rules/api-envelope.md": "89e11e34e67ce04de69d2944a0e35f270c13e9f815892574c3b2948cb3ce1db7",
-    "docs/ai/rules/auth-contract.md": "97aef5c27caa8b8582fc5b77c42c0f6b0357303f0379a1d3f46067a3eebdd431",
+    "docs/ai/rules/auth-contract.md": "3cf624b9f1d58328525757419d7356ccc157ee7d9f3452a385807ac73e4925d2",
     "docs/ai/rules/breaking-changes.md": "2ca8a0d89f4d3c9970ca618ca4fcf58ec2e927fcc164ce911ba7847bd8d5a80e",
     "docs/ai/rules/contract-first.md": "4f2055a6845c939a5763079b81a49b471b06bb8f535c16fcea469b6aba0b2c9f",
     "docs/ai/rules/deploy.md": "4eb255d7eb46f57cbe0350e8cf090692f1a1a073d276a0ad9b2e2f727b6c82df",
@@ -214,7 +214,7 @@
     "docs/ai/rules/versioning.md": "d8542372ef69b0f3654fe64bec3161517c3be644b1e1237e8cdde8bb1eef4e75",
     "docs/ai/rules/workflow.md": "61a3e92e6c9e5d77c50c8975b9d298687ac2de4bb6ba173be798fd216ae469fb",
     "docs/ai/workflows/audit.md": "616bbd0c572eb3b21fd98a02d52b28acb7ae41c5fee232b9a0dc139360b25bd4",
-    "docs/ai/workflows/bootstrap.md": "b46cbaf6cb0874df6837e86ca7dba0f474e6d8a5cc9a62b6341df9483fd61bf0",
+    "docs/ai/workflows/bootstrap.md": "804c5cfdfdf633c26b510b08f4c872a6f546a35e592f9ea2846c9bbd9f722e35",
     "docs/ai/workflows/doctor.md": "9a6a7ef572902fa38d9ef885a80d872e4965f1330b1451a34617e383274fcdb6",
     "docs/ai/workflows/handoff.md": "a638b752f64b82ee81852bad27d9210c05c28c4c9ce33711728cdd2765434a0c",
     "docs/ai/workflows/set-language.md": "4c228bfee3e09bd589ab59391090f0c3b655ced993d22bf91e5261c421763834",
