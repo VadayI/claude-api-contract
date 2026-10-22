@@ -55,7 +55,7 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
+      "sha256": "d57e839b39694bdd9e827eab7184cd70e5a0bc5fb136789b89bf3cd45a378eaa"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -131,7 +131,11 @@
     },
     "scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
+      "sha256": "bb9d2927a628b125fbc52cf1c15ea0e5979fb1acaeeac5cf505a77c50156ce6f"
+    },
+    "scripts/ai/workdir.py": {
+      "ownership": "template",
+      "sha256": "099a62947f8908cc54437330e4781bc43db7627c517711a28dbc2d4ff679fc14"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -219,7 +223,11 @@
     },
     "tests/test_session_context.py": {
       "ownership": "template",
-      "sha256": "1e5f4f0d44a7eae774db038ebaa17832265c604d4f1b64e6e31784334d3a035b"
+      "sha256": "9ca88de8825c1ee2d9464757f53a81025faf4d9b38fb596ecaebfce94d27b249"
+    },
+    "tests/test_workdir.py": {
+      "ownership": "template",
+      "sha256": "caa3c0657a0894515335c97521633b907dfac9b407920fe9615646fe9a6afe9b"
     }
   },
   "phase": "P08-in-progress",

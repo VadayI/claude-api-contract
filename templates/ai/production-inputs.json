@@ -578,6 +578,9 @@
     "scripts/ai/session_context.py": {
       "ownership": "template"
     },
+    "scripts/ai/workdir.py": {
+      "ownership": "template"
+    },
     "scripts/ai/git_lifecycle.py": {
       "ownership": "template"
     },
@@ -796,6 +799,9 @@
     "template-core/scripts/ai/session_context.py": {
       "ownership": "template"
     },
+    "template-core/scripts/ai/workdir.py": {
+      "ownership": "template"
+    },
     "template-core/scripts/ai/git_lifecycle.py": {
       "ownership": "template"
     },
@@ -870,6 +876,9 @@
       "ownership": "template"
     },
     "template-core/tests/test_session_context.py": {
+      "ownership": "template"
+    },
+    "template-core/tests/test_workdir.py": {
       "ownership": "template"
     },
     "template-core/tests/fake_gh.py": {

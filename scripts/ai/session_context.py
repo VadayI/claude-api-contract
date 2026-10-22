@@ -14,6 +14,7 @@ from core_paths import contained_entry
 from core_sync import safe_name, target_root
 import project_state
 import schema
+import workdir
 
 
 # Kandydaci w kolejności: jawna mapa z project.json zawsze wygrywa; bez niej
@@ -478,6 +479,11 @@ def build_report(root: Path) -> dict:
     root = target_root(root)
     report = {"root": str(root), "findings": []}
     findings = report["findings"]
+    # D17: projekt na dysku Windows widzianym z WSL bez zgody użytkownika = blokada sesji.
+    report["workdir"] = workdir.state(root)
+    if report["workdir"]["blocked"]:
+        findings.append(f"BLOCKED (D17): working directory is on a Windows drive mounted into WSL; "
+                        f"move it to ext4 or restart with {workdir.ALLOW_ENV}=1 for this session")
     git = git_state(root)
     report["git"] = git
     if not git["available"]:
@@ -596,6 +602,9 @@ def render(report: dict) -> str:
         None.
     """
     out = ["Session context"]
+    notice = workdir.message(report["workdir"])
+    if notice:
+        out.append(notice.rstrip("\n"))
     git = report["git"]
     if git["available"]:
         head = (git["head"] or "unborn")[:12]
@@ -697,7 +706,7 @@ paste transcripts, env values, tokens or raw logs. -->
 
 ## Limitations
 
-{{TODO: what was not verified and why, or "none known"}}
+{workdir}{{TODO: what was not verified and why, or "none known"}}
 
 ## Next step
 
@@ -737,12 +746,19 @@ def new_record(root: Path, agent: str, now: datetime | None = None) -> Path:
     if sessions["kind"] == "file":
         raise ValueError(f"Sessions entry must be a directory: {sessions['path']}")
     directory = contained_entry(root, sessions["path"])
+    location = workdir.state(root)
+    if location["blocked"]:
+        raise ValueError(workdir.message(location).rstrip("\n"))
+    # Zgoda D17 obowiązuje tylko tę sesję, więc trafia do rekordu, nie do ustawień projektu.
+    allowance = (f"- Working directory {location['path']} is on a Windows drive mounted into WSL; "
+                 f"the user allowed this session explicitly ({workdir.ALLOW_ENV}=1).\n"
+                 if location["allowed"] else "")
     directory.mkdir(parents=True, exist_ok=True)
     moment = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     for _ in range(5):
         session = f"{moment:%Y%m%dT%H%M%SZ}-{agent}-{secrets.token_hex(3)}"
         path = directory / f"{session}.md"
-        text = RECORD_TEMPLATE.format(session=session, agent=agent,
+        text = RECORD_TEMPLATE.format(session=session, agent=agent, workdir=allowance,
                                       recorded=f"{moment:%Y-%m-%dT%H:%M:%SZ}",
                                       branch=git["branch"] or "(detached)",
                                       revision=git["head"] or "unborn")

@@ -7,6 +7,14 @@ Bootstrap a `claude-api-contract` project from this template config. An explicit
 - **A. Fresh** — `.claude/`, `CLAUDE.md`, `templates/` copied (Quick start done) but no `.git/` and no `spec/`.
 - **B. Resume** — existing git+GitHub repo with a partial scaffold.
 
+## Step 0 — working directory (D17)
+
+Before anything else run `python scripts/ai/workdir.py`. Exit 1 means the checkout
+is on a Windows drive mounted into WSL and the user did not start this session with
+`ALLOW_MNT_SESSION=1`: show its message and move checklist to the user and STOP —
+no later step runs (docs/ai/session-continuity.md). Exit 0 continues; a printed
+allowance notice goes into the session record's Limitations.
+
 ## Log
 ```bash
 # Optional legacy log: pass actual arguments as separate argv; never evaluate them.

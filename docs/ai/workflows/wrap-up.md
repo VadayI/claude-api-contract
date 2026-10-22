@@ -1,5 +1,13 @@
 # Wrap up an authorized contract work session
 
+## Step 0 — working directory (D17)
+
+Before anything else run `python scripts/ai/workdir.py`. Exit 1 means the checkout
+is on a Windows drive mounted into WSL and the user did not start this session with
+`ALLOW_MNT_SESSION=1`: show its message and move checklist to the user and STOP —
+no later step runs (docs/ai/session-continuity.md). Exit 0 continues; a printed
+allowance notice goes into the session record's Limitations.
+
 1. Run `python scripts/ai/git_lifecycle.py inspect --fetch` (G0/G1,
    docs/ai/git-lifecycle.md): branch/HEAD/status, worktrees, refs, stash, locks,
    in-progress operations and the PR, with the next step. Reconcile upstream state
