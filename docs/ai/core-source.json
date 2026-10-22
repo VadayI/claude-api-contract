@@ -46,7 +46,11 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
+    },
+    "docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -114,7 +118,11 @@
     },
     "scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
+      "sha256": "bb9d2927a628b125fbc52cf1c15ea0e5979fb1acaeeac5cf505a77c50156ce6f"
+    },
+    "scripts/ai/workdir.py": {
+      "ownership": "template",
+      "sha256": "c405bac959267d1a405793a8082f3f7c4fc55beff98159de704429b321611c87"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -160,7 +168,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "d6ee07d8ec7037a04af840c1a5940ccab4fa916033fe137145bfebbe28215264",
+  "source_manifest_digest": "835de98677c23654ea92cf1c000178dfe26f60d317a1374d9d3d6adf5821c0ab",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"

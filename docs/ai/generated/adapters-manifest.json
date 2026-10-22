@@ -214,13 +214,13 @@
     "docs/ai/rules/versioning.md": "d8542372ef69b0f3654fe64bec3161517c3be644b1e1237e8cdde8bb1eef4e75",
     "docs/ai/rules/workflow.md": "61a3e92e6c9e5d77c50c8975b9d298687ac2de4bb6ba173be798fd216ae469fb",
     "docs/ai/workflows/audit.md": "616bbd0c572eb3b21fd98a02d52b28acb7ae41c5fee232b9a0dc139360b25bd4",
-    "docs/ai/workflows/bootstrap.md": "804c5cfdfdf633c26b510b08f4c872a6f546a35e592f9ea2846c9bbd9f722e35",
-    "docs/ai/workflows/doctor.md": "9a6a7ef572902fa38d9ef885a80d872e4965f1330b1451a34617e383274fcdb6",
+    "docs/ai/workflows/bootstrap.md": "dc72a316c844fa33c58b141b9475009cf294c87b9cbcc7ced282d290e7d23503",
+    "docs/ai/workflows/doctor.md": "f5ef9ed17b0feef622d5b39fbb2991f20160922691c1525c8755da0a8071e37e",
     "docs/ai/workflows/handoff.md": "a638b752f64b82ee81852bad27d9210c05c28c4c9ce33711728cdd2765434a0c",
     "docs/ai/workflows/set-language.md": "4c228bfee3e09bd589ab59391090f0c3b655ced993d22bf91e5261c421763834",
     "docs/ai/workflows/template-sync.md": "a50c009ca632000d024a31544f06f6554dbd30402d550c7b1d1610044cf77ab8",
     "docs/ai/workflows/update-from-template.md": "055ee34d39e1ce3925e057548b3c79f29ba5d1a7b20e6b0128dc8dc2cad89af1",
     "docs/ai/workflows/verify.md": "4165d5ba8462ac6715067ea9dddb9cb1edf4e26a77ee493a1302e625bddc31c8",
-    "docs/ai/workflows/wrap-up.md": "abe9a73a51992b1792dc62cddbeeefe23d99b9bea88d2438c1b07120eceb3fff"
+    "docs/ai/workflows/wrap-up.md": "35f20200fe5b751525a3487d211ae7bc79ee1c5bfef5f973804e107ef5a49098"
   }
 }

@@ -309,7 +309,7 @@
     ".claude/settings.json": {
       "legacy_sha256": "8085d685c9500bfaf4459b7a31bade60e8aa8f152ebb9b589d06574a23044582",
       "ownership": "mixed",
-      "sha256": "9bf7f9e4377d17b1d5930764867f518594c6469ed553b10ff9eefc329268b746"
+      "sha256": "45e7480c3ad979dd2f52ccf3c25bf35d9a226f37c81fe3732ab8cbd2f250170f"
     },
     ".claude/skills/contract-versioning/SKILL.md": {
       "legacy_sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131",
@@ -458,7 +458,7 @@
     },
     "docs/HANDOFF.md": {
       "ownership": "project",
-      "sha256": "b504adc1e23999b6544217d2fd8372e7a6dca8cc32f25803af253bb7298def0e"
+      "sha256": "7d5942e277c6befa68f5e807b800e740f9a815d9025e3f2e29c63cf5c0f398dc"
     },
     "docs/WORKLOG.md": {
       "ownership": "project",
@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "1c9d89b94d2691ac823b452c09594ca6847863adcf30cca7c4d02aad19e567b2"
+      "sha256": "a839f15030166af48890d30f85f1d8a5c24adf57b63a08ede05bdd445ef5d36a"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "aee0fc4c2ee4c8501b902a85b833739a0403acb032e08792807abeb47787639a"
+      "sha256": "b5cec765c9a8e2e132e6d7a339ae720c24efede74188d43957d3aab399d54996"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -647,7 +647,7 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
     },
     "docs/ai/workflows/audit.md": {
       "ownership": "template",
@@ -655,11 +655,11 @@
     },
     "docs/ai/workflows/bootstrap.md": {
       "ownership": "template",
-      "sha256": "804c5cfdfdf633c26b510b08f4c872a6f546a35e592f9ea2846c9bbd9f722e35"
+      "sha256": "dc72a316c844fa33c58b141b9475009cf294c87b9cbcc7ced282d290e7d23503"
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
-      "sha256": "9a6a7ef572902fa38d9ef885a80d872e4965f1330b1451a34617e383274fcdb6"
+      "sha256": "f5ef9ed17b0feef622d5b39fbb2991f20160922691c1525c8755da0a8071e37e"
     },
     "docs/ai/workflows/handoff.md": {
       "ownership": "template",
@@ -683,7 +683,11 @@
     },
     "docs/ai/workflows/wrap-up.md": {
       "ownership": "template",
-      "sha256": "abe9a73a51992b1792dc62cddbeeefe23d99b9bea88d2438c1b07120eceb3fff"
+      "sha256": "35f20200fe5b751525a3487d211ae7bc79ee1c5bfef5f973804e107ef5a49098"
+    },
+    "docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "docs/api/INDEX.md": {
       "ownership": "project",
@@ -835,11 +839,15 @@
     },
     "scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
+      "sha256": "bb9d2927a628b125fbc52cf1c15ea0e5979fb1acaeeac5cf505a77c50156ce6f"
     },
     "scripts/ai/test_react_gate.py": {
       "ownership": "template",
       "sha256": "3954c2fccb7c89d21493a2ee9345b5ee04dc85a57b971a3a66a4621d6b039515"
+    },
+    "scripts/ai/workdir.py": {
+      "ownership": "template",
+      "sha256": "c405bac959267d1a405793a8082f3f7c4fc55beff98159de704429b321611c87"
     },
     "scripts/bundle-openapi.mjs": {
       "legacy_sha256": "b6d49063380e99a1409802f9862c3323a9983ae6c1cd58246461a54ba2a19396",
@@ -957,7 +965,7 @@
     "template-core/README.md": {
       "legacy_sha256": "b951623a3665d695795a76706605fd96dd8e256efbc02be4a22221e1ef0bd853",
       "ownership": "template",
-      "sha256": "cf82ba5ab1b24dcb67b5c5a2f4a8913b6b7811f92b70f5b7f7051e49bcc25b5e"
+      "sha256": "51e1991dd2a6029d4c00ab87f00c6a582279cadea74d8cf5232abcb7790222b0"
     },
     "template-core/core.json": {
       "legacy_sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf",
@@ -972,7 +980,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "d6ee07d8ec7037a04af840c1a5940ccab4fa916033fe137145bfebbe28215264"
+      "sha256": "835de98677c23654ea92cf1c000178dfe26f60d317a1374d9d3d6adf5821c0ab"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1023,7 +1031,11 @@
     },
     "template-core/docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "5298995d3a4f3267dbfb29a673730d5e1fb87b644be628225c6d0f849207917c"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
+    },
+    "template-core/docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "template-core/scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
@@ -1111,7 +1123,11 @@
     },
     "template-core/scripts/ai/session_context.py": {
       "ownership": "template",
-      "sha256": "7ff6a0980d0296db1846e76d04b9e06a09350b54f9b67d1d29c75822be24cca5"
+      "sha256": "bb9d2927a628b125fbc52cf1c15ea0e5979fb1acaeeac5cf505a77c50156ce6f"
+    },
+    "template-core/scripts/ai/workdir.py": {
+      "ownership": "template",
+      "sha256": "c405bac959267d1a405793a8082f3f7c4fc55beff98159de704429b321611c87"
     },
     "template-core/templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -1205,7 +1221,11 @@
     },
     "template-core/tests/test_session_context.py": {
       "ownership": "template",
-      "sha256": "1e5f4f0d44a7eae774db038ebaa17832265c604d4f1b64e6e31784334d3a035b"
+      "sha256": "06b7343210af4f13ce6bf46b1265f09e835931b9d085c3b217623d3b9c306709"
+    },
+    "template-core/tests/test_workdir.py": {
+      "ownership": "template",
+      "sha256": "caa3c0657a0894515335c97521633b907dfac9b407920fe9615646fe9a6afe9b"
     },
     "templates/.github/workflows/contract-audit.yml": {
       "ownership": "template",
@@ -1239,7 +1259,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "378c11583e13855e8c5524ba7874692afa75bc6bc7d3047bc4a72fb34b3cf9c7"
+      "sha256": "94e2844bda218ff50d9f1578cb47be0e64ad8bbd14b1e7d0f5d71f914dd889fa"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",

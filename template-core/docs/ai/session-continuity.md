@@ -48,6 +48,8 @@ python scripts/ai/session_context.py --root .
 
 The command prints, in a bounded form:
 
+- First, when the project is on a Windows drive mounted into WSL, the D17
+  working-directory gate (see below).
 - Git branch, HEAD, the number of changed paths and upstream ahead/behind. It
   does not fetch, so the upstream numbers reflect the last fetch.
 - The project settings summary and the persisted output language
@@ -70,6 +72,30 @@ the notes; it does not mean the handoff is false. The recorded revision is
 also compared with HEAD. A revision missing from this clone (after a squash or
 rebase merge, in a shallow or single-branch clone, or never pushed) is only
 reported, because the record's own commit anchors the comparison.
+
+## Working directory gate (D17)
+
+Agents do not work in a project whose checkout lives on a Windows drive seen
+from WSL (`/mnt/c`, `/mnt/d`, or any 9P/drvfs mount): every file access crosses
+the Windows → WSL bridge, so Docker bind mounts, tests, `node_modules` and `.git`
+become 10–50× slower. `scripts/ai/workdir.py` classifies the root:
+
+| Location | Behaviour |
+|---|---|
+| Native Linux filesystem (ext4, e.g. `~/src/<repo>`) | Nothing is asked or printed |
+| Windows mount, `ALLOW_MNT_SESSION=1` in the agent's environment | The session continues; the start context shows the allowance and `--new-record` writes it into Limitations |
+| Windows mount without that variable | **Blocked**: `BLOCKED (D17)` with the 8-step move checklist; `--check` exits 1 and `--new-record` refuses |
+| Native Windows or macOS | Out of scope of D17 |
+
+The allowance belongs to one session: the user starts the agent with it
+(`ALLOW_MNT_SESSION=1 claude`); it is never written into project settings, and
+editing files cannot grant it. Claude enforces the gate with
+`UserPromptSubmit` and `PreToolUse` hooks (`workdir.py --hook`, exit 2), because
+a SessionStart hook cannot stop a session. Runtimes without hooks (Codex) must
+stop when the start context begins with `BLOCKED (D17)`. Commands that change
+the project (`/doctor`, `/bootstrap`, `/adopt`, `/wrap-up`) run
+`python scripts/ai/workdir.py` as step 0 and stop on exit 1.
+The move checklist with measurements is in [wsl-ext4-migration.md](wsl-ext4-migration.md).
 
 ## During the work
 
@@ -144,7 +170,8 @@ Every record in the directory is validated, not only the newest one.
 | `session_context.py --root .` | Prints the start context; exit 0 even with findings |
 | `--check` | 0 PASS; 1 continuity findings |
 | `--json` | Machine-readable report (combine with `--check` for its exit code) |
-| `--new-record --agent NAME` | Creates one record and prints its path; exit 0 |
+| `--new-record --agent NAME` | Creates one record and prints its path; exit 0; exit 2 when D17 blocks |
+| `workdir.py` | 0 native path or allowed; 1 blocked (message and checklist on stdout); `--hook`: 2 with the message on stderr; `--json` report |
 | any | 2 for unsafe map paths, conflicting settings copies, invalid JSON or I/O errors |
 
 `--check` finds these problems:
@@ -157,7 +184,8 @@ Every record in the directory is validated, not only the newest one.
 - commits after the newest record that change relevant paths;
 - `merge=union` on a continuity path;
 - a conflict between the shared and the legacy language preference;
-- Git being unavailable.
+- Git being unavailable;
+- a Windows-mounted working directory without the session allowance (D17).
 
 ## Evidence boundary
 

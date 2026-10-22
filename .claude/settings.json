@@ -89,6 +89,16 @@
             "statusMessage": "Checking protected-file edit policy..."
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${AI_PYTHON:-python3}\" \"$CLAUDE_PROJECT_DIR/scripts/ai/workdir.py\" --hook",
+            "statusMessage": "Checking working directory (D17)..."
+          }
+        ]
       }
     ],
     "UserPromptExpansion": [
@@ -122,6 +132,17 @@
             "type": "command",
             "command": "bash scripts/session-start.sh",
             "statusMessage": "Detecting environment..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${AI_PYTHON:-python3}\" \"$CLAUDE_PROJECT_DIR/scripts/ai/workdir.py\" --hook",
+            "statusMessage": "Checking working directory (D17)..."
           }
         ]
       }

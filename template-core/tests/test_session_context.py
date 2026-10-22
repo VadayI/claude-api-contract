@@ -341,6 +341,42 @@ class SessionContextTests(unittest.TestCase):
         self.assertEqual(ansi.returncode, 0, ansi.stderr)
         self.assertIn("Наступний крок", ansi.stdout.decode("utf-8"))
 
+    def workdir_as(self, path: str, environ: dict) -> mock._patch:
+        """Pretend the fixture lives at ``path`` (WSL view) with the given agent environment."""
+        fake = session_context.workdir.state(Path(path), environ=environ, platform="linux",
+                                             mountinfo="80 60 0:58 / /mnt/d rw - 9p drvfs rw")
+        return mock.patch.object(session_context.workdir, "state", lambda root: fake)
+
+    def test_d17_mnt_without_permission_blocks_check_and_record(self):
+        """/mnt without ALLOW_MNT_SESSION: finding (so --check exits 1), checklist, no record."""
+        with self.workdir_as("/mnt/d/Dev/shop", {}):
+            report = session_context.build_report(self.repo)
+            self.assertTrue(report["workdir"]["blocked"])
+            self.assertTrue(any(f.startswith("BLOCKED (D17)") for f in report["findings"]))
+            text = session_context.render(report)
+            self.assertTrue(text.splitlines()[1].startswith("BLOCKED (D17)"))
+            self.assertIn("Move checklist (docs/ai/wsl-ext4-migration.md):", text)
+            with self.assertRaisesRegex(ValueError, "BLOCKED"):
+                session_context.new_record(self.repo, "claude")
+        self.assertFalse((self.repo / "docs/sessions").exists())
+
+    def test_d17_mnt_with_permission_continues_and_records_it(self):
+        """Explicit permission: no blocker, and the record states that it was given."""
+        with self.workdir_as("/mnt/d/Dev/shop", {"ALLOW_MNT_SESSION": "1"}):
+            report = session_context.build_report(self.repo)
+            self.assertFalse(any("D17" in f for f in report["findings"]))
+            self.assertIn("allowed this session", session_context.render(report))
+            path = session_context.new_record(self.repo, "claude")
+        self.assertIn("the user allowed this session explicitly (ALLOW_MNT_SESSION=1)",
+                      path.read_text(encoding="utf-8"))
+
+    def test_d17_ext4_asks_nothing(self):
+        """A native Linux path adds neither a notice nor a finding nor a record line."""
+        with self.workdir_as("/home/dev/src/shop", {}):
+            report = session_context.build_report(self.repo)
+            self.assertNotIn("D17", session_context.render(report))
+            self.assertNotIn("Windows drive", session_context.new_record(self.repo, "codex").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()
