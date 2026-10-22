@@ -9,7 +9,8 @@ Integrated so far: P04 production structure, P05 detector/exact-candidate runner
 resolver (delivered, no agent entry point yet), the P07 project-state migration
 ([project-state-migration.md](docs/ai/project-state-migration.md)) and session
 continuity ([session-continuity.md](docs/ai/session-continuity.md): start context,
-documentation map, per-session records). The P08 Git lifecycle G0-G9
+documentation map, per-session records), with the D17 working-directory gate
+(`scripts/ai/workdir.py`; move checklist in [wsl-ext4-migration.md](docs/ai/wsl-ext4-migration.md)). The P08 Git lifecycle G0-G9
 ([git-lifecycle.md](docs/ai/git-lifecycle.md): inspect, commit task paths, verify,
 share, merge on the user's command, evidence-based cleanup) is in progress.
 The 55-step workflow inventory is the static P05 record of the upstream
@@ -33,6 +34,7 @@ dependency to a React, Django or contract application.
 python -m unittest discover -s template-core/tests -p "test_*.py"
 python template-core/scripts/ai/detector.py --repository .
 python template-core/scripts/ai/session_context.py --root . --check
+python template-core/scripts/ai/workdir.py --root .
 python template-core/scripts/ai/git_lifecycle.py --root . inspect --fetch
 python template-core/scripts/ai/runner.py --repository . --candidate FULL_SHA --base FULL_SHA --catalog template-core/templates/ai/checks/contract.json --output .ai-runtime/results/full.json
 python template-core/scripts/ai/readiness.py profile.json

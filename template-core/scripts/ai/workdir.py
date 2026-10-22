@@ -132,7 +132,7 @@ def message(report: dict) -> str:
              "Agent: stop, show this message to the user and do not edit files or run commands.",
              f"User: either move the project to ext4, or restart the agent with {report['allow_env']}=1 "
              f"for this one session (e.g. {report['allow_env']}=1 claude).",
-             "Move checklist:"]
+             "Move checklist (docs/ai/wsl-ext4-migration.md):"]
     lines.extend(f"  {number}. {step}" for number, step in enumerate(CHECKLIST, 1))
     return "\n".join(lines) + "\n"
 

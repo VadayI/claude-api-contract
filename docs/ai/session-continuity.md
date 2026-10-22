@@ -95,6 +95,7 @@ a SessionStart hook cannot stop a session. Runtimes without hooks (Codex) must
 stop when the start context begins with `BLOCKED (D17)`. Commands that change
 the project (`/doctor`, `/bootstrap`, `/adopt`, `/wrap-up`) run
 `python scripts/ai/workdir.py` as step 0 and stop on exit 1.
+The move checklist with measurements is in [wsl-ext4-migration.md](wsl-ext4-migration.md).
 
 ## During the work
 

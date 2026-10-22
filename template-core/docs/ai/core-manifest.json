@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "cf82ba5ab1b24dcb67b5c5a2f4a8913b6b7811f92b70f5b7f7051e49bcc25b5e"
+      "sha256": "51e1991dd2a6029d4c00ab87f00c6a582279cadea74d8cf5232abcb7790222b0"
     },
     "core.json": {
       "ownership": "template",
@@ -55,7 +55,11 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "d57e839b39694bdd9e827eab7184cd70e5a0bc5fb136789b89bf3cd45a378eaa"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
+    },
+    "docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "scripts/ai/adapters.py": {
       "ownership": "template",
@@ -135,7 +139,7 @@
     },
     "scripts/ai/workdir.py": {
       "ownership": "template",
-      "sha256": "099a62947f8908cc54437330e4781bc43db7627c517711a28dbc2d4ff679fc14"
+      "sha256": "7e3ae28a8d8f5bac885322dfb70aecd4b3bccedf0fcfbc89390478c43b0c012e"
     },
     "templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -223,7 +227,7 @@
     },
     "tests/test_session_context.py": {
       "ownership": "template",
-      "sha256": "9ca88de8825c1ee2d9464757f53a81025faf4d9b38fb596ecaebfce94d27b249"
+      "sha256": "06b7343210af4f13ce6bf46b1265f09e835931b9d085c3b217623d3b9c306709"
     },
     "tests/test_workdir.py": {
       "ownership": "template",

@@ -355,7 +355,7 @@ class SessionContextTests(unittest.TestCase):
             self.assertTrue(any(f.startswith("BLOCKED (D17)") for f in report["findings"]))
             text = session_context.render(report)
             self.assertTrue(text.splitlines()[1].startswith("BLOCKED (D17)"))
-            self.assertIn("Move checklist:", text)
+            self.assertIn("Move checklist (docs/ai/wsl-ext4-migration.md):", text)
             with self.assertRaisesRegex(ValueError, "BLOCKED"):
                 session_context.new_record(self.repo, "claude")
         self.assertFalse((self.repo / "docs/sessions").exists())

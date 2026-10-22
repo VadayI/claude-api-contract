@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "2aa82f6523d88832508e954fe345a6306116d24141786acee49c9fe0298227d4"
+      "sha256": "b3b81a2429463d606121a47f0ab6ce782ddcb2cb59057b70de3539bd4af1398a"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -647,7 +647,7 @@
     },
     "docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "d57e839b39694bdd9e827eab7184cd70e5a0bc5fb136789b89bf3cd45a378eaa"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
     },
     "docs/ai/workflows/audit.md": {
       "ownership": "template",
@@ -684,6 +684,10 @@
     "docs/ai/workflows/wrap-up.md": {
       "ownership": "template",
       "sha256": "35f20200fe5b751525a3487d211ae7bc79ee1c5bfef5f973804e107ef5a49098"
+    },
+    "docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "docs/api/INDEX.md": {
       "ownership": "project",
@@ -843,7 +847,7 @@
     },
     "scripts/ai/workdir.py": {
       "ownership": "template",
-      "sha256": "099a62947f8908cc54437330e4781bc43db7627c517711a28dbc2d4ff679fc14"
+      "sha256": "7e3ae28a8d8f5bac885322dfb70aecd4b3bccedf0fcfbc89390478c43b0c012e"
     },
     "scripts/bundle-openapi.mjs": {
       "legacy_sha256": "b6d49063380e99a1409802f9862c3323a9983ae6c1cd58246461a54ba2a19396",
@@ -961,7 +965,7 @@
     "template-core/README.md": {
       "legacy_sha256": "b951623a3665d695795a76706605fd96dd8e256efbc02be4a22221e1ef0bd853",
       "ownership": "template",
-      "sha256": "cf82ba5ab1b24dcb67b5c5a2f4a8913b6b7811f92b70f5b7f7051e49bcc25b5e"
+      "sha256": "51e1991dd2a6029d4c00ab87f00c6a582279cadea74d8cf5232abcb7790222b0"
     },
     "template-core/core.json": {
       "legacy_sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf",
@@ -976,7 +980,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "0fe5230d6c01a5e2d4566dafd32873dbb13ee623462f5ae13d0904c4c8e2fd4f"
+      "sha256": "4f469d2b6d2c5c7a551834cf60587974547afef0af3bf56e9bdacb58070f0886"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -1027,7 +1031,11 @@
     },
     "template-core/docs/ai/session-continuity.md": {
       "ownership": "template",
-      "sha256": "d57e839b39694bdd9e827eab7184cd70e5a0bc5fb136789b89bf3cd45a378eaa"
+      "sha256": "4245da8abe517b5935600b29dafa511c4744b182f4e91911d85ebb1f0456bb84"
+    },
+    "template-core/docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template",
+      "sha256": "fd0cf1ab16b4f5ad077720473cebea155587bfd876ea4cdf86940ecb272d2403"
     },
     "template-core/scripts/ai/adapters.py": {
       "legacy_sha256": "2d4d1b4320c45578cad211c28d9b038cacd67488488629ad0fd6b610f7e8c8f9",
@@ -1119,7 +1127,7 @@
     },
     "template-core/scripts/ai/workdir.py": {
       "ownership": "template",
-      "sha256": "099a62947f8908cc54437330e4781bc43db7627c517711a28dbc2d4ff679fc14"
+      "sha256": "7e3ae28a8d8f5bac885322dfb70aecd4b3bccedf0fcfbc89390478c43b0c012e"
     },
     "template-core/templates/ai/checks/contract.json": {
       "ownership": "template",
@@ -1213,7 +1221,7 @@
     },
     "template-core/tests/test_session_context.py": {
       "ownership": "template",
-      "sha256": "9ca88de8825c1ee2d9464757f53a81025faf4d9b38fb596ecaebfce94d27b249"
+      "sha256": "06b7343210af4f13ce6bf46b1265f09e835931b9d085c3b217623d3b9c306709"
     },
     "template-core/tests/test_workdir.py": {
       "ownership": "template",
@@ -1251,7 +1259,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "51cfc12d88a9629f26855aafdc14fa01471ecc75e2ca2a1e303bf280d1251ed9"
+      "sha256": "94e2844bda218ff50d9f1578cb47be0e64ad8bbd14b1e7d0f5d71f914dd889fa"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",

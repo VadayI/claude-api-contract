@@ -447,6 +447,9 @@
     "docs/ai/session-continuity.md": {
       "ownership": "template"
     },
+    "docs/ai/wsl-ext4-migration.md": {
+      "ownership": "template"
+    },
     "docs/ai/git-lifecycle.md": {
       "ownership": "template"
     },
@@ -738,6 +741,9 @@
       "ownership": "template"
     },
     "template-core/docs/ai/session-continuity.md": {
+      "ownership": "template"
+    },
+    "template-core/docs/ai/wsl-ext4-migration.md": {
       "ownership": "template"
     },
     "template-core/docs/ai/git-lifecycle.md": {
