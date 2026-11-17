@@ -3,9 +3,9 @@
   "permissions": {
     "allow": [
       "Read",
-      "Read(.env.example)",
-      "Read(**/.env.example)",
-      "Read(**/*.example)",
+      "Read(/.env.example)",
+      "Read(/**/.env.example)",
+      "Read(/**/*.example)",
       "Edit",
       "Write",
       "Glob",
@@ -33,59 +33,66 @@
     "deny": [
       "Bash(git push origin main:*)",
       "Bash(git push --force:*)",
-      "Read(.env)",
-      "Read(.env.local)",
-      "Read(.env.*.local)",
-      "Read(.env.dev)",
-      "Read(.env.development)",
-      "Read(.env.prod)",
-      "Read(.env.production)",
-      "Read(.env.stage)",
-      "Read(.env.staging)",
-      "Read(.env.test)",
-      "Read(.env.ci)",
-      "Read(.env.docker)",
-      "Read(.env.backup)",
-      "Read(.env.bak)",
-      "Read(.env.old)",
-      "Read(.env.secret)",
-      "Read(.env.secrets)",
-      "Read(**/.env)",
-      "Read(**/.env.local)",
-      "Read(**/.env.*.local)",
-      "Read(**/.env.dev)",
-      "Read(**/.env.development)",
-      "Read(**/.env.prod)",
-      "Read(**/.env.production)",
-      "Read(**/.env.stage)",
-      "Read(**/.env.staging)",
-      "Read(**/.env.test)",
-      "Read(**/.env.ci)",
-      "Read(**/.env.docker)",
-      "Read(**/.env.backup)",
-      "Read(**/.env.bak)",
-      "Read(**/.env.old)",
-      "Read(**/.env.secret)",
-      "Read(**/.env.secrets)",
-      "Read(.claude/settings.local.json)",
-      "Read(**/*.pem)",
-      "Read(**/*.key)",
-      "Read(**/*.p12)",
-      "Read(**/*.pfx)",
-      "Read(**/id_rsa)",
-      "Read(**/id_ed25519)",
-      "Read(**/credentials*)",
-      "Read(secrets/**)"
+      "Read(/.env)",
+      "Read(/.env.local)",
+      "Read(/.env.*.local)",
+      "Read(/.env.dev)",
+      "Read(/.env.development)",
+      "Read(/.env.prod)",
+      "Read(/.env.production)",
+      "Read(/.env.stage)",
+      "Read(/.env.staging)",
+      "Read(/.env.test)",
+      "Read(/.env.ci)",
+      "Read(/.env.docker)",
+      "Read(/.env.backup)",
+      "Read(/.env.bak)",
+      "Read(/.env.old)",
+      "Read(/.env.secret)",
+      "Read(/.env.secrets)",
+      "Read(/**/.env)",
+      "Read(/**/.env.local)",
+      "Read(/**/.env.*.local)",
+      "Read(/**/.env.dev)",
+      "Read(/**/.env.development)",
+      "Read(/**/.env.prod)",
+      "Read(/**/.env.production)",
+      "Read(/**/.env.stage)",
+      "Read(/**/.env.staging)",
+      "Read(/**/.env.test)",
+      "Read(/**/.env.ci)",
+      "Read(/**/.env.docker)",
+      "Read(/**/.env.backup)",
+      "Read(/**/.env.bak)",
+      "Read(/**/.env.old)",
+      "Read(/**/.env.secret)",
+      "Read(/**/.env.secrets)",
+      "Read(/.claude/settings.local.json)",
+      "Read(/**/*.pem)",
+      "Read(/**/*.key)",
+      "Read(/**/*.p12)",
+      "Read(/**/*.pfx)",
+      "Read(/**/id_rsa)",
+      "Read(/**/id_ed25519)",
+      "Read(/**/credentials*)",
+      "Read(/**/secrets/**)"
     ]
+  },
+  "env": {
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "matcher": "Write|Edit|NotebookEdit|Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/policy/claude_edit_guard.mjs",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/scripts/policy/claude_edit_guard.mjs"
+            ],
+            "onFailure": "block",
             "statusMessage": "Checking protected-file edit policy..."
           }
         ]
@@ -96,6 +103,7 @@
           {
             "type": "command",
             "command": "\"${AI_PYTHON:-python3}\" \"$CLAUDE_PROJECT_DIR/scripts/ai/workdir.py\" --hook",
+            "onFailure": "block",
             "statusMessage": "Checking working directory (D17)..."
           }
         ]
@@ -107,7 +115,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/policy/check_command_gate.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/policy/check_command_gate.sh\"",
+            "onFailure": "block",
             "statusMessage": "Checking command preconditions..."
           }
         ]
@@ -119,7 +128,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/policy/check_plan_execution_log.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/policy/check_plan_execution_log.sh\"",
             "statusMessage": "Checking living-plan execution log..."
           }
         ]
@@ -130,7 +139,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/session-start.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/session-start.sh\"",
             "statusMessage": "Detecting environment..."
           }
         ]
@@ -142,11 +151,12 @@
           {
             "type": "command",
             "command": "\"${AI_PYTHON:-python3}\" \"$CLAUDE_PROJECT_DIR/scripts/ai/workdir.py\" --hook",
+            "onFailure": "block",
             "statusMessage": "Checking working directory (D17)..."
           }
         ]
       }
     ]
   },
-  "_last_reviewed": "2026-06-06"
+  "_last_reviewed": "2026-11-17"
 }

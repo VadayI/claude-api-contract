@@ -70,6 +70,20 @@ class ClaudeEditGuardTests(unittest.TestCase):
         shell = {"tool_name": "Bash", "tool_input": {"command": "printf x > openapi.yml"}}
         self.assertEqual(self.probe(shell).returncode, 0)
 
+    def test_powershell_is_handled_like_bash(self):
+        """Q02 (D18.4): PowerShell apply_patch is checked; other PowerShell writes are out of scope.
+
+        Args: None; synthetic PowerShell payloads.
+        Returns: None after block/pass assertions.
+        Raises: AssertionError if PowerShell patches escape or shell writes are claimed.
+        Side effects: Local Node subprocesses only; no DB/network/writes.
+        """
+        patch = "apply_patch <<'PATCH'\n*** Begin Patch\n*** Update File: openapi.yml\n*** End Patch\nPATCH"
+        self.assertEqual(self.probe({"tool_name": "PowerShell", "tool_input": {"command": patch}}).returncode, 2)
+        write = {"tool_name": "PowerShell", "tool_input": {"command": "Set-Content openapi.yml x"}}
+        self.assertEqual(self.probe(write).returncode, 0)
+        self.assertEqual(self.probe({"tool_name": "PowerShell", "tool_input": {}}).returncode, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

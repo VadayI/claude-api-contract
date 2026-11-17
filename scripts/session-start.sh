@@ -11,12 +11,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 status=0
 
-# Wspólny detektor: Python 3.13+ (AI_PYTHON lub python z PATH); brak = NOT_VERIFIED.
-PYTHON="${AI_PYTHON:-python}"
+# Wspólny detektor: Python 3.13+ (AI_PYTHON, inaczej python3, potem python z PATH — D18); brak = NOT_VERIFIED.
 python_ok=0
-if command -v "$PYTHON" >/dev/null 2>&1 \
-  && "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 13) else 2)' >/dev/null 2>&1; then
-  python_ok=1
+for PYTHON in ${AI_PYTHON:+"$AI_PYTHON"} python3 python; do
+  if command -v "$PYTHON" >/dev/null 2>&1 \
+    && "$PYTHON" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 13) else 2)' >/dev/null 2>&1; then
+    python_ok=1
+    break
+  fi
+  [ -n "${AI_PYTHON:-}" ] && break   # jawny AI_PYTHON nie jest zastępowany niczym innym
+done
+if [ "$python_ok" = 1 ]; then
   if ! "$PYTHON" "$ROOT/scripts/ai/detector.py" --repository "$ROOT" --write; then
     echo '[session-start] NOT_VERIFIED: shared detector failed; .ai-runtime/environment.json not refreshed.' >&2
     status=1

@@ -58,9 +58,10 @@ try {
   if (editTools.has(name)) {
     collectPaths(input, paths);
     if (paths.length === 0) throw new Error('edit payload has no recognized file path');
-  } else if (name === 'Bash') {
+  } else if (name === 'Bash' || name === 'PowerShell') {
+    // PowerShell jak Bash: rozpoznawany jest tylko apply_patch; dowolne zapisy z powłoki pokrywają deny i sandbox.
     const command = input.command;
-    if (typeof command !== 'string') throw new Error('Bash payload has no command');
+    if (typeof command !== 'string') throw new Error(`${name} payload has no command`);
     if (!/\bapply_patch\b/.test(command)) process.exit(0);
     paths = patchPaths(command);
     if (paths.length === 0) throw new Error('apply_patch command has no recognized file path');

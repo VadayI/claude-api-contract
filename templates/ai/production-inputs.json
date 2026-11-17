@@ -450,6 +450,9 @@
     "docs/ai/wsl-ext4-migration.md": {
       "ownership": "template"
     },
+    "docs/ai/hooks.md": {
+      "ownership": "template"
+    },
     "docs/ai/git-lifecycle.md": {
       "ownership": "template"
     },
@@ -582,6 +585,9 @@
       "ownership": "template"
     },
     "scripts/ai/workdir.py": {
+      "ownership": "template"
+    },
+    "scripts/ai/hook_check.py": {
       "ownership": "template"
     },
     "scripts/ai/git_lifecycle.py": {
@@ -746,6 +752,9 @@
     "template-core/docs/ai/wsl-ext4-migration.md": {
       "ownership": "template"
     },
+    "template-core/docs/ai/hooks.md": {
+      "ownership": "template"
+    },
     "template-core/docs/ai/git-lifecycle.md": {
       "ownership": "template"
     },
@@ -806,6 +815,9 @@
       "ownership": "template"
     },
     "template-core/scripts/ai/workdir.py": {
+      "ownership": "template"
+    },
+    "template-core/scripts/ai/hook_check.py": {
       "ownership": "template"
     },
     "template-core/scripts/ai/git_lifecycle.py": {
@@ -885,6 +897,9 @@
       "ownership": "template"
     },
     "template-core/tests/test_workdir.py": {
+      "ownership": "template"
+    },
+    "template-core/tests/test_hook_check.py": {
       "ownership": "template"
     },
     "template-core/tests/fake_gh.py": {
