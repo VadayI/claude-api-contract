@@ -3,7 +3,7 @@
   "files": {
     "README.md": {
       "ownership": "template",
-      "sha256": "51e1991dd2a6029d4c00ab87f00c6a582279cadea74d8cf5232abcb7790222b0"
+      "sha256": "4aa431f4c3a3fbf2c27edcf185ab06b32514f65d226b904d75b83dbc1641d19f"
     },
     "core.json": {
       "ownership": "template",
@@ -20,6 +20,10 @@
     "docs/ai/git-lifecycle.md": {
       "ownership": "template",
       "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
+    },
+    "docs/ai/hooks.md": {
+      "ownership": "template",
+      "sha256": "2bdf825f3a20504c849527af935422a49fa06b678fc0ca23e9df7963f7350199"
     },
     "docs/ai/launchers.md": {
       "ownership": "template",
@@ -92,6 +96,10 @@
     "scripts/ai/git_lifecycle.py": {
       "ownership": "template",
       "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
+    },
+    "scripts/ai/hook_check.py": {
+      "ownership": "template",
+      "sha256": "b069aa7f2920f8d476021a8f0edafcef7ff1f261afb08af1f4a5ffa5dc2baa29"
     },
     "scripts/ai/install_core.py": {
       "ownership": "template",
@@ -200,6 +208,10 @@
     "tests/test_git_lifecycle.py": {
       "ownership": "template",
       "sha256": "1a58595e415dc57225afd075ca83944fec722b3faba8f6f562ef9d978d0840f0"
+    },
+    "tests/test_hook_check.py": {
+      "ownership": "template",
+      "sha256": "55ac235133c30b99a185869e26ca8dd4458629ca7879cc8fe1732a907b67393a"
     },
     "tests/test_launch.py": {
       "ownership": "template",

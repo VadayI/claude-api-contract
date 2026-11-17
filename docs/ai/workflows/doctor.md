@@ -36,6 +36,8 @@ Optional `<procedure arguments>`: a scope — `system`, `claude`, `project`, `gi
 
 1. **Scope 1 — system tools:** node/npm/git/gh/oasdiff present and correct versions.
 2. **Scope 2 — Claude config & access:** optional plugin/MCP capability availability, with local procedures and gh/Git/official-docs fallback, `GITHUB_PERSONAL_ACCESS_TOKEN` + `CONTEXT7_API_KEY` set (never print), `gh auth status`, repo reachable.
+   - **Hooks (D18, D26):** run `python scripts/ai/hook_check.py version` and `python scripts/ai/hook_check.py settings`. Report the Claude Code and Codex CLI versions exactly as printed — never guess a version. `OK` → ✅; `WARN` (Claude Code < 2.1.295) → ⚠️ fail-closed hooks (`onFailure`) are ignored, update Claude Code; `NOT_VERIFIED` → ⚠️ version unknown. Any `settings` finding → ❌ with its location. Recovery from a session where every action is blocked by a hook is in `docs/ai/hooks.md`.
+   - **Workspace trust:** project `permissions.allow` rules apply only after the folder trust dialog was accepted; repeated prompts for allowed commands point there (deny rules apply regardless).
 3. **Scope 3 — project state:** `spec/`, `.spectral.yaml`, `package.json`, deps installed; `npm run validate` green. A pre-`/bootstrap` repo legitimately lacks these → report as "not set up yet" (info), not failure.
 4. **Scope 4 — git hygiene:** feature branch (not `main`), branch protection, clean tree, no tracked `.env`.
 

@@ -12,6 +12,10 @@
       "ownership": "template",
       "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
     },
+    "docs/ai/hooks.md": {
+      "ownership": "template",
+      "sha256": "2bdf825f3a20504c849527af935422a49fa06b678fc0ca23e9df7963f7350199"
+    },
     "docs/ai/launchers.md": {
       "ownership": "template",
       "sha256": "9320603d3ee350b66baa4f6f252fb88c3fde29c13d93974b7f63c591838c94a0"
@@ -79,6 +83,10 @@
     "scripts/ai/git_lifecycle.py": {
       "ownership": "template",
       "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
+    },
+    "scripts/ai/hook_check.py": {
+      "ownership": "template",
+      "sha256": "b069aa7f2920f8d476021a8f0edafcef7ff1f261afb08af1f4a5ffa5dc2baa29"
     },
     "scripts/ai/launch.ps1": {
       "ownership": "template",
@@ -168,7 +176,7 @@
   "pin_status": "local",
   "schema_version": 1,
   "source_kind": "local",
-  "source_manifest_digest": "835de98677c23654ea92cf1c000178dfe26f60d317a1374d9d3d6adf5821c0ab",
+  "source_manifest_digest": "ab913797f81181f3d56eea14e5a2b01556523dbc76940b3d60863cac55f0da50",
   "source_path": "template-core",
   "source_repository": "https://github.com/VadayI/claude-api-contract.git",
   "version": "0.2.0-dev"

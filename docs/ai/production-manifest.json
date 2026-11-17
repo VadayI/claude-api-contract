@@ -74,7 +74,7 @@
     ".claude/agents/happy-path-author.md": {
       "legacy_sha256": "f1ddce4962b3a102d39e8c93e623b04c293668ef95d4db7dc2f33b5654bec25e",
       "ownership": "template",
-      "sha256": "3a1b27ae47e2d4cb0237c7d8c4d2985da9c71f269a0b554fc362896656c7fae3"
+      "sha256": "598f07b4979b925f963b024abc0004ce7eec0d82654fb1d89ef0c2dee5f1e82b"
     },
     ".claude/agents/mock-validator.md": {
       "legacy_sha256": "fdf80526713c52b2f5d71c18ee8e3bcafefb13ece08b72341577531b2d061ddb",
@@ -309,7 +309,7 @@
     ".claude/settings.json": {
       "legacy_sha256": "8085d685c9500bfaf4459b7a31bade60e8aa8f152ebb9b589d06574a23044582",
       "ownership": "mixed",
-      "sha256": "45e7480c3ad979dd2f52ccf3c25bf35d9a226f37c81fe3732ab8cbd2f250170f"
+      "sha256": "e31218a71047a53f84731ea831a4e73c9f45cf5f82c3f78b8421706ad097745a"
     },
     ".claude/skills/contract-versioning/SKILL.md": {
       "legacy_sha256": "b61319495773d704404ab302a44c823cad35f15fa48aeb76c5c5a0f2cdf1e131",
@@ -476,7 +476,7 @@
     "docs/ai/core-source.json": {
       "legacy_sha256": "5de06cd00720fd7ca7d2a0b157800496d7bee75fb5408361b9cedba3082daaf2",
       "ownership": "template",
-      "sha256": "a839f15030166af48890d30f85f1d8a5c24adf57b63a08ede05bdd445ef5d36a"
+      "sha256": "317edaac692ef850baa3facef3065e3e838797664084414e3398abbf3e904f68"
     },
     "docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -485,7 +485,7 @@
     },
     "docs/ai/generated/adapters-manifest.json": {
       "ownership": "template",
-      "sha256": "b5cec765c9a8e2e132e6d7a339ae720c24efede74188d43957d3aab399d54996"
+      "sha256": "dd2b8da633c808e1c3dc7a118991989ba04ea69b477566627e96dbd26c48f161"
     },
     "docs/ai/generated/role-packs/contract-reviewer.md": {
       "ownership": "template",
@@ -498,6 +498,10 @@
     "docs/ai/git-lifecycle.md": {
       "ownership": "template",
       "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
+    },
+    "docs/ai/hooks.md": {
+      "ownership": "template",
+      "sha256": "2bdf825f3a20504c849527af935422a49fa06b678fc0ca23e9df7963f7350199"
     },
     "docs/ai/launchers.md": {
       "legacy_sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec",
@@ -659,7 +663,7 @@
     },
     "docs/ai/workflows/doctor.md": {
       "ownership": "template",
-      "sha256": "f5ef9ed17b0feef622d5b39fbb2991f20160922691c1525c8755da0a8071e37e"
+      "sha256": "98e2ce248988b0dda0a8cc912c16867553eae27bfb885f9e106a16fc9aa557f6"
     },
     "docs/ai/workflows/handoff.md": {
       "ownership": "template",
@@ -782,6 +786,10 @@
     "scripts/ai/git_lifecycle.py": {
       "ownership": "template",
       "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
+    },
+    "scripts/ai/hook_check.py": {
+      "ownership": "template",
+      "sha256": "b069aa7f2920f8d476021a8f0edafcef7ff1f261afb08af1f4a5ffa5dc2baa29"
     },
     "scripts/ai/launch.ps1": {
       "legacy_sha256": "e7164d6a9c89d1caf284735cc0c5f97bb898f20384d2a75b119b5124215be0ae",
@@ -931,7 +939,7 @@
     },
     "scripts/policy/claude_edit_guard.mjs": {
       "ownership": "template",
-      "sha256": "72044af2174c64664c084a3b05573129ab2bbf7df9e618b4b698be7cf2754f04"
+      "sha256": "dd0c500b9882603efaac68b527ee1292d17bd577741fd24335ff56a90be0a25c"
     },
     "scripts/runtime-state.mjs": {
       "ownership": "template",
@@ -950,7 +958,7 @@
     "scripts/session-start.sh": {
       "legacy_sha256": "e89e034b45a2241a17d26d72023b900b672226d02c2f6dee7de192abbbf7e7fb",
       "ownership": "template",
-      "sha256": "c47b59b301dc8ad8aa355a800c5495cd0847d0f626e7161626db782aacb4aff0"
+      "sha256": "b060cbb5b7ef6a52e44dbaee1d5a02dd691553a4f49fc8801dad3686cc971f19"
     },
     "scripts/setup-windows.md": {
       "legacy_sha256": "15957d15aa60b654766d7a28ae7ddc8eb12d68523e92fa3acb25f33a5f1b5bf0",
@@ -965,7 +973,7 @@
     "template-core/README.md": {
       "legacy_sha256": "b951623a3665d695795a76706605fd96dd8e256efbc02be4a22221e1ef0bd853",
       "ownership": "template",
-      "sha256": "51e1991dd2a6029d4c00ab87f00c6a582279cadea74d8cf5232abcb7790222b0"
+      "sha256": "4aa431f4c3a3fbf2c27edcf185ab06b32514f65d226b904d75b83dbc1641d19f"
     },
     "template-core/core.json": {
       "legacy_sha256": "047bc3ffe7a45af10591b10000b1b2df46b736a21315b7ba3ea93b5b2481dfdf",
@@ -980,7 +988,7 @@
     "template-core/docs/ai/core-manifest.json": {
       "legacy_sha256": "ff6be8fa87f16f5ddbe62e38e2b493191e91f86b857d693ef18b9222cd73eb19",
       "ownership": "template",
-      "sha256": "835de98677c23654ea92cf1c000178dfe26f60d317a1374d9d3d6adf5821c0ab"
+      "sha256": "ab913797f81181f3d56eea14e5a2b01556523dbc76940b3d60863cac55f0da50"
     },
     "template-core/docs/ai/decisions/0001-portable-family-core.md": {
       "legacy_sha256": "567e08c653342cb641461f0e1b6ed23bc73c9dd00cf629f8e10a6c14e2d550d9",
@@ -990,6 +998,10 @@
     "template-core/docs/ai/git-lifecycle.md": {
       "ownership": "template",
       "sha256": "65c00868b3b3c9c6b64a0f9b726523bb9d5e7e6278cbc5c03a7841f13862aca4"
+    },
+    "template-core/docs/ai/hooks.md": {
+      "ownership": "template",
+      "sha256": "2bdf825f3a20504c849527af935422a49fa06b678fc0ca23e9df7963f7350199"
     },
     "template-core/docs/ai/launchers.md": {
       "legacy_sha256": "96a508d1dc671696af51869a423a88dd72b1c754c3dcf27c2eabdaa22bfc18ec",
@@ -1073,6 +1085,10 @@
     "template-core/scripts/ai/git_lifecycle.py": {
       "ownership": "template",
       "sha256": "f227ec4d113b7806d924dbb4a3958fda010a85277ec030d621ae4726766454ad"
+    },
+    "template-core/scripts/ai/hook_check.py": {
+      "ownership": "template",
+      "sha256": "b069aa7f2920f8d476021a8f0edafcef7ff1f261afb08af1f4a5ffa5dc2baa29"
     },
     "template-core/scripts/ai/install_core.py": {
       "legacy_sha256": "434c080fe02c24f1dbbf7cf9bb97f9c9cd696c903864f12ae7bef8db17225374",
@@ -1191,6 +1207,10 @@
       "ownership": "template",
       "sha256": "1a58595e415dc57225afd075ca83944fec722b3faba8f6f562ef9d978d0840f0"
     },
+    "template-core/tests/test_hook_check.py": {
+      "ownership": "template",
+      "sha256": "55ac235133c30b99a185869e26ca8dd4458629ca7879cc8fe1732a907b67393a"
+    },
     "template-core/tests/test_launch.py": {
       "legacy_sha256": "3f8d67e6e31eb8d0577fc2e5c0d7ec40c64845f8bd88d1b7d048af0575f5cd21",
       "ownership": "template",
@@ -1259,7 +1279,7 @@
     },
     "templates/ai/production-inputs.json": {
       "ownership": "template",
-      "sha256": "94e2844bda218ff50d9f1578cb47be0e64ad8bbd14b1e7d0f5d71f914dd889fa"
+      "sha256": "605e034e66720204bbb73f2faa46d74242f5ce0c470d1adef075e7c9fe0b34bc"
     },
     "templates/ai/readiness-catalog.json": {
       "legacy_sha256": "415bf3e0df42fcade7d732d69ce753a0d8422cb6e27177bb2a53e12e55247bc5",
