@@ -2,6 +2,14 @@
 
 > Rolling snapshot. Read FIRST when joining the project; updated LAST at end of session (`/handoff` or `/wrap-up`).
 
+## 2026-11-17 — Q02 hook reliability (D18, D25, D26)
+
+Branch `chore/q02-hook-reliability` from `main`. Nothing is merged (D01).
+
+- Shared core: `scripts/ai/hook_check.py` checks hook/permission style (D18, D26) and the Claude Code 2.1.295 minimum; standard and recovery in `docs/ai/hooks.md`. Settings: absolute hook paths, `AI_PYTHON`, fail-closed policies, anchored `Read` rules, 1M context off. `happy-path-author` is pink.
+- This session: `docs/sessions/20261117T150322Z-claude-0c3812.md`.
+- Next: publish, manual acceptance in a live Claude Code session (handoff Q02 §4 p. 6), merge on command; then P08b.
+
 ## 2026-10-22 — P08a WSL/ext4 and the D17 working-directory gate
 
 Branch `chore/p08a-wsl-tests` from `main`. Nothing is merged (D01).
